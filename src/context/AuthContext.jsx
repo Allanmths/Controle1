@@ -1,7 +1,12 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from '../firebase'; 
-import { doc, getDoc } from 'firebase/firestore';
+﻿import React, { createContext, useContext, useState, useEffect } from 'react';
+import { 
+  onAuthStateChanged, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword,
+  signOut 
+} from 'firebase/auth';
+import { auth, db } from '../firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
@@ -23,7 +28,7 @@ export const AuthProvider = ({ children }) => {
         if (userDoc.exists()) {
           setUserData({ id: userDoc.id, ...userDoc.data() });
         } else {
-          setUserData(null); 
+          setUserData(null);
         }
       } else {
         setUserData(null);
@@ -34,10 +39,35 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
+  const login = async (email, password) => {
+    return signInWithEmailAndPassword(auth, email, password);
+  };
+
+  const register = async (email, password) => {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    
+    // Criar documento do usuário no Firestore
+    await setDoc(doc(db, 'users', result.user.uid), {
+      email: result.user.email,
+      role: 'viewer', // Usuários novos começam como 'viewer'
+      createdAt: new Date(),
+      displayName: result.user.email.split('@')[0]
+    });
+    
+    return result;
+  };
+
+  const logout = () => {
+    return signOut(auth);
+  };
+
   const value = {
     currentUser,
     userData,
     loading,
+    login,
+    register,
+    logout
   };
 
   return (
