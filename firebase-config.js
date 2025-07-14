@@ -1,8 +1,8 @@
-export const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId: import.meta.env.VITE_FIREBASE_APP_ID
+﻿export const firebaseConfig = {
+    apiKey: "AIzaSyAzXLA9IRsHtFye3DQJ61lR7a5fjXOvcck",
+    authDomain: "controle-estoque-production.firebaseapp.com",
+    projectId: "controle-estoque-production",
+    storageBucket: "controle-estoque-production.firebasestorage.app",
+    messagingSenderId: "281665433507",
+    appId: "1:281665433507:web:8ccc72a761e5e136e17416"
 };
