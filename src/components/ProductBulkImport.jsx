@@ -26,7 +26,7 @@ const ProductBulkImport = () => {
                 'Categoria': 'Eletrônicos',
                 'Unidade': 'un',
                 'EstoqueMinimo': '5',
-                ...locations.reduce((acc, loc) => ({ ...acc, [`Estoque_${loc.name.replace(/\s+/g, '_')}`]: '10' }), {})
+                ...(locations || []).reduce((acc, loc) => ({ ...acc, [`Estoque_${loc.name.replace(/\s+/g, '_')}`]: '10' }), {})
             }
         ];
 

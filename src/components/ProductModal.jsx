@@ -84,7 +84,7 @@ const ProductModal = ({ isOpen, onClose, productToEdit, locations, userData }) =
             const batch = writeBatch(db);
             const movementsRef = collection(db, 'movements');
             const oldQuantities = productToEdit?.locations || {};
-            const locationMap = locations.reduce((acc, loc) => {
+            const locationMap = (locations || []).reduce((acc, loc) => {
                 acc[loc.id] = loc.name;
                 return acc;
             }, {});
