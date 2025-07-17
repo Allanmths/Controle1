@@ -60,7 +60,7 @@ const ProductBulkImport = () => {
                 const categoriesMap = new Map((categories || []).map(cat => [cat.name.toLowerCase(), cat.id]));
                 const locationsMap = new Map((locations || []).map(loc => [`Estoque_${loc.name.replace(/\s+/g, '_')}`, loc.id]));
 
-                const promises = productsToImport.map(async (productRow) => {
+                const promises = (productsToImport || []).map(async (productRow) => {
                     const { Nome, Categoria, Unidade, EstoqueMinimo, ...stockFields } = productRow;
 
                     if (!Nome || !Categoria) {

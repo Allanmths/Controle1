@@ -75,7 +75,7 @@ export default function DashboardPage() {
   }, [periodOption]);
 
   const lowStockProducts = useMemo(() => {
-    return products
+    return (products || [])
       .map(p => {
         const totalQuantity = Object.values(p.locations || {}).reduce((sum, qty) => sum + (Number(qty) || 0), 0);
         return { ...p, totalQuantity };
@@ -132,8 +132,8 @@ export default function DashboardPage() {
     return {
       labels,
       datasets: [
-        { label: 'Entradas', data: labels.map(day => groupedByDay[day].entrada), backgroundColor: '#16a34a' },
-        { label: 'Saídas', data: labels.map(day => groupedByDay[day].saida), backgroundColor: '#dc2626' },
+        { label: 'Entradas', data: (labels || []).map(day => groupedByDay[day].entrada), backgroundColor: '#16a34a' },
+        { label: 'Saídas', data: (labels || []).map(day => groupedByDay[day].saida), backgroundColor: '#dc2626' },
       ],
     };
   }, [movements, startDate, endDate, chartType]);
