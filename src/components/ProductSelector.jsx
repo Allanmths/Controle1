@@ -23,7 +23,7 @@ const ProductSelector = ({ onProductSelect, selectedProductId }) => {
                 disabled={loading}
             >
                 <option value="">{loading ? 'Carregando produtos...' : 'Selecione um produto'}</option>
-                {products.map(product => (
+                {products && products.map(product => (
                     <option key={product.id} value={product.id}>
                         {product.name}
                     </option>

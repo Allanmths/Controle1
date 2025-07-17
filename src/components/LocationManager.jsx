@@ -54,7 +54,7 @@ const LocationManager = () => {
                         <SkeletonLoader count={3} />
                     ) : (
                         <ul className="space-y-3">
-                            {locations.length > 0 ? (
+                            {locations && locations.length > 0 ? (
                                 locations.map((location) => (
                                     <li key={location.id} className="flex items-center justify-between p-3 even:bg-gray-50 rounded-md">
                                         <span className="text-gray-800 font-medium">{location.name}</span>

@@ -62,7 +62,7 @@ export default function SuppliersManager() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {suppliers.length > 0 ? suppliers.map(sup => (
+                                {suppliers && suppliers.length > 0 ? suppliers.map(sup => (
                                     <tr key={sup.id}>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm font-medium text-gray-900">{sup.name}</div>

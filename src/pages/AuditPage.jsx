@@ -127,7 +127,7 @@ const AuditPage = () => {
                             className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
                         >
                             <option value="">Todos</option>
-                            {Object.entries(movementTypes).map(([key, value]) => (
+                            {movementTypes && Object.entries(movementTypes).map(([key, value]) => (
                                 <option key={key} value={key}>{value}</option>
                             ))}
                         </select>
@@ -160,7 +160,7 @@ const AuditPage = () => {
                     <tbody className="bg-white divide-y divide-gray-200">
                         {loading ? (
                             <tr><td colSpan="6" className="text-center py-10">Carregando registros...</td></tr>
-                        ) : paginatedLogs.length > 0 ? (
+                        ) : paginatedLogs && paginatedLogs.length > 0 ? (
                             paginatedLogs.map(log => <AuditLogRow key={log.id} log={log} />)
                         ) : (
                             <tr><td colSpan="6" className="text-center py-10">Nenhum registro de auditoria encontrado.</td></tr>

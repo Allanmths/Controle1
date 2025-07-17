@@ -27,7 +27,7 @@ const ABCAnalysisReport = () => {
 
         const periodStartDate = subDays(new Date(), periodDays);
         
-        const consumptionData = products.map(product => {
+        const consumptionData = (products || []).map(product => {
             const productMovements = movements.filter(m => 
                 m.productId === product.id &&
                 (m.type === 'saida' || m.type === 'transfer_out') &&
@@ -102,7 +102,7 @@ const ABCAnalysisReport = () => {
                     <tbody className="bg-white divide-y divide-gray-200">
                         {loading ? (
                             <tr><td colSpan="4" className="text-center py-10">Analisando dados...</td></tr>
-                        ) : reportData.lines.length > 0 ? (
+                        ) : reportData && reportData.lines && reportData.lines.length > 0 ? (
                             reportData.lines.map(line => {
                                 const { label, color } = getClassStyle(line.classification);
                                 return (

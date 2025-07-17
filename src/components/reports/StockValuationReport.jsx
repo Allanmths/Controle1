@@ -47,7 +47,7 @@ const StockValuationReport = () => {
                     <tbody className="bg-white divide-y divide-gray-200">
                         {loading ? (
                             <tr><td colSpan="4" className="text-center py-10">Carregando dados...</td></tr>
-                        ) : reportData.lines.length > 0 ? (
+                        ) : reportData && reportData.lines && reportData.lines.length > 0 ? (
                             reportData.lines.map(line => (
                                 <tr key={line.id} className="hover:bg-gray-50">
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{line.name}</td>
