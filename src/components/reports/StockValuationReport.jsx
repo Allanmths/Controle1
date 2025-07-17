@@ -9,7 +9,7 @@ const StockValuationReport = () => {
     const { docs: products, loading } = useFirestore('products');
 
     const reportData = useMemo(() => {
-        if (!products.length) return { lines: [], grandTotal: 0 };
+        if (!products || !products.length) return { lines: [], grandTotal: 0 };
 
         const lines = products.map(product => {
             const totalStock = Object.values(product.locations || {}).reduce((sum, qty) => sum + qty, 0);

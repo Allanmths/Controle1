@@ -12,7 +12,7 @@ const DeadStockReport = () => {
     const [periodDays, setPeriodDays] = useState(180);
 
     const reportData = useMemo(() => {
-        if (!products.length) return { lines: [], totalDeadValue: 0 };
+        if (!products || !products.length) return { lines: [], totalDeadValue: 0 };
 
         const thresholdDate = subDays(new Date(), periodDays);
         
