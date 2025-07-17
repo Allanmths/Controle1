@@ -85,7 +85,7 @@ const ProductModal = ({ isOpen, onClose, productToEdit, locations, userData }) =
             const batch = writeBatch(db);
             const movementsRef = collection(db, 'movements');
             const oldQuantities = productToEdit?.locations || {};
-            const locationMap = ensureArray(locations).reduce((acc, loc) => {
+            const locationMap = ensureArray(locations, 'locations').reduce((acc, loc) => {
                 acc[loc.id] = loc.name;
                 return acc;
             }, {});
@@ -156,8 +156,8 @@ const ProductModal = ({ isOpen, onClose, productToEdit, locations, userData }) =
                                 required
                             >
                                 <option value="" disabled>Selecione...</option>
-                                {ensureArray(categories).length > 0 ? (
-                                    ensureArray(categories).map(cat => (
+                                {ensureArray(categories, 'categories').length > 0 ? (
+                                    ensureArray(categories, 'categories').map(cat => (
                                         <option key={cat.id} value={cat.id}>{cat.name}</option>
                                     ))
                                 ) : (
@@ -213,8 +213,8 @@ const ProductModal = ({ isOpen, onClose, productToEdit, locations, userData }) =
                     <div className="mt-8">
                         <h3 className="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Estoque por Localidade</h3>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            {ensureArray(locations).length > 0 ? (
-                                ensureArray(locations).map(location => (
+                            {ensureArray(locations, 'locations').length > 0 ? (
+                                ensureArray(locations, 'locations').map(location => (
                                     <div key={location.id}>
                                         <label htmlFor={`loc-${location.id}`} className="block text-sm font-medium text-gray-700 mb-1">{location.name}</label>
                                         <input
