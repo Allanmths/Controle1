@@ -10,9 +10,14 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest",
+    "test:ui": "vitest --ui",
     "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
     "predeploy": "npm run build:prod",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "clean": "rm -rf dist node_modules package-lock.json",
+    "reinstall": "npm run clean && npm install",
+    "analyze": "npm run build:prod && npx vite-bundle-analyzer dist"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -20,7 +25,9 @@
     "@mui/material": "^5.14.18",
     "chart.js": "^4.5.0",
     "date-fns": "^4.1.0",
+    "dompurify": "^3.0.9",
     "firebase": "^10.7.0",
+    "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.1",
     "papaparse": "^5.5.3",

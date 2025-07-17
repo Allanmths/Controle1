@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../firebase';
+import { db } from '../services/firebase';
 import { collection, addDoc, doc, updateDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import useFirestore from '../hooks/useFirestore';
@@ -155,9 +155,13 @@ const ProductModal = ({ isOpen, onClose, productToEdit, locations, userData }) =
                                 required
                             >
                                 <option value="" disabled>Selecione...</option>
-                                {categories.map(cat => (
-                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                ))}
+                                {categories && categories.length > 0 ? (
+                                    categories.map(cat => (
+                                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                    ))
+                                ) : (
+                                    <option value="" disabled>Carregando categorias...</option>
+                                )}
                             </select>
                         </div>
 
@@ -208,12 +212,13 @@ const ProductModal = ({ isOpen, onClose, productToEdit, locations, userData }) =
                     <div className="mt-8">
                         <h3 className="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Estoque por Localidade</h3>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            {locations.map(location => (
-                                <div key={location.id}>
-                                    <label htmlFor={`loc-${location.id}`} className="block text-sm font-medium text-gray-700 mb-1">{location.name}</label>
-                                    <input
-                                        type="number"
-                                        id={`loc-${location.id}`}
+                            {locations && locations.length > 0 ? (
+                                locations.map(location => (
+                                    <div key={location.id}>
+                                        <label htmlFor={`loc-${location.id}`} className="block text-sm font-medium text-gray-700 mb-1">{location.name}</label>
+                                        <input
+                                            type="number"
+                                            id={`loc-${location.id}`}
                                         value={stockQuantities[location.id] || ''}
                                         onChange={(e) => handleQuantityChange(location.id, e.target.value)}
                                         placeholder="0"
@@ -221,7 +226,12 @@ const ProductModal = ({ isOpen, onClose, productToEdit, locations, userData }) =
                                         className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     />
                                 </div>
-                            ))}
+                            ))
+                            ) : (
+                                <div className="col-span-full text-center text-gray-500">
+                                    Carregando localidades...
+                                </div>
+                            )}
                         </div>
                     </div>
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import useFirestore from '../hooks/useFirestore';
-import { db } from '../firebase';
+import { db } from '../services/firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import Papa from 'papaparse';
 import toast from 'react-hot-toast';
@@ -17,7 +17,7 @@ const ProductBulkImport = () => {
             'Categoria', 
             'Unidade', 
             'EstoqueMinimo', 
-            ...locations.map(loc => `Estoque_${loc.name.replace(/\s+/g, '_')}`)
+            ...(locations && locations.length > 0 ? locations.map(loc => `Estoque_${loc.name.replace(/\s+/g, '_')}`) : ['Estoque_Local'])
         ];
         
         const sampleData = [
@@ -57,8 +57,8 @@ const ProductBulkImport = () => {
             skipEmptyLines: true,
             complete: async (results) => {
                 const productsToImport = results.data;
-                const categoriesMap = new Map(categories.map(cat => [cat.name.toLowerCase(), cat.id]));
-                const locationsMap = new Map(locations.map(loc => [`Estoque_${loc.name.replace(/\s+/g, '_')}`, loc.id]));
+                const categoriesMap = new Map((categories || []).map(cat => [cat.name.toLowerCase(), cat.id]));
+                const locationsMap = new Map((locations || []).map(loc => [`Estoque_${loc.name.replace(/\s+/g, '_')}`, loc.id]));
 
                 const promises = productsToImport.map(async (productRow) => {
                     const { Nome, Categoria, Unidade, EstoqueMinimo, ...stockFields } = productRow;

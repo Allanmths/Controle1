@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useFirestore from '../hooks/useFirestore';
 import SkeletonLoader from './SkeletonLoader';
-import { db } from '../firebase';
+import { db } from '../services/firebase';
 import { doc, deleteDoc } from 'firebase/firestore';
 import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
 import toast from 'react-hot-toast';

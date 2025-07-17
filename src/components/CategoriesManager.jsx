@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
-import { db } from '../firebase';
+import { db } from '../services/firebase';
 import { doc, deleteDoc } from 'firebase/firestore';
 import useFirestore from '../hooks/useFirestore';
 import CategoryFormModal from './CategoryFormModal';

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { db } from '../firebase';
+import { db } from '../services/firebase';
 import { runTransaction, doc, collection, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 import ProductSelector from './ProductSelector';
@@ -131,22 +131,30 @@ const StockTransferForm = () => {
                                 <label htmlFor="from-location-transfer" className="block text-sm font-medium text-gray-700 mb-1">De</label>
                                 <select id="from-location-transfer" value={fromLocationId} onChange={e => setFromLocationId(e.target.value)} className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
                                     <option value="">Selecione a origem</option>
-                                    {locations.map(loc => (
-                                        <option key={loc.id} value={loc.id}>
-                                            {`${loc.name} (Disp: ${selectedProduct.locations?.[loc.id] || 0})`}
-                                        </option>
-                                    ))}
+                                    {locations && locations.length > 0 ? (
+                                        locations.map(loc => (
+                                            <option key={loc.id} value={loc.id}>
+                                                {`${loc.name} (Disp: ${selectedProduct.locations?.[loc.id] || 0})`}
+                                            </option>
+                                        ))
+                                    ) : (
+                                        <option value="" disabled>Carregando localidades...</option>
+                                    )}
                                 </select>
                             </div>
                             <div>
                                 <label htmlFor="to-location-transfer" className="block text-sm font-medium text-gray-700 mb-1">Para</label>
                                 <select id="to-location-transfer" value={toLocationId} onChange={e => setToLocationId(e.target.value)} className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
                                     <option value="">Selecione o destino</option>
-                                    {locations.filter(l => l.id !== fromLocationId).map(loc => (
-                                        <option key={loc.id} value={loc.id}>
-                                            {loc.name}
-                                        </option>
-                                    ))}
+                                    {locations && locations.length > 0 ? (
+                                        locations.filter(l => l.id !== fromLocationId).map(loc => (
+                                            <option key={loc.id} value={loc.id}>
+                                                {loc.name}
+                                            </option>
+                                        ))
+                                    ) : (
+                                        <option value="" disabled>Carregando localidades...</option>
+                                    )}
                                 </select>
                             </div>
                         </div>

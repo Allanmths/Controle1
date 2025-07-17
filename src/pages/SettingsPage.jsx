@@ -1,5 +1,5 @@
 import React from 'react';
-import UsersManager from '../components/UsersManager';
+import UserRoleManager from '../components/UserRoleManager';
 import { useSettings } from '../context/SettingsContext';
 import { FaListOl } from 'react-icons/fa';
 
@@ -40,7 +40,7 @@ const SettingsPage = () => {
                 </div>
 
                 {/* Card de Usuários (existente) */}
-                <UsersManager />
+                <UserRoleManager />
             </div>
         </div>
     );

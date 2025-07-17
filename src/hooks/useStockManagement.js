@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { doc, deleteDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '../services/firebase';
 import useFirestore from './useFirestore';
 import toast from 'react-hot-toast';
 import { useSettings } from '../context/SettingsContext';
