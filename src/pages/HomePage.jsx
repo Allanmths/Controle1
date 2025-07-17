@@ -50,9 +50,9 @@ export default function HomePage() {
 
     const loading = loadingProducts || loadingCategories || loadingMovements;
 
-    const totalItems = products.reduce((acc, p) => acc + (p.totalQuantity || 0), 0);
-    const lowStockCount = products.filter(p => p.minStock > 0 && p.totalQuantity <= p.minStock).length;
-    const recentMovements = movements.slice(0, 7);
+    const totalItems = (products || []).reduce((acc, p) => acc + (p.totalQuantity || 0), 0);
+    const lowStockCount = (products || []).filter(p => p.minStock > 0 && p.totalQuantity <= p.minStock).length;
+    const recentMovements = (movements || []).slice(0, 7);
 
     return (
         <div>

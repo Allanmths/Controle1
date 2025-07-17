@@ -13,7 +13,7 @@ export default function StockReport() {
     };
 
     const totalStockValue = useMemo(() => {
-        return products.reduce((acc, product) => {
+        return (products || []).reduce((acc, product) => {
             const value = (product.price || 0) * (product.totalQuantity || 0);
             return acc + value;
         }, 0);

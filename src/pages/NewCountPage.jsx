@@ -15,7 +15,7 @@ export default function NewCountPage() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (products.length > 0) {
+        if (products && products.length > 0) {
             const initialQuantities = products.reduce((acc, product) => {
                 acc[product.id] = ''; // Use empty string for placeholder
                 return acc;

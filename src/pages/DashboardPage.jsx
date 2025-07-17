@@ -105,8 +105,8 @@ export default function DashboardPage() {
     });
 
     if (chartType === 'pie') {
-      const entries = filteredMovements.filter(m => m.type === 'entrada').reduce((sum, m) => sum + m.quantity, 0);
-      const exits = filteredMovements.filter(m => m.type === 'saida').reduce((sum, m) => sum + m.quantity, 0);
+      const entries = (filteredMovements || []).filter(m => m.type === 'entrada').reduce((sum, m) => sum + m.quantity, 0);
+      const exits = (filteredMovements || []).filter(m => m.type === 'saida').reduce((sum, m) => sum + m.quantity, 0);
       return {
         labels: ['Entradas', 'Saídas'],
         datasets: [{
