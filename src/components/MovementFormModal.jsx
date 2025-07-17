@@ -94,7 +94,11 @@ export default function MovementFormModal({ isOpen, onClose }) {
                     <label htmlFor="productId" className="block text-sm font-medium text-gray-700">Produto</label>
                     <select name="productId" id="productId" value={formData.productId} onChange={handleChange} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-white">
                         <option value="" disabled>Selecione um produto</option>
-                        {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                        {products && products.length > 0 ? (
+                            products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)
+                        ) : (
+                            <option value="" disabled>Carregando produtos...</option>
+                        )}
                     </select>
                 </div>
 

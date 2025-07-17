@@ -151,7 +151,7 @@ export default function DashboardPage() {
   }, [chartType]);
 
   const handleGenerateReport = () => {
-    const augmentedProducts = products.map(p => ({
+    const augmentedProducts = (products || []).map(p => ({
         ...p,
         totalQuantity: Object.values(p.locations || {}).reduce((sum, qty) => sum + (Number(qty) || 0), 0),
     }));
@@ -268,7 +268,7 @@ export default function DashboardPage() {
             <div className="bg-yellow-100 border-l-4 border-yellow-400 p-4 rounded-r-lg">
                 <h3 className="font-bold text-yellow-800 mb-2">Alerta de Estoque Baixo</h3>
                 <div className="space-y-1 text-sm text-yellow-700 max-h-40 overflow-y-auto">
-                    {lowStockProducts.length > 0 ? (
+                    {lowStockProducts && lowStockProducts.length > 0 ? (
                         lowStockProducts.map(p => <p key={p.id}>{p.name}: <span className="font-semibold">{p.totalQuantity}</span> / {p.minStock} {p.unit || 'UN'}</p>)
                     ) : <p>Nenhum produto com estoque baixo.</p>}
                 </div>
@@ -276,13 +276,17 @@ export default function DashboardPage() {
             <div className="bg-white p-4 rounded-lg shadow-md">
                 <h3 className="font-bold text-green-700 mb-2">Top 5 Entradas Recentes</h3>
                 <div className="space-y-1 text-sm text-gray-600">
-                    {top5Entries.map(m => <p key={m.id}><span className="font-semibold">{m.quantity}x</span> {m.productName}</p>)}
+                    {top5Entries && top5Entries.length > 0 ? (
+                        top5Entries.map(m => <p key={m.id}><span className="font-semibold">{m.quantity}x</span> {m.productName}</p>)
+                    ) : <p>Nenhuma entrada recente.</p>}
                 </div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow-md">
                 <h3 className="font-bold text-red-700 mb-2">Top 5 Saídas Recentes</h3>
                 <div className="space-y-1 text-sm text-gray-600">
-                    {top5Exits.map(m => <p key={m.id}><span className="font-semibold">{m.quantity}x</span> {m.productName}</p>)}
+                    {top5Exits && top5Exits.length > 0 ? (
+                        top5Exits.map(m => <p key={m.id}><span className="font-semibold">{m.quantity}x</span> {m.productName}</p>)
+                    ) : <p>Nenhuma saída recente.</p>}
                 </div>
             </div>
         </div>
@@ -296,7 +300,11 @@ export default function DashboardPage() {
                 <label htmlFor="report-category" className="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
                 <select id="report-category" value={reportCategory} onChange={(e) => setReportCategory(e.target.value)} className="w-full p-2 border border-gray-300 rounded-md shadow-sm">
                     <option value="all">Todas</option>
-                    {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+                    {categories && categories.length > 0 ? (
+                        categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)
+                    ) : (
+                        <option value="" disabled>Carregando categorias...</option>
+                    )}
                 </select>
             </div>
             <div>
