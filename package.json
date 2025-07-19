@@ -9,15 +9,16 @@
     "build:prod": "vite build --mode production",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
+    "preview:dist": "vite preview --port 4173 --host",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "predeploy": "npm run build:prod",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "clean": "rm -rf dist node_modules package-lock.json",
     "reinstall": "npm run clean && npm install",
-    "analyze": "npm run build:prod && npx vite-bundle-analyzer dist"
+    "analyze": "npm run build && npx vite-bundle-analyzer dist"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
