@@ -3,11 +3,36 @@
 ## ✅ Status do Deploy
 
 - **Site ao vivo**: https://allanmths.github.io/Controle1/
-- **Último deploy**: 19 de julho de 2025
+- **Último deploy**: 19 de julho de 2025 - 18:00
 - **Método atual**: Deploy manual com gh-pages
 - **Status**: ✅ FUNCIONANDO
+- **Última correção**: Fix exibição de produtos e movimentações no Dashboard
 
-## 🚀 Como fazer deploy
+## � Correções Recentes (19/07/2025 - 18:00)
+
+### Problemas Identificados e Corrigidos:
+
+1. **Exibição de Produtos na Aba Estoque**:
+   - ❌ **Problema**: Produtos não exibiam informações corretas (categoria, local, quantidade, preço)
+   - ✅ **Solução**: Corrigida estrutura de dados para usar `categoryId`, `locations` (objeto), `cost`
+   - 🔧 **Alterações**: Mapeamento de categoria por ID, cálculo de quantidade total, exibição de locais com estoque
+
+2. **Filtros na Página de Estoque**:
+   - ❌ **Problema**: Filtros não funcionavam devido à incompatibilidade de estrutura de dados
+   - ✅ **Solução**: Atualizada lógica de filtros para trabalhar com dados reais
+   - 🔧 **Alterações**: Filtro de categoria usa ID, filtro de localização verifica estoque real
+
+3. **Movimentações no Dashboard**:
+   - ❌ **Problema**: Movimentações não apareciam nos gráficos do dashboard
+   - ✅ **Solução**: Corrigida lógica para trabalhar com tipos de movimento reais
+   - 🔧 **Alterações**: Reconhece 'Entrada Inicial' e 'Ajuste Manual' com base em `quantityChanged`
+
+### Dados Corrigidos:
+- **Tabela de Produtos**: Agora mostra categoria, locais com estoque, quantidade total e custo
+- **Filtros**: Funcionam corretamente com a estrutura real do Firebase
+- **Dashboard**: Gráficos mostram movimentações reais de entrada/saída
+
+---
 
 ### Método Recomendado (Manual)
 
@@ -106,5 +131,6 @@ Para tentar reativar:
 
 ---
 
-**Última atualização**: 19 de julho de 2025
+**Última atualização**: 19 de julho de 2025 - 18:00
 **Responsável**: GitHub Copilot
+**Correções**: Exibição de produtos e movimentações funcionando corretamente
