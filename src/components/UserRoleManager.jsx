@@ -1,137 +1,337 @@
 import React, { useState } from 'react';
-import { db } from '../services/firebase';
-import { collection, query, where, getDocs, doc, updateDoc, setDoc } from 'firebase/firestore';
-import toast from 'react-hot-toast';
+import { 
+  FaUsers, 
+  FaSearch, 
+  FaEdit, 
+  FaToggleOn, 
+  FaToggleOff, 
+  FaShieldAlt,
+  FaUserCrown,
+  FaUserEdit,
+  FaUser,
+  FaEye,
+  FaChartBar
+} from 'react-icons/fa';
+import { useUserManagement } from '../hooks/useUserManagement';
+import { useAuth } from '../context/AuthContext';
+import { ROLES, ROLE_DESCRIPTIONS, hasPermission, PERMISSIONS } from '../utils/permissions';
+import UserEditModal from './UserEditModal';
+import SkeletonLoader from './SkeletonLoader';
 
 const UserRoleManager = () => {
-    const [email, setEmail] = useState('demo@teste.com');
-    const [role, setRole] = useState('admin');
-    const [loading, setLoading] = useState(false);
+  const { userData } = useAuth();
+  const { 
+    users, 
+    loading, 
+    updateUserRole, 
+    updateUserPermissions, 
+    toggleUserStatus,
+    searchUsers,
+    getUserStats
+  } = useUserManagement();
+  
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [selectedRole, setSelectedRole] = useState('');
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
-    const updateUserRole = async () => {
-        if (!email || !role) {
-            toast.error('Email e role são obrigatórios');
-            return;
-        }
+  // Verificar se o usuário atual pode gerenciar usuários
+  const canManageUsers = hasPermission(userData?.role, PERMISSIONS.MANAGE_USERS);
 
-        setLoading(true);
-        const toastId = toast.loading('Atualizando role do usuário...');
+  // Filtrar usuários baseado na busca e role
+  React.useEffect(() => {
+    let filtered = users;
+    
+    if (searchTerm) {
+      filtered = filtered.filter(user => 
+        user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.displayName?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    if (selectedRole) {
+      filtered = filtered.filter(user => user.role === selectedRole);
+    }
+    
+    setFilteredUsers(filtered);
+  }, [users, searchTerm, selectedRole]);
 
-        try {
-            // Buscar o usuário pelo email
-            const usersRef = collection(db, 'users');
-            const q = query(usersRef, where('email', '==', email));
-            const querySnapshot = await getDocs(q);
+  const handleEditUser = (user) => {
+    setSelectedUser(user);
+    setIsEditModalOpen(true);
+  };
 
-            if (querySnapshot.empty) {
-                // Se o usuário não existe, criar um novo documento
-                // Nota: Normalmente o UID seria obtido da autenticação, mas para demo usaremos o email como referência
-                const userRef = doc(usersRef, email.replace('@', '_').replace('.', '_'));
-                await setDoc(userRef, {
-                    email: email,
-                    role: role,
-                    name: 'Demo User',
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                });
-                toast.success(`Usuário criado com role ${role}!`, { id: toastId });
-            } else {
-                // Atualizar o usuário existente
-                const userDoc = querySnapshot.docs[0];
-                const userRef = doc(db, 'users', userDoc.id);
-                await updateDoc(userRef, {
-                    role: role,
-                    updatedAt: new Date()
-                });
-                toast.success(`Role atualizada para ${role}!`, { id: toastId });
-            }
+  const handleSaveUser = async (userId, userData) => {
+    // Atualizar role
+    await updateUserRole(userId, userData.role);
+    
+    // Atualizar permissões customizadas se houver
+    if (userData.customPermissions) {
+      await updateUserPermissions(userId, userData.customPermissions);
+    }
+    
+    // Atualizar status ativo/inativo
+    await toggleUserStatus(userId, userData.isActive);
+  };
 
-            console.log(`Role do usuário ${email} atualizada para ${role}`);
-        } catch (error) {
-            console.error('Erro ao atualizar role:', error);
-            toast.error(`Erro: ${error.message}`, { id: toastId });
-        }
+  const getRoleIcon = (role) => {
+    switch (role) {
+      case ROLES.ADMIN: return <FaUserCrown className="text-purple-600" />;
+      case ROLES.MANAGER: return <FaShieldAlt className="text-blue-600" />;
+      case ROLES.EDITOR: return <FaUserEdit className="text-green-600" />;
+      case ROLES.USER: return <FaUser className="text-yellow-600" />;
+      case ROLES.VIEWER: return <FaEye className="text-gray-600" />;
+      default: return <FaUser className="text-gray-400" />;
+    }
+  };
 
-        setLoading(false);
-    };
+  const getRoleBadgeColor = (role) => {
+    switch (role) {
+      case ROLES.ADMIN: return 'bg-purple-100 text-purple-800';
+      case ROLES.MANAGER: return 'bg-blue-100 text-blue-800';
+      case ROLES.EDITOR: return 'bg-green-100 text-green-800';
+      case ROLES.USER: return 'bg-yellow-100 text-yellow-800';
+      case ROLES.VIEWER: return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
 
-    const checkUserRole = async () => {
-        if (!email) {
-            toast.error('Email é obrigatório');
-            return;
-        }
+  const stats = getUserStats();
 
-        const toastId = toast.loading('Verificando usuário...');
-
-        try {
-            const usersRef = collection(db, 'users');
-            const q = query(usersRef, where('email', '==', email));
-            const querySnapshot = await getDocs(q);
-
-            if (querySnapshot.empty) {
-                toast.error('Usuário não encontrado', { id: toastId });
-            } else {
-                const userData = querySnapshot.docs[0].data();
-                toast.success(`Usuário encontrado! Role atual: ${userData.role || 'não definida'}`, { id: toastId });
-                console.log('Dados do usuário:', userData);
-            }
-        } catch (error) {
-            console.error('Erro ao verificar usuário:', error);
-            toast.error(`Erro: ${error.message}`, { id: toastId });
-        }
-    };
-
+  if (!canManageUsers) {
     return (
-        <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
-            <div className="flex">
-                <div className="ml-3 w-full">
-                    <h3 className="text-sm font-medium text-blue-800">
-                        Gerenciador de Roles de Usuário
-                    </h3>
-                    <div className="mt-2 space-y-3">
-                        <div>
-                            <label className="block text-xs font-medium text-blue-700">Email:</label>
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="mt-1 block w-full text-sm p-2 border border-blue-300 rounded"
-                                placeholder="usuario@exemplo.com"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-blue-700">Role:</label>
-                            <select
-                                value={role}
-                                onChange={(e) => setRole(e.target.value)}
-                                className="mt-1 block w-full text-sm p-2 border border-blue-300 rounded"
-                            >
-                                <option value="admin">Admin</option>
-                                <option value="editor">Editor</option>
-                                <option value="user">User</option>
-                            </select>
-                        </div>
-                        <div className="flex space-x-2">
-                            <button
-                                onClick={checkUserRole}
-                                className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700"
-                                disabled={loading}
-                            >
-                                Verificar Usuário
-                            </button>
-                            <button
-                                onClick={updateUserRole}
-                                className="bg-green-600 text-white px-3 py-1 rounded text-xs hover:bg-green-700"
-                                disabled={loading}
-                            >
-                                {loading ? 'Atualizando...' : 'Atualizar Role'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div className="bg-red-50 border-l-4 border-red-400 p-4">
+        <div className="flex">
+          <div className="ml-3">
+            <h3 className="text-sm font-medium text-red-800">
+              Acesso Negado
+            </h3>
+            <p className="text-sm text-red-700 mt-1">
+              Você não tem permissão para gerenciar usuários do sistema.
+            </p>
+          </div>
         </div>
+      </div>
     );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <FaUsers className="text-2xl text-blue-600" />
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">Gerenciamento de Usuários</h2>
+            <p className="text-gray-600">Gerencie roles e permissões dos usuários do sistema</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Estatísticas */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white p-4 rounded-lg shadow border-l-4 border-blue-500">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Total de Usuários</p>
+              <p className="text-2xl font-bold text-blue-600">{stats.total}</p>
+            </div>
+            <FaUsers className="text-3xl text-blue-500" />
+          </div>
+        </div>
+        
+        <div className="bg-white p-4 rounded-lg shadow border-l-4 border-green-500">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Usuários Ativos</p>
+              <p className="text-2xl font-bold text-green-600">{stats.active}</p>
+            </div>
+            <FaToggleOn className="text-3xl text-green-500" />
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg shadow border-l-4 border-red-500">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Usuários Inativos</p>
+              <p className="text-2xl font-bold text-red-600">{stats.inactive}</p>
+            </div>
+            <FaToggleOff className="text-3xl text-red-500" />
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg shadow border-l-4 border-purple-500">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Administradores</p>
+              <p className="text-2xl font-bold text-purple-600">{stats.byRole[ROLES.ADMIN] || 0}</p>
+            </div>
+            <FaUserCrown className="text-3xl text-purple-500" />
+          </div>
+        </div>
+      </div>
+
+      {/* Filtros */}
+      <div className="bg-white p-4 rounded-lg shadow">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="relative">
+            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Buscar por email ou nome..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          
+          <select
+            value={selectedRole}
+            onChange={(e) => setSelectedRole(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">Todos os Roles</option>
+            {Object.entries(ROLES).map(([key, value]) => (
+              <option key={key} value={value}>
+                {value.charAt(0).toUpperCase() + value.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Lista de Usuários */}
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        {loading ? (
+          <div className="p-4">
+            <SkeletonLoader rows={5} />
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Usuário
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Role
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Último Login
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Criado em
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Ações
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredUsers.map((user) => (
+                  <tr key={user.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 h-10 w-10">
+                          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                            <FaUser className="text-gray-600" />
+                          </div>
+                        </div>
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900">
+                            {user.displayName || 'Nome não definido'}
+                          </div>
+                          <div className="text-sm text-gray-500">{user.email}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center space-x-2">
+                        {getRoleIcon(user.role)}
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleBadgeColor(user.role)}`}>
+                          {user.role?.charAt(0).toUpperCase() + user.role?.slice(1)}
+                        </span>
+                      </div>
+                      {user.customPermissions && user.customPermissions.length > 0 && (
+                        <div className="text-xs text-blue-600 mt-1">
+                          +{user.customPermissions.length} permissões customizadas
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        user.isActive !== false 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                        {user.isActive !== false ? 'Ativo' : 'Inativo'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.lastLoginFormatted}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.createdAtFormatted}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center justify-end space-x-2">
+                        <button
+                          onClick={() => handleEditUser(user)}
+                          className="text-blue-600 hover:text-blue-900 p-2 rounded-full hover:bg-blue-100 transition-colors"
+                          title="Editar usuário"
+                        >
+                          <FaEdit />
+                        </button>
+                        <button
+                          onClick={() => toggleUserStatus(user.id, !user.isActive)}
+                          className={`p-2 rounded-full transition-colors ${
+                            user.isActive !== false
+                              ? 'text-red-600 hover:text-red-900 hover:bg-red-100'
+                              : 'text-green-600 hover:text-green-900 hover:bg-green-100'
+                          }`}
+                          title={user.isActive !== false ? 'Desativar usuário' : 'Ativar usuário'}
+                        >
+                          {user.isActive !== false ? <FaToggleOff /> : <FaToggleOn />}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            
+            {filteredUsers.length === 0 && !loading && (
+              <div className="text-center py-12">
+                <FaUsers className="text-6xl text-gray-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  Nenhum usuário encontrado
+                </h3>
+                <p className="text-gray-500">
+                  {searchTerm || selectedRole 
+                    ? 'Tente ajustar os filtros de busca' 
+                    : 'Não há usuários cadastrados no sistema'
+                  }
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Modal de Edição */}
+      <UserEditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        user={selectedUser}
+        onSave={handleSaveUser}
+      />
+    </div>
+  );
 };
 
 export default UserRoleManager;
