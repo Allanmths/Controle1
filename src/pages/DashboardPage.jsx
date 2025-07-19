@@ -90,11 +90,16 @@ export default function DashboardPage() {
   }, [products]);
 
   const top5Entries = useMemo(() => 
-    movements.filter(m => m.type === 'entrada').slice(0, 5)
+    movements.filter(m => 
+      m.type === 'Entrada Inicial' || 
+      m.type === 'Ajuste Manual' && (m.quantityChanged > 0)
+    ).slice(0, 5)
   , [movements]);
 
   const top5Exits = useMemo(() => 
-    movements.filter(m => m.type === 'saida').slice(0, 5)
+    movements.filter(m => 
+      m.type === 'Ajuste Manual' && (m.quantityChanged < 0)
+    ).slice(0, 5)
   , [movements]);
 
   const movementsChartData = useMemo(() => {
@@ -105,8 +110,15 @@ export default function DashboardPage() {
     });
 
     if (chartType === 'pie') {
-      const entries = (filteredMovements || []).filter(m => m.type === 'entrada').reduce((sum, m) => sum + m.quantity, 0);
-      const exits = (filteredMovements || []).filter(m => m.type === 'saida').reduce((sum, m) => sum + m.quantity, 0);
+      const entries = (filteredMovements || []).filter(m => 
+        m.type === 'Entrada Inicial' || 
+        (m.type === 'Ajuste Manual' && m.quantityChanged > 0)
+      ).reduce((sum, m) => sum + Math.abs(m.quantityChanged || 0), 0);
+      
+      const exits = (filteredMovements || []).filter(m => 
+        m.type === 'Ajuste Manual' && m.quantityChanged < 0
+      ).reduce((sum, m) => sum + Math.abs(m.quantityChanged || 0), 0);
+      
       return {
         labels: ['Entradas', 'Saídas'],
         datasets: [{
@@ -123,7 +135,14 @@ export default function DashboardPage() {
       if (!acc[day]) {
         acc[day] = { entrada: 0, saida: 0 };
       }
-      acc[day][mov.type] += mov.quantity;
+      
+      // Determinar se é entrada ou saída baseado no tipo e quantidade
+      if (mov.type === 'Entrada Inicial' || (mov.type === 'Ajuste Manual' && mov.quantityChanged > 0)) {
+        acc[day].entrada += Math.abs(mov.quantityChanged || 0);
+      } else if (mov.type === 'Ajuste Manual' && mov.quantityChanged < 0) {
+        acc[day].saida += Math.abs(mov.quantityChanged || 0);
+      }
+      
       return acc;
     }, {});
 

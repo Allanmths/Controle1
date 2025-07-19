@@ -47,12 +47,32 @@ export const useStockManagement = () => {
 
   // Memoiza os produtos filtrados para evitar recálculos desnecessários
   const filteredProducts = useMemo(() => {
-    return (products || []).filter(product =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (categoryFilter === '' || product.category === categoryFilter) &&
-      (locationFilter === '' || product.location === locationFilter)
-    );
-  }, [products, searchTerm, categoryFilter, locationFilter]);
+    return (products || []).filter(product => {
+      // Filtro por nome
+      const matchesName = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      // Filtro por categoria - usando categoryId e comparando com o nome da categoria
+      let matchesCategory = true;
+      if (categoryFilter !== '') {
+        const category = categories?.find(cat => cat.id === product.categoryId);
+        matchesCategory = category ? category.name === categoryFilter : false;
+      }
+      
+      // Filtro por localização - verificando se tem estoque na localização selecionada
+      let matchesLocation = true;
+      if (locationFilter !== '') {
+        const location = locations?.find(loc => loc.name === locationFilter);
+        if (location && product.locations) {
+          const stockInLocation = Number(product.locations[location.id] || 0);
+          matchesLocation = stockInLocation > 0;
+        } else {
+          matchesLocation = false;
+        }
+      }
+      
+      return matchesName && matchesCategory && matchesLocation;
+    });
+  }, [products, searchTerm, categoryFilter, locationFilter, categories, locations]);
 
   // Memoiza os produtos para a página atual
   const paginatedProducts = useMemo(() => {

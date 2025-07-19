@@ -263,26 +263,44 @@ const StockPage = () => {
               </thead>
               <tbody>
                 {products && products.length > 0 ? (
-                  products.map(product => (
-                    <tr key={product.id}>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">{product.name}</td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">{product.category}</td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">{product.location}</td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">{product.quantity}</td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">R$ {product.price}</td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm relative" ref={openDropdown === product.id ? dropdownRef : null}>
-                      <button onClick={() => setOpenDropdown(openDropdown === product.id ? null : product.id)} className="text-gray-600 hover:text-gray-900">
-                        <FaEllipsisV />
-                      </button>
-                      {openDropdown === product.id && (
-                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                          <a href="#" onClick={(e) => { e.preventDefault(); handleOpenModal(product); setOpenDropdown(null); }} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Editar</a>
-                          <a href="#" onClick={(e) => { e.preventDefault(); handleOpenDeleteModal(product); setOpenDropdown(null); }} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Excluir</a>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))
+                  products.map(product => {
+                    // Encontrar nome da categoria pelo ID
+                    const category = categories?.find(cat => cat.id === product.categoryId);
+                    const categoryName = category ? category.name : 'N/A';
+                    
+                    // Calcular quantidade total de todas as localizações
+                    const totalQuantity = Object.values(product.locations || {}).reduce((sum, qty) => sum + (Number(qty) || 0), 0);
+                    
+                    // Formatar locais onde tem estoque
+                    const stockLocations = Object.entries(product.locations || {})
+                      .filter(([_, qty]) => Number(qty) > 0)
+                      .map(([locationId, qty]) => {
+                        const location = locations?.find(loc => loc.id === locationId);
+                        return location ? `${location.name} (${qty})` : `${locationId} (${qty})`;
+                      })
+                      .join(', ') || 'Sem estoque';
+                    
+                    return (
+                      <tr key={product.id}>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">{product.name}</td>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">{categoryName}</td>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">{stockLocations}</td>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">{totalQuantity} {product.unit || 'un'}</td>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">R$ {(product.cost || 0).toFixed(2)}</td>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm relative" ref={openDropdown === product.id ? dropdownRef : null}>
+                          <button onClick={() => setOpenDropdown(openDropdown === product.id ? null : product.id)} className="text-gray-600 hover:text-gray-900">
+                            <FaEllipsisV />
+                          </button>
+                          {openDropdown === product.id && (
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                              <a href="#" onClick={(e) => { e.preventDefault(); handleOpenModal(product); setOpenDropdown(null); }} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Editar</a>
+                              <a href="#" onClick={(e) => { e.preventDefault(); handleOpenDeleteModal(product); setOpenDropdown(null); }} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Excluir</a>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
                     <td colSpan="6" className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">Carregando produtos...</td>
