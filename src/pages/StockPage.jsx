@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FaPlus, FaSearch, FaFilePdf, FaEllipsisV } from 'react-icons/fa';
+import { FaPlus, FaSearch, FaFilePdf, FaEllipsisV, FaSave, FaFilter, FaTimes } from 'react-icons/fa';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
@@ -12,6 +12,10 @@ import Pagination from '../components/Pagination';
 
 const StockPage = () => {
   const { userData } = useAuth();
+  const [savedFilters, setSavedFilters] = useState([]);
+  const [showSaveFilter, setShowSaveFilter] = useState(false);
+  const [filterName, setFilterName] = useState('');
+  
   const {
     products,
     categories,
@@ -29,9 +33,9 @@ const StockPage = () => {
     handleDeleteProduct,
     searchTerm, 
     setSearchTerm,
-    categoryFilter, 
+    categoryFilter,
     setCategoryFilter,
-    locationFilter, 
+    locationFilter,
     setLocationFilter,
     currentPage,
     setCurrentPage,
@@ -42,7 +46,54 @@ const StockPage = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const dropdownRef = useRef(null);
 
-  const generatePdf = () => {
+  // Carregar filtros salvos do localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('stock-saved-filters');
+    if (saved) {
+      setSavedFilters(JSON.parse(saved));
+    }
+  }, []);
+
+  // Salvar filtro atual
+  const saveCurrentFilter = () => {
+    if (!filterName.trim()) return;
+    
+    const newFilter = {
+      id: Date.now(),
+      name: filterName,
+      searchTerm,
+      categoryFilter,
+      locationFilter,
+      createdAt: new Date().toISOString()
+    };
+    
+    const updatedFilters = [...savedFilters, newFilter];
+    setSavedFilters(updatedFilters);
+    localStorage.setItem('stock-saved-filters', JSON.stringify(updatedFilters));
+    setFilterName('');
+    setShowSaveFilter(false);
+  };
+
+  // Aplicar filtro salvo
+  const applyFilter = (filter) => {
+    setSearchTerm(filter.searchTerm);
+    setCategoryFilter(filter.categoryFilter);
+    setLocationFilter(filter.locationFilter);
+  };
+
+  // Remover filtro salvo
+  const removeFilter = (filterId) => {
+    const updatedFilters = savedFilters.filter(f => f.id !== filterId);
+    setSavedFilters(updatedFilters);
+    localStorage.setItem('stock-saved-filters', JSON.stringify(updatedFilters));
+  };
+
+  // Limpar todos os filtros
+  const clearAllFilters = () => {
+    setSearchTerm('');
+    setCategoryFilter('');
+    setLocationFilter('');
+  };  const generatePdf = () => {
     const doc = new jsPDF();
     doc.text('Relatório de Estoque', 20, 10);
     // Nota: O hook retorna os produtos já paginados.
@@ -81,34 +132,116 @@ const StockPage = () => {
         </div>
       </div>
 
-      {/* Filtros */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Buscar por nome..."
-            className="w-full p-2 border rounded pl-10"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+      {/* Filtros Avançados */}
+      <div className="bg-white rounded-lg shadow-sm mb-6 p-4" data-tour="stock-filters">
+        {/* Filtros Salvos */}
+        {savedFilters.length > 0 && (
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-medium text-gray-700">Filtros Salvos</h3>
+              <button
+                onClick={clearAllFilters}
+                className="text-xs text-gray-500 hover:text-gray-700"
+              >
+                Limpar filtros
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {savedFilters.map(filter => (
+                <div key={filter.id} className="flex items-center bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">
+                  <button
+                    onClick={() => applyFilter(filter)}
+                    className="hover:underline mr-2"
+                  >
+                    {filter.name}
+                  </button>
+                  <button
+                    onClick={() => removeFilter(filter.id)}
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    <FaTimes className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Filtros Principais */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Buscar por nome..."
+              className="w-full p-3 border rounded-lg pl-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          </div>
+          
+          <select
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+          >
+            <option value="">Todas as Categorias</option>
+            {categories?.map(cat => <option key={cat.id} value={cat.name}>{cat.name}</option>)}
+          </select>
+          
+          <select
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            value={locationFilter}
+            onChange={(e) => setLocationFilter(e.target.value)}
+          >
+            <option value="">Todos os Locais</option>
+            {locations?.map(loc => <option key={loc.id} value={loc.name}>{loc.name}</option>)}
+          </select>
+
+          <div className="flex space-x-2">
+            <button
+              onClick={() => setShowSaveFilter(true)}
+              className="flex items-center px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              title="Salvar filtros atuais"
+            >
+              <FaSave className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline">Salvar</span>
+            </button>
+          </div>
         </div>
-        <select
-          className="w-full p-2 border rounded"
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-        >
-          <option value="">Todas as Categorias</option>
-          {categories?.map(cat => <option key={cat.id} value={cat.name}>{cat.name}</option>)}
-        </select>
-        <select
-          className="w-full p-2 border rounded"
-          value={locationFilter}
-          onChange={(e) => setLocationFilter(e.target.value)}
-        >
-          <option value="">Todos os Locais</option>
-          {locations?.map(loc => <option key={loc.id} value={loc.name}>{loc.name}</option>)}
-        </select>
+
+        {/* Modal para salvar filtro */}
+        {showSaveFilter && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4">
+              <h3 className="text-lg font-semibold mb-4">Salvar Filtro</h3>
+              <input
+                type="text"
+                placeholder="Nome do filtro..."
+                value={filterName}
+                onChange={(e) => setFilterName(e.target.value)}
+                className="w-full p-3 border rounded-lg mb-4 focus:ring-2 focus:ring-blue-500"
+                onKeyDown={(e) => e.key === 'Enter' && saveCurrentFilter()}
+                autoFocus
+              />
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => setShowSaveFilter(false)}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={saveCurrentFilter}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  disabled={!filterName.trim()}
+                >
+                  Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Tabela de Produtos */}

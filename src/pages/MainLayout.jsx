@@ -3,6 +3,8 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
+import Breadcrumbs from '../components/Breadcrumbs';
+import KeyboardShortcuts from '../components/KeyboardShortcuts';
 
 export default function MainLayout() {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -29,10 +31,12 @@ export default function MainLayout() {
                 <Header onMenuClick={toggleSidebar} />
                 <main className="flex-1 overflow-x-hidden overflow-y-auto">
                     <div className="container mx-auto px-6 py-8 max-w-7xl">
+                        <Breadcrumbs />
                         <Outlet />
                     </div>
                 </main>
             </div>
+            <KeyboardShortcuts />
         </div>
     );
 }

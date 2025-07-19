@@ -1,6 +1,8 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { FaBars, FaWineBottle } from 'react-icons/fa';
+import GlobalSearch from './GlobalSearch';
+import NotificationCenter from './NotificationCenter';
 
 
 export default function Header({ onMenuClick }) {
@@ -10,29 +12,34 @@ export default function Header({ onMenuClick }) {
 
     return (
         <header className="bg-white shadow-sm sticky top-0 z-30">
-            <div className="container mx-auto px-4 h-20 flex items-center justify-between lg:justify-center relative">
-                {/* Hamburger Menu - visible only on small screens */}
-                <button 
-                    onClick={onMenuClick} 
-                    className="p-2 rounded-md text-slate-600 hover:bg-slate-100 lg:hidden"
-                    aria-label="Abrir menu"
-                >
-                    <FaBars className="h-6 w-6" />
-                </button>
+            <div className="container mx-auto px-4 h-20 flex items-center justify-between">
+                {/* Left Side - Hamburger Menu */}
+                <div className="flex items-center">
+                    <button 
+                        onClick={onMenuClick} 
+                        className="p-2 rounded-md text-slate-600 hover:bg-slate-100 lg:hidden"
+                        aria-label="Abrir menu"
+                    >
+                        <FaBars className="h-6 w-6" />
+                    </button>
+                </div>
 
-                {/* Logo and Title - centered */}
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+                {/* Center - Logo and Title */}
+                <div className="flex flex-col items-center">
                     <div className="flex items-center">
                         <FaWineBottle className="h-8 w-8 text-blue-600 mr-3" />
-                        <h1 className="text-3xl font-bold text-slate-800">Estoque HCM</h1>
+                        <h1 className="text-2xl lg:text-3xl font-bold text-slate-800">Estoque HCM</h1>
                     </div>
-                    <p className="text-sm text-slate-500 mt-1">
+                    <p className="text-xs lg:text-sm text-slate-500 mt-1">
                         Bem-vindo! Você está logado como {userRole}.
                     </p>
                 </div>
 
-                {/* This div is a placeholder to balance the flex layout on mobile */}
-                <div className="w-8 lg:hidden"></div>
+                {/* Right Side - Search and Notifications */}
+                <div className="flex items-center space-x-3">
+                    <GlobalSearch />
+                    <NotificationCenter />
+                </div>
             </div>
         </header>
     );
