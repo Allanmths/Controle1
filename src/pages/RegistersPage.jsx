@@ -3,8 +3,6 @@ import CategoriesManager from '../components/CategoriesManager';
 import LocationManager from '../components/LocationManager';
 import ProductManager from '../components/ProductManager';
 import ProductBulkImport from '../components/ProductBulkImport';
-import DiagnosticPanel from '../components/DiagnosticPanel';
-import UserRoleManager from '../components/UserRoleManager';
 import { FaBox, FaTags, FaMapMarkerAlt } from 'react-icons/fa';
 
 export default function RegistersPage() {
@@ -37,12 +35,6 @@ export default function RegistersPage() {
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
             <h2 className="text-3xl font-bold text-gray-800 mb-6">Cadastros</h2>
-            
-            {/* Painel de Diagnóstico Temporário */}
-            <DiagnosticPanel />
-            
-            {/* Gerenciador de Roles Temporário */}
-            <UserRoleManager />
             
             {/* Navegação por Abas */}
             <div className="bg-white rounded-lg shadow-sm mb-6">
