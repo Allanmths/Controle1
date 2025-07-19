@@ -6,7 +6,7 @@ import {
   FaToggleOn, 
   FaToggleOff, 
   FaShieldAlt,
-  FaUserCrown,
+  FaCrown,
   FaUserEdit,
   FaUser,
   FaEye,
@@ -77,7 +77,7 @@ const UserRoleManager = () => {
 
   const getRoleIcon = (role) => {
     switch (role) {
-      case ROLES.ADMIN: return <FaUserCrown className="text-purple-600" />;
+      case ROLES.ADMIN: return <FaCrown className="text-purple-600" />;
       case ROLES.MANAGER: return <FaShieldAlt className="text-blue-600" />;
       case ROLES.EDITOR: return <FaUserEdit className="text-green-600" />;
       case ROLES.USER: return <FaUser className="text-yellow-600" />;
@@ -167,7 +167,7 @@ const UserRoleManager = () => {
               <p className="text-sm text-gray-600">Administradores</p>
               <p className="text-2xl font-bold text-purple-600">{stats.byRole[ROLES.ADMIN] || 0}</p>
             </div>
-            <FaUserCrown className="text-3xl text-purple-500" />
+            <FaCrown className="text-3xl text-purple-500" />
           </div>
         </div>
       </div>
