@@ -4,12 +4,14 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 import { useStockManagement } from '../hooks/useStockManagement';
+import { useAuth } from '../context/AuthContext';
 import ProductModal from '../components/ProductModal';
 import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
 import SkeletonLoader from '../components/SkeletonLoader';
 import Pagination from '../components/Pagination';
 
 const StockPage = () => {
+  const { userData } = useAuth();
   const {
     products,
     categories,
@@ -75,10 +77,7 @@ const StockPage = () => {
             <FaFilePdf className="mr-2" />
             Exportar PDF
           </button>
-          <button onClick={() => handleOpenModal()} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center">
-            <FaPlus className="mr-2" />
-            Adicionar Produto
-          </button>
+          {/* Botão de Adicionar Produto removido - agora está disponível apenas na aba Cadastros */}
         </div>
       </div>
 
@@ -161,11 +160,8 @@ const StockPage = () => {
           ) : (
             <div className="text-center p-10">
               <h2 className="text-xl font-semibold mb-2">Nenhum produto encontrado.</h2>
-              <p className="text-gray-500 mb-4">Que tal adicionar o primeiro?</p>
-              <button onClick={() => handleOpenModal()} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center mx-auto">
-                <FaPlus className="mr-2" />
-                Adicionar Produto
-              </button>
+              <p className="text-gray-500 mb-4">Vá para a aba "Cadastros" para adicionar produtos.</p>
+              {/* Botão removido - cadastro agora é apenas na aba Cadastros */}
             </div>
           )}
         </div>
@@ -186,9 +182,9 @@ const StockPage = () => {
         <ProductModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-          product={selectedProduct}
-          categories={categories}
+          productToEdit={selectedProduct}
           locations={locations}
+          userData={userData}
         />
       )}
 

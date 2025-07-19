@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ProductModal from './ProductModal';
 import { FaPlus } from 'react-icons/fa';
-import useFirestore from '../hooks/useFirestore';
+import { useStockManagement } from '../hooks/useStockManagement';
 import { useAuth } from '../context/AuthContext';
 
 const ProductManager = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const { docs: locations } = useFirestore('locations');
     const { userData } = useAuth();
+    const {
+        locations,
+        isModalOpen,
+        selectedProduct,
+        handleOpenModal,
+        handleCloseModal,
+    } = useStockManagement();
 
     return (
         <>
@@ -15,7 +20,7 @@ const ProductManager = () => {
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-bold text-gray-800">Cadastro de Produtos</h3>
                     <button 
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => handleOpenModal()}
                         className="flex items-center bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300"
                     >
                         <FaPlus className="mr-2" />
@@ -29,8 +34,8 @@ const ProductManager = () => {
 
             <ProductModal 
                 isOpen={isModalOpen} 
-                onClose={() => setIsModalOpen(false)} 
-                productToEdit={null}
+                onClose={handleCloseModal} 
+                productToEdit={selectedProduct}
                 locations={locations}
                 userData={userData}
             />
