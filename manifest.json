@@ -81,9 +81,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Dashboard",
-      "short_name": "Início",
-      "description": "Abrir dashboard principal",
+      "name": "Início",
+      "short_name": "Início", 
+      "description": "Abrir página inicial com dashboard",
       "url": "/Controle1/",
       "icons": [{ "src": "/Controle1/icons/icon-96x96.png", "sizes": "96x96" }]
     },
