@@ -73,13 +73,13 @@ const SmartPurchaseListDashboard = () => {
   };
 
   const handleGenerateList = async () => {
-    if (!lowStockAnalysis || lowStockAnalysis.items.length === 0) return;
+    if (!lowStockAnalysis || !lowStockAnalysis.items || lowStockAnalysis.items.length === 0) return;
 
     setGeneratingList(true);
     try {
       const listData = {
         title: `Lista de Compras - ${new Date().toLocaleDateString()}`,
-        items: lowStockAnalysis.items.map(item => ({
+        items: (lowStockAnalysis.items || []).map(item => ({
           productId: item.id,
           productName: item.name,
           currentStock: item.currentStock,
@@ -97,12 +97,12 @@ const SmartPurchaseListDashboard = () => {
             : 'medium'
         })),
         summary: {
-          totalItems: lowStockAnalysis.items.length,
-          totalCost: lowStockAnalysis.summary.totalCost,
-          criticalItems: lowStockAnalysis.items.filter(item => 
+          totalItems: lowStockAnalysis.items?.length || 0,
+          totalCost: lowStockAnalysis.summary?.totalEstimatedCost || 0,
+          criticalItems: (lowStockAnalysis.items || []).filter(item => 
             item.stockPercentage < REPLENISHMENT_CONFIG.CRITICAL_STOCK_PERCENTAGE
           ).length,
-          suppliers: [...new Set(lowStockAnalysis.items.map(item => item.supplierId))].length
+          suppliers: [...new Set((lowStockAnalysis.items || []).map(item => item.supplierId).filter(Boolean))].length
         },
         createdBy: userData.uid,
         createdByName: userData.displayName || userData.email
@@ -119,7 +119,7 @@ const SmartPurchaseListDashboard = () => {
 
   const handleExport = async (list, format = 'excel') => {
     try {
-      await exportPurchaseList(list.id, format);
+      await exportPurchaseList(list, format);
     } catch (error) {
       console.error('Erro ao exportar lista:', error);
     }
@@ -140,10 +140,10 @@ const SmartPurchaseListDashboard = () => {
     }
   };
 
-  const filteredLists = purchaseLists.filter(list => {
+  const filteredLists = (purchaseLists || []).filter(list => {
     const matchesSearch = 
-      list.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      list.createdByName.toLowerCase().includes(searchTerm.toLowerCase());
+      list.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      list.createdByName?.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesStatus = statusFilter === 'all' || list.status === statusFilter;
     
@@ -192,7 +192,7 @@ const SmartPurchaseListDashboard = () => {
         {canGenerate && (
           <button
             onClick={handleGenerateList}
-            disabled={!lowStockAnalysis || lowStockAnalysis.items.length === 0 || generatingList}
+            disabled={!lowStockAnalysis || !lowStockAnalysis.items || lowStockAnalysis.items.length === 0 || generatingList}
             className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <FaPlus />
@@ -227,7 +227,7 @@ const SmartPurchaseListDashboard = () => {
                 <div>
                   <p className="text-sm text-orange-600">Total de Itens</p>
                   <p className="text-2xl font-bold text-orange-600">
-                    {lowStockAnalysis.summary.totalItems}
+                    {lowStockAnalysis.summary?.totalItems || 0}
                   </p>
                 </div>
               </div>
@@ -239,7 +239,7 @@ const SmartPurchaseListDashboard = () => {
                 <div>
                   <p className="text-sm text-blue-600">Custo Estimado</p>
                   <p className="text-2xl font-bold text-blue-600">
-                    R$ {lowStockAnalysis.summary.totalCost.toFixed(2)}
+                    R$ {(lowStockAnalysis.summary?.totalEstimatedCost || 0).toFixed(2)}
                   </p>
                 </div>
               </div>
@@ -251,14 +251,14 @@ const SmartPurchaseListDashboard = () => {
                 <div>
                   <p className="text-sm text-purple-600">Fornecedores</p>
                   <p className="text-2xl font-bold text-purple-600">
-                    {lowStockAnalysis.summary.uniqueSuppliers}
+                    {[...new Set((lowStockAnalysis.items || []).map(item => item.supplierId).filter(Boolean))].length}
                   </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {lowStockAnalysis.items.length === 0 ? (
+          {(lowStockAnalysis.items || []).length === 0 ? (
             <div className="text-center py-8">
               <FaCheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
               <h4 className="text-lg font-medium text-gray-900 mb-2">
@@ -274,17 +274,17 @@ const SmartPurchaseListDashboard = () => {
                 <strong>Próximos itens críticos:</strong>
               </p>
               <div className="flex flex-wrap gap-2">
-                {lowStockAnalysis.items.slice(0, 5).map(item => (
+                {(lowStockAnalysis.items || []).slice(0, 5).map(item => (
                   <span 
                     key={item.id}
                     className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs"
                   >
-                    {item.name} ({Math.round(item.stockPercentage)}%)
+                    {item.name} ({Math.round(item.stockPercentage || 0)}%)
                   </span>
                 ))}
-                {lowStockAnalysis.items.length > 5 && (
+                {(lowStockAnalysis.items || []).length > 5 && (
                   <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">
-                    +{lowStockAnalysis.items.length - 5} mais
+                    +{(lowStockAnalysis.items || []).length - 5} mais
                   </span>
                 )}
               </div>
