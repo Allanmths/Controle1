@@ -83,6 +83,15 @@ const UserRoleManager = () => {
     await toggleUserStatus(userId, userData.isActive);
   };
 
+  const handleDeleteUserFromModal = async (userId) => {
+    const success = await deleteUser(userId);
+    if (success) {
+      setIsEditModalOpen(false);
+      setSelectedUser(null);
+    }
+    return success;
+  };
+
   const handleDeleteUser = (user) => {
     // Verificar se não é o próprio usuário
     if (user.id === currentUser?.uid) {
@@ -369,6 +378,7 @@ const UserRoleManager = () => {
         onClose={() => setIsEditModalOpen(false)}
         user={selectedUser}
         onSave={handleSaveUser}
+        onDelete={handleDeleteUserFromModal}
       />
 
       {/* Modal de Exclusão */}

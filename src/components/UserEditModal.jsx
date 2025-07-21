@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { FaTimes, FaUser, FaShieldAlt, FaCheck, FaTimes as FaTimesIcon } from 'react-icons/fa';
-import { ROLES, PERMISSIONS, ROLE_PERMISSIONS, ROLE_DESCRIPTIONS, getRolePermissions } from '../utils/permissions';
+import { FaTimes, FaUser, FaShieldAlt, FaCheck, FaTimes as FaTimesIcon, FaTrash, FaExclamationTriangle } from 'react-icons/fa';
+import { ROLES, PERMISSIONS, ROLE_PERMISSIONS, ROLE_DESCRIPTIONS, getRolePermissions, hasPermission } from '../utils/permissions';
+import { useAuth } from '../context/AuthContext';
 
-const UserEditModal = ({ isOpen, onClose, user, onSave }) => {
+const UserEditModal = ({ isOpen, onClose, user, onSave, onDelete }) => {
+  const { userData, currentUser } = useAuth();
   const [formData, setFormData] = useState({
     displayName: '',
     email: '',
@@ -12,6 +14,8 @@ const UserEditModal = ({ isOpen, onClose, user, onSave }) => {
   });
   const [showCustomPermissions, setShowCustomPermissions] = useState(false);
   const [loading, setSaving] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -36,6 +40,28 @@ const UserEditModal = ({ isOpen, onClose, user, onSave }) => {
     }
     setSaving(false);
   };
+
+  const handleDelete = () => {
+    if (user.id === currentUser?.uid) {
+      alert('Você não pode excluir sua própria conta');
+      return;
+    }
+    setShowDeleteConfirm(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await onDelete(user.id);
+      setShowDeleteConfirm(false);
+      onClose();
+    } catch (error) {
+      console.error('Erro ao excluir usuário:', error);
+    }
+    setIsDeleting(false);
+  };
+
+  const canDeleteUser = hasPermission(userData?.role, PERMISSIONS.DELETE_USERS) && user?.id !== currentUser?.uid;
 
   const handlePermissionToggle = (permission) => {
     const currentPermissions = formData.customPermissions || [];
@@ -269,21 +295,100 @@ const UserEditModal = ({ isOpen, onClose, user, onSave }) => {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end space-x-3 p-6 border-t bg-gray-50">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleSave}
-            disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-          >
-            {loading ? 'Salvando...' : 'Salvar Alterações'}
-          </button>
+        <div className="flex items-center justify-between p-6 border-t bg-gray-50">
+          {/* Botão de Exclusão (esquerda) */}
+          <div>
+            {canDeleteUser && (
+              <button
+                onClick={handleDelete}
+                disabled={loading || isDeleting}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 flex items-center space-x-2"
+                title="Excluir usuário"
+              >
+                <FaTrash className="text-sm" />
+                <span>Excluir Usuário</span>
+              </button>
+            )}
+          </div>
+
+          {/* Botões principais (direita) */}
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={onClose}
+              disabled={loading || isDeleting}
+              className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={loading || isDeleting}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+            >
+              {loading ? 'Salvando...' : 'Salvar Alterações'}
+            </button>
+          </div>
         </div>
+
+        {/* Modal de Confirmação de Exclusão */}
+        {showDeleteConfirm && (
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+              {/* Header do modal de confirmação */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                    <FaExclamationTriangle className="text-red-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">Confirmar Exclusão</h3>
+                    <p className="text-sm text-gray-500">Esta ação não pode ser desfeita</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Content do modal de confirmação */}
+              <div className="p-4">
+                <p className="text-gray-700 mb-4">
+                  Tem certeza que deseja excluir o usuário <strong>{user?.displayName || user?.email}</strong>?
+                </p>
+                
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+                  <div className="flex items-start space-x-2">
+                    <FaExclamationTriangle className="text-red-500 mt-0.5 flex-shrink-0" />
+                    <div className="text-sm text-red-700">
+                      <p className="font-medium mb-1">Atenção:</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>O usuário será permanentemente removido</li>
+                        <li>Todos os dados associados serão perdidos</li>
+                        <li>Esta ação não pode ser desfeita</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer do modal de confirmação */}
+              <div className="flex items-center justify-end space-x-3 p-4 border-t border-gray-200">
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  disabled={isDeleting}
+                  className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleConfirmDelete}
+                  disabled={isDeleting}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 flex items-center space-x-2"
+                >
+                  <FaTrash className="text-sm" />
+                  <span>{isDeleting ? 'Excluindo...' : 'Confirmar Exclusão'}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
