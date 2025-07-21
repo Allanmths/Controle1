@@ -26,6 +26,7 @@ import {
 import ReplenishmentRequestModal from '../components/ReplenishmentRequestModal';
 import ReplenishmentApprovalModal from '../components/ReplenishmentApprovalModal';
 import ApprovalDashboard from '../components/ApprovalDashboard';
+import ExecutionDashboard from '../components/ExecutionDashboard';
 
 const ReplenishmentPage = () => {
   const { userData } = useAuth();
@@ -52,6 +53,7 @@ const ReplenishmentPage = () => {
   const canRequestReplenishment = hasPermission(userData?.role, PERMISSIONS.REQUEST_REPLENISHMENT);
   const canViewAllRequests = hasPermission(userData?.role, PERMISSIONS.VIEW_ALL_REQUESTS);
   const canApproveRequests = hasPermission(userData?.role, PERMISSIONS.APPROVE_REPLENISHMENT);
+  const canExecuteReplenishment = hasPermission(userData?.role, PERMISSIONS.EXECUTE_REPLENISHMENT);
   const canGeneratePurchaseList = hasPermission(userData?.role, PERMISSIONS.GENERATE_PURCHASE_LIST);
 
   // Carregar dados iniciais
@@ -200,6 +202,19 @@ const ReplenishmentPage = () => {
               }`}
             >
               Dashboard de Aprovações
+            </button>
+          )}
+          
+          {canExecuteReplenishment && (
+            <button
+              onClick={() => setActiveTab('execution')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'execution'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Execução
             </button>
           )}
           
@@ -446,6 +461,11 @@ const ReplenishmentPage = () => {
       {/* Tab Content - Dashboard de Aprovações */}
       {activeTab === 'approvals' && canApproveRequests && (
         <ApprovalDashboard />
+      )}
+
+      {/* Tab Content - Execução */}
+      {activeTab === 'execution' && canExecuteReplenishment && (
+        <ExecutionDashboard />
       )}
 
       {/* Tab Content - Análise de Estoque */}
