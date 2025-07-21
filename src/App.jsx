@@ -15,6 +15,7 @@ import CountReportPage from './pages/CountReportPage';
 import ReportsPage from './pages/ReportsPage';
 import SettingsPage from './pages/SettingsPage';
 import AuditPage from './pages/AuditPage';
+import ReplenishmentPage from './pages/ReplenishmentPage';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 
 function App() {
@@ -74,6 +75,7 @@ function App() {
               <Route path="counting" element={<CountingPage />} />
               <Route path="counting/new" element={<NewCountPage />} />
               <Route path="counting/:id" element={<CountReportPage />} />
+              <Route path="replenishment" element={<ReplenishmentPage />} />
               <Route path="reports" element={<ReportsPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="audit" element={<AuditPage />} />
