@@ -9,16 +9,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        
     - uses: actions/setup-node@v3
       with:
         node-version: "18"
-    - run: npm install
-    - run: npm run build
+        cache: npm
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build project
+      run: npx vite build
       env:
         CI: false
-    - run: |
-        git config --global user.name "github-actions"
-        git config --global user.email "github-actions@github.com"
-        npm run deploy
+        NODE_OPTIONS: "--max-old-space-size=4096"
+        
+    - name: Deploy to GitHub Pages
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        npx gh-pages -d dist
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
