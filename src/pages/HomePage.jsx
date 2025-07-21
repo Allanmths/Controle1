@@ -1,13 +1,34 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   FaBox, FaBoxes, FaTags, FaExclamationTriangle, 
   FaArrowUp, FaArrowDown, FaExchangeAlt, FaCalendarAlt,
   FaChartLine, FaUsers, FaCog, FaPlus, FaEye,
-  FaArrowRight, FaChevronUp, FaChevronDown
+  FaArrowRight, FaChevronUp, FaChevronDown, FaFilePdf,
+  FaChartBar, FaChartPie, FaChartArea
 } from 'react-icons/fa';
+import { Bar, Line, Pie } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import useFirestore from '../hooks/useFirestore';
-import { format, isToday, isYesterday, subDays } from 'date-fns';
+import { format, isToday, isYesterday, subDays, startOfMonth, endOfMonth, subMonths, startOfDay, endOfDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, ArcElement, Title, Tooltip, Legend);
 
 const StatCard = ({ title, value, icon: Icon, color, trend, trendValue, loading, onClick, description }) => (
   <div 
@@ -143,6 +164,18 @@ const LowStockItem = ({ product, locations }) => {
     medium: 'border-yellow-400 bg-yellow-50'
   };
 
+  // Componente para renderizar gráficos
+  const ChartComponent = ({ options, data }) => {
+    if (chartType === 'bar') {
+      return <Bar options={options} data={data} />;
+    } else if (chartType === 'line') {
+      return <Line options={options} data={data} />;
+    } else if (chartType === 'pie') {
+      return <Pie options={options} data={data} />;
+    }
+    return null;
+  };
+
   return (
     <div className={`p-3 rounded-lg border-l-4 ${urgencyColors[urgencyLevel]}`}>
       <div className="flex items-center justify-between">
@@ -160,7 +193,14 @@ const LowStockItem = ({ product, locations }) => {
 };
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const [selectedTimeRange, setSelectedTimeRange] = useState('7');
+  const [chartType, setChartType] = useState('bar');
+  const [periodOption, setPeriodOption] = useState('last7days');
+  const [dateRange, setDateRange] = useState([subDays(new Date(), 6), new Date()]);
+  const [startDate, endDate] = dateRange;
+  const [reportCategory, setReportCategory] = useState('all');
+  const [reportStatus, setReportStatus] = useState('all');
   
   const { docs: products, loading: loadingProducts } = useFirestore('products');
   const { docs: categories, loading: loadingCategories } = useFirestore('categories');
@@ -171,6 +211,31 @@ export default function HomePage() {
   });
 
   const loading = loadingProducts || loadingCategories || loadingMovements || loadingLocations;
+
+  // Atualizar dateRange quando periodOption muda
+  useEffect(() => {
+    const now = new Date();
+    switch (periodOption) {
+      case 'last7days':
+        setDateRange([startOfDay(subDays(now, 6)), endOfDay(now)]);
+        break;
+      case 'last30days':
+        setDateRange([startOfDay(subDays(now, 29)), endOfDay(now)]);
+        break;
+      case 'thisMonth':
+        setDateRange([startOfMonth(now), endOfMonth(now)]);
+        break;
+      case 'lastMonth':
+        const lastMonth = subMonths(now, 1);
+        setDateRange([startOfMonth(lastMonth), endOfMonth(lastMonth)]);
+        break;
+      case 'custom':
+        // No-op, dateRange é definido pelo DatePicker
+        break;
+      default:
+        setDateRange([startOfDay(subDays(now, 6)), endOfDay(now)]);
+    }
+  }, [periodOption]);
 
   const stats = useMemo(() => {
     if (!products || !categories || !movements) return {};
@@ -210,6 +275,165 @@ export default function HomePage() {
     };
   }, [products, categories, movements, selectedTimeRange]);
 
+  // Dados para gráficos de movimentação
+  const movementsChartData = useMemo(() => {
+    if (!movements || !startDate || !endDate) return { labels: [], datasets: [] };
+
+    const filteredMovements = movements.filter(mov => {
+      const moveDate = mov.timestamp?.toDate();
+      if (!moveDate) return false;
+      return moveDate >= startDate && moveDate <= endDate;
+    });
+
+    if (chartType === 'pie') {
+      const entries = filteredMovements.filter(m => 
+        m.type === 'Entrada Inicial' || 
+        (m.type === 'Ajuste Manual' && m.quantityChanged > 0)
+      ).reduce((sum, m) => sum + Math.abs(m.quantityChanged || 0), 0);
+      
+      const exits = filteredMovements.filter(m => 
+        m.type === 'Ajuste Manual' && m.quantityChanged < 0
+      ).reduce((sum, m) => sum + Math.abs(m.quantityChanged || 0), 0);
+      
+      return {
+        labels: ['Entradas', 'Saídas'],
+        datasets: [{
+          data: [entries, exits],
+          backgroundColor: ['#16a34a', '#dc2626'],
+          borderColor: ['#15803d', '#b91c1c'],
+          borderWidth: 1,
+        }]
+      };
+    }
+
+    const groupedByDay = filteredMovements.reduce((acc, mov) => {
+      if (!mov.timestamp?.toDate) return acc;
+      const day = format(mov.timestamp.toDate(), 'dd/MM');
+      if (!acc[day]) {
+        acc[day] = { entrada: 0, saida: 0 };
+      }
+      
+      if (mov.type === 'Entrada Inicial' || (mov.type === 'Ajuste Manual' && mov.quantityChanged > 0)) {
+        acc[day].entrada += Math.abs(mov.quantityChanged || 0);
+      } else if (mov.type === 'Ajuste Manual' && mov.quantityChanged < 0) {
+        acc[day].saida += Math.abs(mov.quantityChanged || 0);
+      }
+      
+      return acc;
+    }, {});
+
+    const labels = Object.keys(groupedByDay).sort((a, b) => 
+      new Date(a.split('/').reverse().join('-')) - new Date(b.split('/').reverse().join('-'))
+    );
+
+    return {
+      labels,
+      datasets: [
+        { 
+          label: 'Entradas', 
+          data: labels.map(day => groupedByDay[day]?.entrada || 0), 
+          backgroundColor: '#16a34a',
+          borderColor: '#15803d',
+          borderWidth: 2
+        },
+        { 
+          label: 'Saídas', 
+          data: labels.map(day => groupedByDay[day]?.saida || 0), 
+          backgroundColor: '#dc2626',
+          borderColor: '#b91c1c',
+          borderWidth: 2
+        },
+      ],
+    };
+  }, [movements, startDate, endDate, chartType]);
+
+  const chartOptions = {
+    responsive: true,
+    plugins: { 
+      legend: { position: 'top' }, 
+      title: { display: false } 
+    },
+    scales: chartType !== 'pie' ? { 
+      x: { grid: { display: false } }, 
+      y: { beginAtZero: true } 
+    } : {}
+  };
+
+  const ChartComponent = useMemo(() => {
+    if (chartType === 'line') return Line;
+    if (chartType === 'pie') return Pie;
+    return Bar;
+  }, [chartType]);
+
+  // Função para gerar relatório
+  const handleGenerateReport = () => {
+    const augmentedProducts = (products || []).map(p => ({
+      ...p,
+      totalQuantity: Object.values(p.locations || {}).reduce((sum, qty) => sum + (Number(qty) || 0), 0),
+    }));
+
+    const filteredProducts = augmentedProducts.filter(product => {
+      const categoryMatch = reportCategory === 'all' || product.categoryId === reportCategory;
+      const minStock = product.minStock || 0;
+
+      let statusMatch = false;
+      switch (reportStatus) {
+        case 'in_stock':
+          statusMatch = product.totalQuantity > 0;
+          break;
+        case 'low_stock':
+          statusMatch = minStock > 0 && product.totalQuantity <= minStock;
+          break;
+        case 'out_of_stock':
+          statusMatch = product.totalQuantity <= 0;
+          break;
+        case 'all':
+        default:
+          statusMatch = true;
+          break;
+      }
+
+      return categoryMatch && statusMatch;
+    });
+
+    const doc = new jsPDF();
+    
+    doc.setFontSize(18);
+    doc.text('Relatório de Estoque', 14, 22);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`Data de Emissão: ${format(new Date(), 'dd/MM/yyyy')}`, 14, 30);
+
+    const tableColumn = ["Nome", "Categoria", "Quantidade", "Custo Unit.", "Valor Total"];
+    const tableRows = [];
+
+    filteredProducts.forEach(product => {
+      const categoryName = categories?.find(c => c.id === product.categoryId)?.name || 'N/A';
+      const cost = product.cost || 0;
+      const totalValue = cost * product.totalQuantity;
+
+      const productData = [
+        product.name,
+        categoryName,
+        product.totalQuantity,
+        cost.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+        totalValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+      ];
+      tableRows.push(productData);
+    });
+
+    doc.autoTable(tableColumn, tableRows, { startY: 35 });
+
+    const pageCount = doc.internal.getNumberOfPages();
+    for(let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(9);
+      doc.text(`Página ${i} de ${pageCount}`, doc.internal.pageSize.width - 20, doc.internal.pageSize.height - 10);
+    }
+
+    doc.save(`relatorio_estoque_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
+  };
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -231,7 +455,7 @@ export default function HomePage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-1">Visão geral do seu sistema de controle de estoque</p>
+          <p className="text-gray-600 mt-1">Visão geral completa do seu sistema de controle de estoque</p>
         </div>
         <div className="flex items-center space-x-3">
           <FaCalendarAlt className="text-gray-400" />
@@ -294,23 +518,94 @@ export default function HomePage() {
             description="Cadastrar novo item no estoque"
             icon={FaPlus}
             color="border-l-blue-400"
-            onClick={() => window.location.href = '#/cadastros'}
+            onClick={() => navigate('/registers')}
           />
           <QuickActionCard
             title="Ver Estoque"
             description="Visualizar todos os produtos"
             icon={FaEye}
             color="border-l-green-400"
-            onClick={() => window.location.href = '#/estoque'}
+            onClick={() => navigate('/stock')}
           />
           <QuickActionCard
             title="Relatórios"
             description="Gerar relatórios detalhados"
             icon={FaChartLine}
             color="border-l-purple-400"
-            onClick={() => window.location.href = '#/relatorios'}
+            onClick={() => navigate('/reports')}
             badge={stats.recentMovementsCount > 0 ? `${stats.recentMovementsCount} novos` : null}
           />
+        </div>
+      </div>
+
+      {/* Charts Section */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold text-gray-900">Análise de Movimentações</h2>
+          <div className="flex items-center space-x-4">
+            {/* Chart Type Selector */}
+            <div className="flex items-center border border-gray-300 rounded-lg p-1">
+              <button 
+                onClick={() => setChartType('bar')}
+                className={`p-2 rounded-md transition-colors ${chartType === 'bar' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+                title="Gráfico de Barras"
+              >
+                <FaChartBar />
+              </button>
+              <button 
+                onClick={() => setChartType('line')}
+                className={`p-2 rounded-md transition-colors ${chartType === 'line' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+                title="Gráfico de Linha"
+              >
+                <FaChartArea />
+              </button>
+              <button 
+                onClick={() => setChartType('pie')}
+                className={`p-2 rounded-md transition-colors ${chartType === 'pie' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+                title="Gráfico de Pizza"
+              >
+                <FaChartPie />
+              </button>
+            </div>
+            
+            {/* Period Selector */}
+            <select 
+              value={periodOption} 
+              onChange={(e) => setPeriodOption(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="last7days">Últimos 7 dias</option>
+              <option value="last30days">Últimos 30 dias</option>
+              <option value="thisMonth">Este Mês</option>
+              <option value="lastMonth">Mês Passado</option>
+              <option value="custom">Personalizado</option>
+            </select>
+          </div>
+        </div>
+
+        {periodOption === 'custom' && (
+          <div className="mb-4">
+            <DatePicker
+              selectsRange={true}
+              startDate={startDate}
+              endDate={endDate}
+              onChange={(update) => setDateRange(update)}
+              isClearable={true}
+              className="w-full md:w-64 p-2 border border-gray-300 rounded-md"
+              dateFormat="dd/MM/yyyy"
+              placeholderText="Selecione o período"
+            />
+          </div>
+        )}
+
+        <div className="h-96">
+          {loading ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            </div>
+          ) : (
+            <ChartComponent options={chartOptions} data={movementsChartData} />
+          )}
         </div>
       </div>
 
@@ -362,6 +657,46 @@ export default function HomePage() {
               </div>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Reports Section */}
+      <div id="reports-section" className="bg-white rounded-xl shadow-sm p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Gerador de Relatórios</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
+            <select 
+              value={reportCategory} 
+              onChange={(e) => setReportCategory(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">Todas</option>
+              {categories?.map(cat => (
+                <option key={cat.id} value={cat.id}>{cat.name}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Status do Estoque</label>
+            <select 
+              value={reportStatus} 
+              onChange={(e) => setReportStatus(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">Todos</option>
+              <option value="in_stock">Em estoque</option>
+              <option value="low_stock">Baixo estoque</option>
+              <option value="out_of_stock">Sem estoque</option>
+            </select>
+          </div>
+          <button 
+            onClick={handleGenerateReport}
+            className="flex items-center justify-center p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-semibold transition-colors"
+          >
+            <FaFilePdf className="mr-2" />
+            Gerar Relatório
+          </button>
         </div>
       </div>
     </div>

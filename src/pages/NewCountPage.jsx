@@ -4,10 +4,14 @@ import { db } from '../services/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import useFirestore from '../hooks/useFirestore';
 import { useAuth } from '../context/AuthContext';
+import { useOfflineMode } from '../hooks/useOfflineMode';
+import toast from 'react-hot-toast';
+import { FaWifi, FaBan, FaPlus, FaEdit, FaTrash, FaCheck, FaTimes } from 'react-icons/fa';
 
 export default function NewCountPage() {
     const { docs: products, loading: loadingProducts } = useFirestore('products');
     const { currentUser } = useAuth();
+    const { isOnline, saveOfflineCount, cacheDataForOffline } = useOfflineMode();
     const navigate = useNavigate();
     
     const [countedQuantities, setCountedQuantities] = useState({});
@@ -21,8 +25,11 @@ export default function NewCountPage() {
                 return acc;
             }, {});
             setCountedQuantities(initialQuantities);
+            
+            // Cache produtos para uso offline
+            cacheDataForOffline('products', products);
         }
-    }, [products]);
+    }, [products, cacheDataForOffline]);
 
     const handleQuantityChange = (productId, value) => {
         setCountedQuantities(prev => ({
@@ -51,18 +58,36 @@ export default function NewCountPage() {
             countedQuantity: countedQuantities[product.id] === '' ? 0 : countedQuantities[product.id],
         }));
 
+        const countData = {
+            createdAt: isOnline ? serverTimestamp() : new Date(),
+            userEmail: currentUser?.email || 'N/A',
+            userName: currentUser?.displayName || currentUser?.email || 'N/A',
+            status: isOnline ? 'concluido' : 'offline',
+            details: countDetails,
+            totalProducts: countDetails.length,
+            timestamp: new Date().toISOString()
+        };
+
         try {
-            await addDoc(collection(db, 'counts'), {
-                createdAt: serverTimestamp(),
-                userEmail: currentUser?.email || 'N/A',
-                status: 'concluido',
-                details: countDetails,
-            });
-            alert('Contagem finalizada e salva com sucesso!');
+            if (isOnline) {
+                // Salvar online no Firebase
+                await addDoc(collection(db, 'counts'), countData);
+                toast.success('Contagem finalizada e salva com sucesso!');
+            } else {
+                // Salvar offline no IndexedDB
+                const success = await saveOfflineCount(countData);
+                if (!success) {
+                    throw new Error('Falha ao salvar offline');
+                }
+            }
+            
             navigate('/counting');
         } catch (error) {
             console.error('Error finalizing count:', error);
-            alert('Falha ao finalizar a contagem. Tente novamente.');
+            const errorMessage = isOnline 
+                ? 'Falha ao finalizar a contagem. Tente novamente.'
+                : 'Falha ao salvar contagem offline. Verifique o armazenamento do dispositivo.';
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -74,16 +99,38 @@ export default function NewCountPage() {
 
     return (
         <div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">Nova Contagem de Estoque</h2>
-            <p className="mb-6 text-gray-600">Insira a quantidade contada para cada produto. Itens não preenchidos serão considerados como 0.</p>
+            <div className="flex justify-between items-center mb-4">
+                <div>
+                    <h2 className="text-3xl font-bold text-gray-800">Nova Contagem de Estoque</h2>
+                    <div className="flex items-center mt-2 space-x-4">
+                        <div className={`flex items-center space-x-2 text-sm ${isOnline ? 'text-green-600' : 'text-orange-600'}`}>
+                            {isOnline ? <FaWifi /> : <FaBan />}
+                            <span>{isOnline ? 'Online' : 'Modo Offline'}</span>
+                        </div>
+                        {!isOnline && (
+                            <div className="text-sm text-orange-600 bg-orange-50 px-3 py-1 rounded-full">
+                                Dados serão salvos localmente
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
             
-            <div className="mb-4">
+            <p className="mb-6 text-gray-600">
+                Insira a quantidade contada para cada produto. Itens não preenchidos serão considerados como 0.
+                {!isOnline && ' A contagem será sincronizada quando a conexão for restaurada.'}
+            </p>
+            
+            <div className="mb-4 relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <FaSearch className="text-gray-400" />
+                </div>
                 <input
                     type="text"
                     placeholder="Buscar produto pelo nome..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
             </div>
 
@@ -128,16 +175,28 @@ export default function NewCountPage() {
             <div className="mt-6 flex justify-end space-x-4">
                 <button 
                     onClick={() => navigate('/counting')}
-                    className="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+                    className="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors"
                 >
                     Cancelar
                 </button>
                 <button 
                     onClick={handleFinalizeCount}
                     disabled={loading}
-                    className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-green-300"
+                    className={`px-6 py-2 text-white rounded-md font-medium flex items-center space-x-2 transition-colors ${
+                        isOnline 
+                            ? 'bg-green-600 hover:bg-green-700 disabled:bg-green-300' 
+                            : 'bg-orange-600 hover:bg-orange-700 disabled:bg-orange-300'
+                    }`}
                 >
-                    {loading ? 'Finalizando...' : 'Finalizar Contagem'}
+                    <FaSave />
+                    <span>
+                        {loading 
+                            ? 'Salvando...' 
+                            : isOnline 
+                                ? 'Finalizar Contagem' 
+                                : 'Salvar Offline'
+                        }
+                    </span>
                 </button>
             </div>
         </div>

@@ -2,24 +2,23 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
-    FaHome, FaChartPie, FaBoxOpen, FaPlusCircle, 
+    FaHome, FaBoxOpen, FaPlusCircle, 
     FaExchangeAlt, FaClipboardCheck, FaHistory, FaFileAlt, FaCog, FaSignOutAlt 
 } from 'react-icons/fa';
 
 // Links de navegação principais
 const mainNavLinks = [
     { to: '/', text: 'Início', icon: FaHome },
-    { to: '/dashboard', text: 'Dashboard', icon: FaChartPie },
     { to: '/stock', text: 'Estoque', icon: FaBoxOpen },
     { to: '/registers', text: 'Cadastros', icon: FaPlusCircle },
     { to: '/movements', text: 'Movimentações', icon: FaExchangeAlt },
     { to: '/counting', text: 'Contagem', icon: FaClipboardCheck },
     { to: '/audit', text: 'Auditoria', icon: FaHistory },
-    { to: '/reports', text: 'Relatórios', icon: FaFileAlt },
+    { to: '/reports', text: 'Analytics & Relatórios', icon: FaFileAlt },
 ];
 
 // Componente de item de navegação reutilizável
-const NavItem = ({ to, text, icon: Icon, onClick }) => (
+const NavItem = ({ to, text, icon: Icon, onClick, onNavigate }) => (
     <li>
         <NavLink
             to={to}
@@ -27,13 +26,20 @@ const NavItem = ({ to, text, icon: Icon, onClick }) => (
             className={({ isActive }) =>
                 `flex items-center py-2.5 px-4 rounded-lg transition-colors font-medium ${
                     isActive 
-                        ? 'bg-blue-100 text-blue-600' 
-                        : 'text-slate-700 hover:bg-slate-100'
+                        ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300' 
+                        : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'
                 }`
             }
-            onClick={onClick}
+            onClick={(e) => {
+                if (onClick) {
+                    onClick(e);
+                }
+                if (onNavigate) {
+                    onNavigate();
+                }
+            }}
         >
-            <Icon className="w-5 h-5 mr-3 text-slate-500" />
+            <Icon className="w-5 h-5 mr-3 text-slate-500 dark:text-slate-400" />
             {text}
         </NavLink>
     </li>
@@ -48,6 +54,14 @@ export default function Sidebar({ isOpen, onClose }) {
         navigate('/auth');
     };
 
+    // Função para fechar o sidebar após navegar (principalmente para mobile)
+    const handleNavigate = () => {
+        // Fecha o sidebar em telas menores quando uma opção é selecionada
+        if (window.innerWidth < 1024) { // lg breakpoint do Tailwind
+            onClose();
+        }
+    };
+
     return (
         <>
             {/* Overlay para fechar o menu em telas menores */}
@@ -57,24 +71,41 @@ export default function Sidebar({ isOpen, onClose }) {
             ></div>
 
             {/* Sidebar */}
-            <aside className={`fixed top-0 left-0 h-full w-64 bg-white z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
-                <div className="p-4 border-b border-slate-200">
-                    <h2 className="text-2xl font-bold text-slate-800">Menu</h2>
+            <aside className={`fixed top-0 left-0 h-full w-64 bg-white dark:bg-slate-800 z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+                <div className="p-4 border-b border-slate-200 dark:border-slate-700">
+                    <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Menu</h2>
                 </div>
 
                 <div className="flex flex-col justify-between flex-grow p-2">
                     {/* Links Principais */}
                     <nav>
                         <ul className="space-y-1">
-                            {mainNavLinks.map(link => <NavItem key={link.to} {...link} />)}
+                            {mainNavLinks.map(link => 
+                                <NavItem 
+                                    key={link.to} 
+                                    {...link} 
+                                    onNavigate={handleNavigate}
+                                />
+                            )}
                         </ul>
                     </nav>
                     
                     {/* Links Inferiores (Configurações e Sair) */}
                     <nav>
-                        <ul className="pt-2 mt-2 space-y-1 border-t border-slate-200">
-                            <NavItem to="/settings" icon={FaCog} text="Configurações" />
-                            <NavItem to="/auth" icon={FaSignOutAlt} text="Sair" onClick={handleLogout} />
+                        <ul className="pt-2 mt-2 space-y-1 border-t border-slate-200 dark:border-slate-700">
+                            <NavItem 
+                                to="/settings" 
+                                icon={FaCog} 
+                                text="Configurações" 
+                                onNavigate={handleNavigate}
+                            />
+                            <NavItem 
+                                to="/auth" 
+                                icon={FaSignOutAlt} 
+                                text="Sair" 
+                                onClick={handleLogout}
+                                onNavigate={handleNavigate}
+                            />
                         </ul>
                     </nav>
                 </div>

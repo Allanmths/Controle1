@@ -7,7 +7,7 @@ const KeyboardShortcuts = () => {
     const navigate = useNavigate();
 
     const shortcuts = [
-        { key: 'Ctrl + D', action: 'Ir para Dashboard', path: '/dashboard' },
+        { key: 'Ctrl + D', action: 'Ir para Início', path: '/' },
         { key: 'Ctrl + E', action: 'Ir para Estoque', path: '/stock' },
         { key: 'Ctrl + R', action: 'Ir para Cadastros', path: '/registers' },
         { key: 'Ctrl + M', action: 'Ir para Movimentações', path: '/movements' },
@@ -27,7 +27,7 @@ const KeyboardShortcuts = () => {
                 switch (event.key.toLowerCase()) {
                     case 'd':
                         event.preventDefault();
-                        navigate('/dashboard');
+                        navigate('/');
                         break;
                     case 'e':
                         event.preventDefault();

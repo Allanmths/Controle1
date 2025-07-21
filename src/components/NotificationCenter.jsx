@@ -1,164 +1,228 @@
-import React, { useState, useEffect } from 'react';
-import { FaCheck, FaExclamationTriangle, FaInfo, FaTimes, FaBell } from 'react-icons/fa';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaBell, FaTimes, FaCheck, FaTrash, FaEye } from 'react-icons/fa';
+import { useNotifications } from '../context/NotificationContext';
+import { formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 const NotificationCenter = () => {
-    const [notifications, setNotifications] = useState([]);
-    const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const { notifications, unreadCount, markAsRead, markAllAsRead, removeNotification, clearAll } = useNotifications();
+  const dropdownRef = useRef(null);
 
-    const addNotification = (notification) => {
-        const id = Date.now();
-        const newNotification = {
-            id,
-            timestamp: new Date(),
-            read: false,
-            ...notification
-        };
-        
-        setNotifications(prev => [newNotification, ...prev]);
-        
-        // Auto remove após 5 segundos se for temporária
-        if (notification.autoRemove !== false) {
-            setTimeout(() => {
-                removeNotification(id);
-            }, 5000);
-        }
+  // Fechar dropdown ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
     };
 
-    const removeNotification = (id) => {
-        setNotifications(prev => prev.filter(n => n.id !== id));
-    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-    const markAsRead = (id) => {
-        setNotifications(prev => 
-            prev.map(n => n.id === id ? { ...n, read: true } : n)
-        );
-    };
+  const getNotificationIcon = (type) => {
+    const baseClasses = "w-4 h-4";
+    switch (type) {
+      case 'success':
+        return <FaCheck className={`${baseClasses} text-green-500`} />;
+      case 'warning':
+        return <FaBell className={`${baseClasses} text-yellow-500`} />;
+      case 'error':
+        return <FaBell className={`${baseClasses} text-red-500`} />;
+      default:
+        return <FaBell className={`${baseClasses} text-blue-500`} />;
+    }
+  };
 
-    const clearAll = () => {
-        setNotifications([]);
-    };
+  const handleNotificationClick = (notification) => {
+    // Marcar como lida se não foi lida ainda
+    if (!notification.read) {
+      markAsRead(notification.id);
+    }
+    
+    // Fechar o dropdown
+    setIsOpen(false);
+    
+    // Lógica de redirecionamento baseada no tipo e categoria
+    if (notification.action?.href) {
+      // Se tem URL específica definida
+      if (notification.action.href.startsWith('http')) {
+        // URL externa
+        window.open(notification.action.href, '_blank');
+      } else {
+        // Rota interna
+        navigate(notification.action.href);
+      }
+    } else if (notification.category === 'stock' && notification.productId) {
+      // Notificações de estoque - ir para página de estoque com busca do produto
+      navigate(`/stock?search=${encodeURIComponent(notification.title.replace('Produto ', '').replace(' está', ''))}`);
+    } else if (notification.category === 'movement' && notification.productId) {
+      // Notificações de movimento - ir para página de movimentações
+      navigate('/movements');
+    } else if (notification.category === 'system') {
+      // Notificações de sistema - ir para configurações
+      navigate('/settings');
+    } else {
+      // Default - ir para dashboard
+      navigate('/');
+    }
+  };
 
-    const unreadCount = notifications.filter(n => !n.read).length;
+  return (
+    <div className="relative" ref={dropdownRef}>
+      {/* Botão de Notificações */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+      >
+        <FaBell className="w-5 h-5" />
+        {unreadCount > 0 && (
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+            {unreadCount > 99 ? '99+' : unreadCount}
+          </span>
+        )}
+      </button>
 
-    useEffect(() => {
-        // Simular notificações do sistema (ex: estoque baixo, vendas, etc.)
-        const checkSystemNotifications = () => {
-            // Aqui você pode integrar com seus dados reais
-            // Por exemplo, verificar estoque baixo, produtos vencendo, etc.
-        };
+      {/* Dropdown de Notificações */}
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-96 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 max-h-96 overflow-hidden">
+          {/* Header */}
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Notificações
+            </h3>
+            <div className="flex items-center gap-2">
+              {unreadCount > 0 && (
+                <button
+                  onClick={markAllAsRead}
+                  className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  Marcar todas como lidas
+                </button>
+              )}
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              >
+                <FaTimes className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
 
-        const interval = setInterval(checkSystemNotifications, 60000); // Check every minute
-        return () => clearInterval(interval);
-    }, []);
-
-    const getIcon = (type) => {
-        switch (type) {
-            case 'success': return <FaCheck className="text-green-500" />;
-            case 'warning': return <FaExclamationTriangle className="text-yellow-500" />;
-            case 'error': return <FaTimes className="text-red-500" />;
-            default: return <FaInfo className="text-blue-500" />;
-        }
-    };
-
-    return (
-        <div className="relative">
-            {/* Notification Bell */}
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="relative p-2 text-gray-600 hover:text-gray-800 transition-colors"
-            >
-                <FaBell className="w-5 h-5" />
-                {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                        {unreadCount > 9 ? '9+' : unreadCount}
-                    </span>
-                )}
-            </button>
-
-            {/* Notification Panel */}
-            {isOpen && (
-                <div className="absolute right-0 top-12 w-80 bg-white rounded-lg shadow-xl border z-50">
-                    <div className="flex items-center justify-between p-4 border-b">
-                        <h3 className="font-semibold">Notificações</h3>
-                        {notifications.length > 0 && (
-                            <button
-                                onClick={clearAll}
-                                className="text-sm text-gray-500 hover:text-gray-700"
-                            >
-                                Limpar todas
-                            </button>
-                        )}
-                    </div>
-
-                    <div className="max-h-96 overflow-y-auto">
-                        {notifications.length === 0 ? (
-                            <div className="p-8 text-center text-gray-500">
-                                <FaBell className="w-8 h-8 mx-auto mb-2 text-gray-300" />
-                                <p>Nenhuma notificação</p>
-                            </div>
-                        ) : (
-                            notifications.map(notification => (
-                                <div
-                                    key={notification.id}
-                                    className={`p-4 border-b hover:bg-gray-50 transition-colors ${
-                                        !notification.read ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
-                                    }`}
-                                    onClick={() => markAsRead(notification.id)}
-                                >
-                                    <div className="flex items-start space-x-3">
-                                        <div className="flex-shrink-0 mt-1">
-                                            {getIcon(notification.type)}
-                                        </div>
-                                        <div className="flex-1">
-                                            <p className="font-medium text-gray-900">
-                                                {notification.title}
-                                            </p>
-                                            <p className="text-sm text-gray-600 mt-1">
-                                                {notification.message}
-                                            </p>
-                                            <p className="text-xs text-gray-400 mt-2">
-                                                {notification.timestamp.toLocaleTimeString('pt-BR')}
-                                            </p>
-                                        </div>
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                removeNotification(notification.id);
-                                            }}
-                                            className="text-gray-400 hover:text-gray-600"
-                                        >
-                                            <FaTimes className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                </div>
-                            ))
-                        )}
-                    </div>
-                </div>
-            )}
-
-            {/* Click outside to close */}
-            {isOpen && (
+          {/* Lista de Notificações */}
+          <div className="max-h-80 overflow-y-auto">
+            {notifications.length === 0 ? (
+              <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+                <FaBell className="mx-auto mb-3 text-3xl opacity-50" />
+                <p>Nenhuma notificação</p>
+                <p className="text-sm">Você está em dia!</p>
+              </div>
+            ) : (
+              notifications.map((notification) => (
                 <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setIsOpen(false)}
-                />
+                  key={notification.id}
+                  className={`p-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0 cursor-pointer transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700 ${
+                    !notification.read ? 'bg-blue-50 dark:bg-blue-900/10' : ''
+                  } ${notification.action ? 'hover:shadow-sm' : ''}`}
+                  onClick={() => handleNotificationClick(notification)}
+                  title={notification.action ? `Clique para: ${notification.action.label}` : 'Clique para marcar como lida'}
+                >
+                  <div className="flex items-start gap-3">
+                    {/* Ícone */}
+                    <div className="flex-shrink-0 mt-1">
+                      {getNotificationIcon(notification.type)}
+                    </div>
+
+                    {/* Conteúdo */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h4 className={`text-sm font-medium ${
+                            notification.read 
+                              ? 'text-gray-700 dark:text-gray-300' 
+                              : 'text-gray-900 dark:text-white'
+                          }`}>
+                            {notification.title}
+                          </h4>
+                          <p className={`text-sm mt-1 ${
+                            notification.read 
+                              ? 'text-gray-500 dark:text-gray-400' 
+                              : 'text-gray-600 dark:text-gray-300'
+                          }`}>
+                            {notification.message}
+                          </p>
+                          
+                          {/* Ação */}
+                          {notification.action && (
+                            <div className="flex items-center gap-2 mt-2">
+                              <button className="text-xs text-blue-600 dark:text-blue-400 hover:underline bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded">
+                                {notification.action.label}
+                              </button>
+                              <span className="text-xs text-gray-400">• Clique para navegar</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Ações */}
+                        <div className="flex items-center gap-1 ml-2">
+                          {!notification.read && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                markAsRead(notification.id);
+                              }}
+                              className="p-1 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
+                              title="Marcar como lida"
+                            >
+                              <FaEye className="w-3 h-3" />
+                            </button>
+                          )}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeNotification(notification.id);
+                            }}
+                            className="p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400"
+                            title="Remover"
+                          >
+                            <FaTimes className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Timestamp */}
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+                        {formatDistanceToNow(new Date(notification.timestamp), {
+                          addSuffix: true,
+                          locale: ptBR
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))
             )}
+          </div>
+
+          {/* Footer */}
+          {notifications.length > 0 && (
+            <div className="p-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+              <button
+                onClick={clearAll}
+                className="w-full text-sm text-red-600 dark:text-red-400 hover:underline flex items-center justify-center gap-2"
+              >
+                <FaTrash className="w-3 h-3" />
+                Limpar todas
+              </button>
+            </div>
+          )}
         </div>
-    );
-};
-
-// Hook para usar o sistema de notificações
-export const useNotifications = () => {
-    const [notificationComponent, setNotificationComponent] = useState(null);
-
-    const showNotification = (notification) => {
-        // Esta função seria chamada para adicionar notificações
-        // Implementação dependeria de como você quer gerenciar o estado global
-        console.log('Nova notificação:', notification);
-    };
-
-    return { showNotification };
+      )}
+    </div>
+  );
 };
 
 export default NotificationCenter;

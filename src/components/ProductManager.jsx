@@ -3,6 +3,7 @@ import ProductModal from './ProductModal';
 import { FaPlus } from 'react-icons/fa';
 import { useStockManagement } from '../hooks/useStockManagement';
 import { useAuth } from '../context/AuthContext';
+import { useAutoNotifications } from '../hooks/useNotificationHelpers';
 
 const ProductManager = () => {
     const { userData } = useAuth();
@@ -13,6 +14,9 @@ const ProductManager = () => {
         handleOpenModal,
         handleCloseModal,
     } = useStockManagement();
+    
+    // Ativar notificações automáticas
+    useAutoNotifications();
 
     return (
         <>

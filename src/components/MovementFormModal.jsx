@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { db } from '../services/firebase';
 import { collection, doc, runTransaction } from 'firebase/firestore';
 import Modal from './Modal';
+import ProductSelector from './ProductSelector';
 import useFirestore from '../hooks/useFirestore';
 import { useAuth } from '../context/AuthContext';
 
 const INITIAL_STATE = {
-    productId: '',
+    selectedProduct: null,
     type: 'entrada',
     quantity: 1,
     motive: '',
 };
 
 export default function MovementFormModal({ isOpen, onClose }) {
-    const { docs: products } = useFirestore('products');
     const { currentUser } = useAuth();
     const [formData, setFormData] = useState(INITIAL_STATE);
     const [loading, setLoading] = useState(false);
@@ -33,10 +33,10 @@ export default function MovementFormModal({ isOpen, onClose }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { productId, type, quantity, motive } = formData;
+        const { selectedProduct, type, quantity, motive } = formData;
         const numQuantity = Number(quantity);
 
-        if (!productId || numQuantity <= 0) {
+        if (!selectedProduct || numQuantity <= 0) {
             setError('Por favor, preencha todos os campos corretamente.');
             return;
         }
@@ -45,7 +45,7 @@ export default function MovementFormModal({ isOpen, onClose }) {
         setError('');
 
         try {
-            const productRef = doc(db, 'products', productId);
+            const productRef = doc(db, 'products', selectedProduct.id);
             const movementRef = doc(collection(db, 'movements'));
 
             await runTransaction(db, async (transaction) => {
@@ -68,7 +68,7 @@ export default function MovementFormModal({ isOpen, onClose }) {
 
                 transaction.update(productRef, { totalQuantity: newQuantity });
                 transaction.set(movementRef, {
-                    productId,
+                    productId: selectedProduct.id,
                     type,
                     quantity: numQuantity,
                     motive,
@@ -88,19 +88,13 @@ export default function MovementFormModal({ isOpen, onClose }) {
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Registrar Nova Movimentação">
             <form onSubmit={handleSubmit} className="space-y-4">
-                {error && <p className="bg-red-100 text-red-700 p-3 rounded-lg">{error}</p>}
+                {error && <p className="bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400 p-3 rounded-lg">{error}</p>}
                 
-                <div>
-                    <label htmlFor="productId" className="block text-sm font-medium text-gray-700">Produto</label>
-                    <select name="productId" id="productId" value={formData.productId} onChange={handleChange} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-white">
-                        <option value="" disabled>Selecione um produto</option>
-                        {products && products.length > 0 ? (
-                            products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)
-                        ) : (
-                            <option value="" disabled>Carregando produtos...</option>
-                        )}
-                    </select>
-                </div>
+                <ProductSelector 
+                    onProductSelect={(product) => setFormData(prev => ({ ...prev, selectedProduct: product }))}
+                    selectedProductId={formData.selectedProduct?.id}
+                    placeholder="Buscar produto para movimentação..."
+                />
 
                 <div>
                     <label htmlFor="type" className="block text-sm font-medium text-gray-700">Tipo de Movimentação</label>

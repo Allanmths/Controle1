@@ -10,22 +10,26 @@ import {
   FaUserEdit,
   FaUser,
   FaEye,
-  FaChartBar
+  FaChartBar,
+  FaTrash
 } from 'react-icons/fa';
 import { useUserManagement } from '../hooks/useUserManagement';
 import { useAuth } from '../context/AuthContext';
 import { ROLES, ROLE_DESCRIPTIONS, hasPermission, PERMISSIONS } from '../utils/permissions';
 import UserEditModal from './UserEditModal';
+import DeleteUserModal from './DeleteUserModal';
 import SkeletonLoader from './SkeletonLoader';
+import toast from 'react-hot-toast';
 
 const UserRoleManager = () => {
-  const { userData } = useAuth();
+  const { userData, currentUser } = useAuth();
   const { 
     users, 
     loading, 
     updateUserRole, 
     updateUserPermissions, 
     toggleUserStatus,
+    deleteUser,
     searchUsers,
     getUserStats
   } = useUserManagement();
@@ -35,9 +39,13 @@ const UserRoleManager = () => {
   const [selectedRole, setSelectedRole] = useState('');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Verificar se o usuário atual pode gerenciar usuários
   const canManageUsers = hasPermission(userData?.role, PERMISSIONS.MANAGE_USERS);
+  const canDeleteUsers = hasPermission(userData?.role, PERMISSIONS.DELETE_USERS);
 
   // Filtrar usuários baseado na busca e role
   React.useEffect(() => {
@@ -73,6 +81,29 @@ const UserRoleManager = () => {
     
     // Atualizar status ativo/inativo
     await toggleUserStatus(userId, userData.isActive);
+  };
+
+  const handleDeleteUser = (user) => {
+    // Verificar se não é o próprio usuário
+    if (user.id === currentUser?.uid) {
+      toast.error('Você não pode excluir sua própria conta');
+      return;
+    }
+    
+    setUserToDelete(user);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async (userId) => {
+    setIsDeleting(true);
+    const success = await deleteUser(userId);
+    
+    if (success) {
+      setIsDeleteModalOpen(false);
+      setUserToDelete(null);
+    }
+    
+    setIsDeleting(false);
   };
 
   const getRoleIcon = (role) => {
@@ -298,6 +329,15 @@ const UserRoleManager = () => {
                         >
                           {user.isActive !== false ? <FaToggleOff /> : <FaToggleOn />}
                         </button>
+                        {user.id !== currentUser?.uid && canDeleteUsers && (
+                          <button
+                            onClick={() => handleDeleteUser(user)}
+                            className="text-red-600 hover:text-red-900 p-2 rounded-full hover:bg-red-100 transition-colors"
+                            title="Excluir usuário"
+                          >
+                            <FaTrash />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -329,6 +369,15 @@ const UserRoleManager = () => {
         onClose={() => setIsEditModalOpen(false)}
         user={selectedUser}
         onSave={handleSaveUser}
+      />
+
+      {/* Modal de Exclusão */}
+      <DeleteUserModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        user={userToDelete}
+        onConfirm={handleConfirmDelete}
+        isDeleting={isDeleting}
       />
     </div>
   );

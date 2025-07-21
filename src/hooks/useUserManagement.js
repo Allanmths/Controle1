@@ -104,6 +104,21 @@ export const useUserManagement = () => {
     }
   };
 
+  // Excluir usuário
+  const deleteUser = async (userId) => {
+    try {
+      const userRef = doc(db, 'users', userId);
+      await deleteDoc(userRef);
+      
+      toast.success('Usuário excluído com sucesso!');
+      return true;
+    } catch (error) {
+      console.error('Erro ao excluir usuário:', error);
+      toast.error('Erro ao excluir usuário');
+      return false;
+    }
+  };
+
   // Buscar usuários por termo
   const searchUsers = async (searchTerm) => {
     if (!searchTerm.trim()) {
@@ -154,6 +169,7 @@ export const useUserManagement = () => {
     updateUserRole,
     updateUserPermissions,
     toggleUserStatus,
+    deleteUser,
     searchUsers,
     getUserStats
   };

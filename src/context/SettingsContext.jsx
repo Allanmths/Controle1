@@ -22,7 +22,23 @@ export const SettingsProvider = ({ children }) => {
     }
   };
 
+  // Função para obter o tema inicial
+  const getInitialTheme = () => {
+    try {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        return savedTheme;
+      }
+      // Se não há preferência salva, verifica a preferência do sistema
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    } catch (error) {
+      console.error("Erro ao ler 'theme' do localStorage:", error);
+      return 'light';
+    }
+  };
+
   const [itemsPerPage, setItemsPerPage] = useState(getInitialItemsPerPage);
+  const [theme, setTheme] = useState(getInitialTheme);
 
   // Efeito para salvar no localStorage sempre que o valor mudar
   useEffect(() => {
@@ -33,9 +49,33 @@ export const SettingsProvider = ({ children }) => {
     }
   }, [itemsPerPage]);
 
+  // Efeito para aplicar e salvar o tema
+  useEffect(() => {
+    try {
+      localStorage.setItem('theme', theme);
+      
+      // Aplica ou remove a classe 'dark' no elemento html
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    } catch (error) {
+      console.error("Erro ao salvar 'theme' no localStorage:", error);
+    }
+  }, [theme]);
+
+  // Função para alternar o tema
+  const toggleTheme = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
+
   const value = {
     itemsPerPage,
     setItemsPerPage,
+    theme,
+    setTheme,
+    toggleTheme,
   };
 
   return (

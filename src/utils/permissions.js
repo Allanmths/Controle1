@@ -36,6 +36,7 @@ export const PERMISSIONS = {
   
   // Permissões de sistema
   MANAGE_USERS: 'manage_users',
+  DELETE_USERS: 'delete_users',
   SYSTEM_SETTINGS: 'system_settings',
   VIEW_AUDIT: 'view_audit'
 };

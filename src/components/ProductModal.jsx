@@ -4,6 +4,7 @@ import { collection, addDoc, doc, updateDoc, serverTimestamp, writeBatch } from 
 import toast from 'react-hot-toast';
 import useFirestore from '../hooks/useFirestore';
 import { ensureArray } from '../utils/arrayHelpers';
+import { useUserActionNotifications } from '../hooks/useNotificationHelpers';
 
 const ProductModal = ({ isOpen, onClose, productToEdit, locations, userData }) => {
     const [name, setName] = useState('');
@@ -14,6 +15,7 @@ const ProductModal = ({ isOpen, onClose, productToEdit, locations, userData }) =
     const [stockQuantities, setStockQuantities] = useState({});
 
     const { docs: categories } = useFirestore('categories');
+    const { notifyProductAdded, notifyProductUpdated } = useUserActionNotifications();
 
     useEffect(() => {
         if (isOpen) {
@@ -119,7 +121,15 @@ const ProductModal = ({ isOpen, onClose, productToEdit, locations, userData }) =
 
         toast.promise(promise(), {
             loading: 'Salvando produto...',
-            success: `Produto "${name}" salvo com sucesso!`,
+            success: (result) => {
+                // Adicionar notificação baseada na ação
+                if (productToEdit) {
+                    notifyProductUpdated(name);
+                } else {
+                    notifyProductAdded(name);
+                }
+                return `Produto "${name}" salvo com sucesso!`;
+            },
             error: (err) => `Falha ao salvar: ${err.message}`,
         });
 

@@ -7,6 +7,7 @@ import { useStockManagement } from '../hooks/useStockManagement';
 import { useAuth } from '../context/AuthContext';
 import ProductModal from '../components/ProductModal';
 import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
+import ActionConfirmationModal from '../components/ActionConfirmationModal';
 import SkeletonLoader from '../components/SkeletonLoader';
 import Pagination from '../components/Pagination';
 
@@ -26,11 +27,21 @@ const StockPage = () => {
     selectedProduct,
     handleOpenModal,
     handleCloseModal,
+    isEditConfirmModalOpen,
+    productToEdit,
+    handleOpenEditConfirmModal,
+    handleCloseEditConfirmModal,
+    handleConfirmEdit,
     isDeleteModalOpen,
     productToDelete,
     handleOpenDeleteModal,
     handleCloseDeleteModal,
     handleDeleteProduct,
+    isDeleteConfirmModalOpen,
+    productToDeleteConfirm,
+    handleOpenDeleteConfirmModal,
+    handleCloseDeleteConfirmModal,
+    handleConfirmDelete,
     searchTerm, 
     setSearchTerm,
     categoryFilter,
@@ -292,9 +303,9 @@ const StockPage = () => {
                             <FaEllipsisV />
                           </button>
                           {openDropdown === product.id && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                              <a href="#" onClick={(e) => { e.preventDefault(); handleOpenModal(product); setOpenDropdown(null); }} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Editar</a>
-                              <a href="#" onClick={(e) => { e.preventDefault(); handleOpenDeleteModal(product); setOpenDropdown(null); }} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Excluir</a>
+                            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-600">
+                              <a href="#" onClick={(e) => { e.preventDefault(); handleOpenEditConfirmModal(product); setOpenDropdown(null); }} className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Editar</a>
+                              <a href="#" onClick={(e) => { e.preventDefault(); handleOpenDeleteConfirmModal(product); setOpenDropdown(null); }} className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Excluir</a>
                             </div>
                           )}
                         </td>
@@ -347,6 +358,28 @@ const StockPage = () => {
           handleCloseDeleteModal();
         }}
         productName={productToDelete?.name}
+      />
+
+      {/* Modal de Confirmação de Edição */}
+      <ActionConfirmationModal
+        isOpen={isEditConfirmModalOpen}
+        onClose={handleCloseEditConfirmModal}
+        onConfirm={handleConfirmEdit}
+        action="edit"
+        productName={productToEdit?.name}
+        confirmText="Editar"
+        cancelText="Cancelar"
+      />
+
+      {/* Modal de Confirmação de Exclusão */}
+      <ActionConfirmationModal
+        isOpen={isDeleteConfirmModalOpen}
+        onClose={handleCloseDeleteConfirmModal}
+        onConfirm={handleConfirmDelete}
+        action="delete"
+        productName={productToDeleteConfirm?.name}
+        confirmText="Excluir"
+        cancelText="Cancelar"
       />
     </div>
   );

@@ -18,8 +18,12 @@ export const useStockManagement = () => {
   // 2. Estado dos Modais
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditConfirmModalOpen, setIsEditConfirmModalOpen] = useState(false);
+  const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [productToEdit, setProductToEdit] = useState(null);
+  const [productToDeleteConfirm, setProductToDeleteConfirm] = useState(null);
 
   // 3. Estado de Filtros e Paginação
   const { itemsPerPage } = useSettings(); // Consome do contexto
@@ -82,6 +86,23 @@ export const useStockManagement = () => {
 
   // 5. Funções de Manipulação de Eventos (Handlers)
 
+  const handleOpenEditConfirmModal = (product) => {
+    setProductToEdit(product);
+    setIsEditConfirmModalOpen(true);
+  };
+
+  const handleCloseEditConfirmModal = () => {
+    setIsEditConfirmModalOpen(false);
+    setProductToEdit(null);
+  };
+
+  const handleConfirmEdit = () => {
+    setSelectedProduct(productToEdit);
+    setIsModalOpen(true);
+    setIsEditConfirmModalOpen(false);
+    setProductToEdit(null);
+  };
+
   const handleOpenModal = (product = null) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
@@ -100,6 +121,23 @@ export const useStockManagement = () => {
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
     setProductToDelete(null);
+  };
+
+  const handleOpenDeleteConfirmModal = (product) => {
+    setProductToDeleteConfirm(product);
+    setIsDeleteConfirmModalOpen(true);
+  };
+
+  const handleCloseDeleteConfirmModal = () => {
+    setIsDeleteConfirmModalOpen(false);
+    setProductToDeleteConfirm(null);
+  };
+
+  const handleConfirmDelete = () => {
+    setProductToDelete(productToDeleteConfirm);
+    setIsDeleteModalOpen(true);
+    setIsDeleteConfirmModalOpen(false);
+    setProductToDeleteConfirm(null);
   };
 
   const handleDeleteProduct = async () => {
@@ -133,6 +171,13 @@ export const useStockManagement = () => {
     handleOpenModal,
     handleCloseModal,
 
+    // Estado e Handlers do Modal de Confirmação de Edição
+    isEditConfirmModalOpen,
+    productToEdit,
+    handleOpenEditConfirmModal,
+    handleCloseEditConfirmModal,
+    handleConfirmEdit,
+
     // Estado e Handlers do Modal de Exclusão
     isDeleteModalOpen,
     productToDelete,
@@ -140,12 +185,22 @@ export const useStockManagement = () => {
     handleCloseDeleteModal,
     handleDeleteProduct,
 
+    // Estado e Handlers do Modal de Confirmação de Exclusão
+    isDeleteConfirmModalOpen,
+    productToDeleteConfirm,
+    handleOpenDeleteConfirmModal,
+    handleCloseDeleteConfirmModal,
+    handleConfirmDelete,
+
     // Handlers de Filtro e Paginação
+    searchTerm,
     setSearchTerm,
+    categoryFilter,
     setCategoryFilter,
+    locationFilter,
     setLocationFilter,
+    currentPage,
     setCurrentPage,
     itemsPerPage, // Vem do contexto agora
-    currentPage,
   };
 };
