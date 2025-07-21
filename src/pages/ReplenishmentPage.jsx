@@ -9,7 +9,8 @@ import {
   FaTimes,
   FaClock,
   FaExclamationTriangle,
-  FaFileAlt
+  FaFileAlt,
+  FaEdit
 } from 'react-icons/fa';
 import { useReplenishmentManagement } from '../hooks/useReplenishmentManagement';
 import { usePurchaseListManagement } from '../hooks/usePurchaseListManagement';
@@ -23,6 +24,8 @@ import {
   REPLENISHMENT_PRIORITY 
 } from '../utils/replenishmentPermissions';
 import ReplenishmentRequestModal from '../components/ReplenishmentRequestModal';
+import ReplenishmentApprovalModal from '../components/ReplenishmentApprovalModal';
+import ApprovalDashboard from '../components/ApprovalDashboard';
 
 const ReplenishmentPage = () => {
   const { userData } = useAuth();
@@ -35,6 +38,8 @@ const ReplenishmentPage = () => {
   const { analyzeLowStock } = usePurchaseListManagement();
 
   const [showRequestModal, setShowRequestModal] = useState(false);
+  const [showApprovalModal, setShowApprovalModal] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
   const [filters, setFilters] = useState({
     status: '',
     priority: '',
@@ -138,6 +143,17 @@ const ReplenishmentPage = () => {
     return timestamp.toDate ? timestamp.toDate().toLocaleDateString('pt-BR') : 'N/A';
   };
 
+  const handleViewRequest = (request) => {
+    setSelectedRequest(request);
+    setShowApprovalModal(true);
+  };
+
+  const handleApprovalSuccess = () => {
+    fetchReplenishmentRequests();
+    setShowApprovalModal(false);
+    setSelectedRequest(null);
+  };
+
   return (
     <div className="p-6">
       {/* Header */}
@@ -173,6 +189,19 @@ const ReplenishmentPage = () => {
           >
             Solicitações de Reposição
           </button>
+          
+          {canApproveRequests && (
+            <button
+              onClick={() => setActiveTab('approvals')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'approvals'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Dashboard de Aprovações
+            </button>
+          )}
           
           {canGeneratePurchaseList && (
             <button
@@ -370,12 +399,25 @@ const ReplenishmentPage = () => {
                       </td>
                       
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          onClick={() => {/* TODO: Implementar visualização */}}
-                          className="text-blue-600 hover:text-blue-900 mr-3"
-                        >
-                          <FaEye />
-                        </button>
+                        <div className="flex items-center justify-end space-x-2">
+                          <button
+                            onClick={() => handleViewRequest(request)}
+                            className="text-blue-600 hover:text-blue-900 p-1 rounded"
+                            title="Ver detalhes"
+                          >
+                            <FaEye />
+                          </button>
+                          
+                          {canApproveRequests && request.status === REPLENISHMENT_STATUS.PENDING && (
+                            <button
+                              onClick={() => handleViewRequest(request)}
+                              className="text-green-600 hover:text-green-900 p-1 rounded"
+                              title="Aprovar/Rejeitar"
+                            >
+                              <FaEdit />
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -399,6 +441,11 @@ const ReplenishmentPage = () => {
             </div>
           </div>
         </>
+      )}
+
+      {/* Tab Content - Dashboard de Aprovações */}
+      {activeTab === 'approvals' && canApproveRequests && (
+        <ApprovalDashboard />
       )}
 
       {/* Tab Content - Análise de Estoque */}
@@ -566,6 +613,17 @@ const ReplenishmentPage = () => {
           fetchReplenishmentRequests();
           setShowRequestModal(false);
         }}
+      />
+
+      {/* Modal de Aprovação */}
+      <ReplenishmentApprovalModal
+        isOpen={showApprovalModal}
+        onClose={() => {
+          setShowApprovalModal(false);
+          setSelectedRequest(null);
+        }}
+        request={selectedRequest}
+        onSuccess={handleApprovalSuccess}
       />
     </div>
   );
