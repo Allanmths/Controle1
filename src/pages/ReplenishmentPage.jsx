@@ -27,6 +27,7 @@ import ReplenishmentRequestModal from '../components/ReplenishmentRequestModal';
 import ReplenishmentApprovalModal from '../components/ReplenishmentApprovalModal';
 import ApprovalDashboard from '../components/ApprovalDashboard';
 import ExecutionDashboard from '../components/ExecutionDashboard';
+import SmartPurchaseListDashboard from '../components/SmartPurchaseListDashboard';
 
 const ReplenishmentPage = () => {
   const { userData } = useAuth();
@@ -215,6 +216,19 @@ const ReplenishmentPage = () => {
               }`}
             >
               Execução
+            </button>
+          )}
+          
+          {canGeneratePurchaseList && (
+            <button
+              onClick={() => setActiveTab('purchase')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'purchase'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Lista de Compras
             </button>
           )}
           
@@ -466,6 +480,11 @@ const ReplenishmentPage = () => {
       {/* Tab Content - Execução */}
       {activeTab === 'execution' && canExecuteReplenishment && (
         <ExecutionDashboard />
+      )}
+
+      {/* Tab Content - Lista de Compras */}
+      {activeTab === 'purchase' && canGeneratePurchaseList && (
+        <SmartPurchaseListDashboard />
       )}
 
       {/* Tab Content - Análise de Estoque */}
