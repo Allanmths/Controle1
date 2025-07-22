@@ -21,7 +21,7 @@ import SkeletonLoader from './SkeletonLoader';
 
 const ExecutionDashboard = () => {
   const { user } = useAuth();
-  const { requests, loading } = useReplenishmentManagement();
+  const { replenishmentRequests, loading } = useReplenishmentManagement();
   
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -30,7 +30,7 @@ const ExecutionDashboard = () => {
   const [viewModalOpen, setViewModalOpen] = useState(false);
 
   // Filtrar apenas reposições aprovadas ou em execução
-  const executableRequests = requests.filter(request => 
+  const executableRequests = replenishmentRequests.filter(request => 
     [REPLENISHMENT_STATUS.APPROVED, REPLENISHMENT_STATUS.IN_PROGRESS].includes(request.status)
   );
 

@@ -117,17 +117,17 @@ const ProductBulkImport = () => {
             <p className="text-gray-600 mb-6">
                 Para adicionar múltiplos produtos de uma vez, baixe a planilha modelo, preencha com os dados e importe o arquivo aqui.
             </p>
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col gap-4">
                 <button
                     onClick={handleDownloadTemplate}
-                    className="flex-1 flex items-center justify-center bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300"
+                    className="flex items-center justify-center bg-green-600 text-white font-semibold py-3 px-6 sm:py-4 sm:px-8 rounded-lg hover:bg-green-700 transition duration-300 min-h-[44px] sm:min-h-[48px] text-sm sm:text-base"
                 >
-                    <FaDownload className="mr-2" />
+                    <FaDownload className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
                     Baixar Planilha Modelo
                 </button>
                 
-                <label htmlFor="csv-upload" className="flex-1 flex items-center justify-center bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300 cursor-pointer">
-                    <FaUpload className="mr-2" />
+                <label htmlFor="csv-upload" className="flex items-center justify-center bg-blue-500 text-white font-semibold py-3 px-6 sm:py-4 sm:px-8 rounded-lg hover:bg-blue-600 transition duration-300 cursor-pointer min-h-[44px] sm:min-h-[48px] text-sm sm:text-base">
+                    <FaUpload className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
                     {isImporting ? 'Importando...' : 'Importar Planilha'}
                 </label>
                 <input
