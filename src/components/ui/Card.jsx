@@ -11,7 +11,7 @@ const Card = ({ variant = 'default', hoverable = false, children, className = ''
   const hoverClasses = hoverable ? 'transition-all duration-200 hover:shadow-md' : '';
   
   return (
-    <div className={${baseClasses}   }>
+    <div className={`${baseClasses} ${variantClasses[variant]} ${hoverClasses} ${className}`}>
       {title && (
         <div className="px-4 py-3 border-b border-gray-200">
           <h3 className="text-lg font-medium text-gray-800">{title}</h3>
