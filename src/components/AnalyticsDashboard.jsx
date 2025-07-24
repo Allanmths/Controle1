@@ -324,7 +324,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
           {analytics.zeroStockProducts.length > 0 && (
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-red-500">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <FaTrendingDown className="text-red-600" />
+                <FaArrowDown className="text-red-600" />
                 Sem Estoque ({analytics.zeroStockProducts.length})
               </h3>
               <div className="space-y-3 max-h-64 overflow-y-auto">
