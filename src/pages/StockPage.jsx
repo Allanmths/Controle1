@@ -1,8 +1,8 @@
-ï»¿import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FaPlus, FaSearch, FaFilePdf, FaEllipsisV, FaSave, FaFilter, FaTimes, FaTrash, FaCheck } from 'react-icons/fa';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 
 import { useStockManagement } from '../hooks/useStockManagement';
 import { useAuth } from '../context/AuthContext';
@@ -18,7 +18,7 @@ const StockPage = () => {
   const [showSaveFilter, setShowSaveFilter] = useState(false);
   const [filterName, setFilterName] = useState('');
   
-  // Estados para seleÃ§Ã£o mÃºltipla
+  // Estados para seleção múltipla
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [isSelectMode, setIsSelectMode] = useState(false);
   
@@ -58,11 +58,11 @@ const StockPage = () => {
     itemsPerPage,
   } = useStockManagement();
 
-  // Estado local apenas para o dropdown de aÃ§Ãµes
+  // Estado local apenas para o dropdown de ações
   const [openDropdown, setOpenDropdown] = useState(null);
   const dropdownRef = useRef(null);
 
-  // Handlers para seleÃ§Ã£o mÃºltipla
+  // Handlers para seleção múltipla
   const handleSelectProduct = (productId) => {
     setSelectedProducts(prev => {
       if (prev.includes(productId)) {
@@ -95,7 +95,7 @@ const StockPage = () => {
         }
         setSelectedProducts([]);
         setIsSelectMode(false);
-        toast.success(`${selectedProducts.length} produto(s) excluÃ­do(s) com sucesso!`);
+        toast.success(`${selectedProducts.length} produto(s) excluído(s) com sucesso!`);
       } catch (error) {
         console.error('Erro ao excluir produtos:', error);
         toast.error('Erro ao excluir produtos');
@@ -159,9 +159,9 @@ const StockPage = () => {
 
   const generatePdf = () => {
     const doc = new jsPDF();
-    doc.text('RelatÃ³rio de Estoque', 20, 10);
+    doc.text('Relatório de Estoque', 20, 10);
     doc.autoTable({
-      head: [['Nome', 'Categoria', 'Local', 'Quantidade', 'PreÃ§o']],
+      head: [['Nome', 'Categoria', 'Local', 'Quantidade', 'Preço']],
       body: (products || []).map(p => [p.name, p.category, p.location, p.quantity, `R$ ${p.price}`]),
     });
     doc.save('relatorio_estoque.pdf');
@@ -194,7 +194,7 @@ const StockPage = () => {
             }`}
           >
             <FaCheck className="mr-2" />
-            {isSelectMode ? 'Cancelar SeleÃ§Ã£o' : 'SeleÃ§Ã£o MÃºltipla'}
+            {isSelectMode ? 'Cancelar Seleção' : 'Seleção Múltipla'}
           </button>
           <button onClick={generatePdf} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 flex items-center">
             <FaFilePdf className="mr-2" />
@@ -203,7 +203,7 @@ const StockPage = () => {
         </div>
       </div>
 
-      {/* Barra de aÃ§Ãµes em massa */}
+      {/* Barra de ações em massa */}
       {isSelectMode && selectedProducts.length > 0 && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 flex items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -229,7 +229,7 @@ const StockPage = () => {
         </div>
       )}
 
-      {/* Filtros AvanÃ§ados */}
+      {/* Filtros Avançados */}
       <div className="bg-white rounded-lg shadow-sm mb-6 p-4" data-tour="stock-filters">
         {/* Filtros Salvos */}
         {savedFilters.length > 0 && (
@@ -364,8 +364,8 @@ const StockPage = () => {
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Categoria</th>
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Local</th>
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Quantidade</th>
-                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">PreÃ§o</th>
-                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">AÃ§Ãµes</th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Preço</th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -375,7 +375,7 @@ const StockPage = () => {
                     const category = categories?.find(cat => cat.id === product.categoryId);
                     const categoryName = category ? category.name : 'N/A';
                     
-                    // Calcular quantidade total de todas as localizaÃ§Ãµes
+                    // Calcular quantidade total de todas as localizações
                     const totalQuantity = Object.values(product.locations || {}).reduce((sum, qty) => sum + (Number(qty) || 0), 0);
                     
                     // Formatar locais onde tem estoque
@@ -430,13 +430,13 @@ const StockPage = () => {
           ) : (
             <div className="text-center p-10">
               <h2 className="text-xl font-semibold mb-2">Nenhum produto encontrado.</h2>
-              <p className="text-gray-500 mb-4">VÃ¡ para a aba "Cadastros" para adicionar produtos.</p>
+              <p className="text-gray-500 mb-4">Vá para a aba "Cadastros" para adicionar produtos.</p>
             </div>
           )}
         </div>
       </div>
 
-      {/* PaginaÃ§Ã£o */}
+      {/* Paginação */}
       {products.length > 0 && (
         <Pagination
           currentPage={currentPage}
@@ -467,7 +467,7 @@ const StockPage = () => {
         productName={productToDelete?.name}
       />
 
-      {/* Modal de ConfirmaÃ§Ã£o de EdiÃ§Ã£o */}
+      {/* Modal de Confirmação de Edição */}
       <ActionConfirmationModal
         isOpen={isEditConfirmModalOpen}
         onClose={handleCloseEditConfirmModal}
@@ -478,7 +478,7 @@ const StockPage = () => {
         cancelText="Cancelar"
       />
 
-      {/* Modal de ConfirmaÃ§Ã£o de ExclusÃ£o */}
+      {/* Modal de Confirmação de Exclusão */}
       <ActionConfirmationModal
         isOpen={isDeleteConfirmModalOpen}
         onClose={handleCloseDeleteConfirmModal}
