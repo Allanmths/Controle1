@@ -204,3 +204,4 @@ export const useStockManagement = () => {
     itemsPerPage, // Vem do contexto agora
   };
 };
+
