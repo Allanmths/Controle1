@@ -1,4 +1,4 @@
-Ôªøimport React, { useState } from 'react';
+import React, { useState } from 'react';
 import useFirestore from '../hooks/useFirestore';
 import { db } from '../services/firebase';
 import { collection, addDoc } from 'firebase/firestore';
@@ -24,7 +24,7 @@ const ProductBulkImport = () => {
         const sampleData = [
             {
                 'Nome': 'Exemplo: Monitor 24 Polegadas',
-                'Categoria': 'Eletr√¥nicos',
+                'Categoria': 'EletrÙnicos',
                 'Unidade': 'un',
                 'EstoqueMinimo': '5',
                 ...(locations || []).reduce((acc, loc) => ({ ...acc, [`Estoque_${loc.name.replace(/\s+/g, '_')}`]: '10' }), {})
@@ -91,7 +91,7 @@ const ProductBulkImport = () => {
                         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
                         
                         if (jsonData.length < 2) {
-                            toast.error('Arquivo Excel deve conter pelo menos uma linha de cabe√ßalho e uma linha de dados.');
+                            toast.error('Arquivo Excel deve conter pelo menos uma linha de cabeÁalho e uma linha de dados.');
                             setIsImporting(false);
                             return;
                         }
@@ -138,13 +138,13 @@ const ProductBulkImport = () => {
                 break;
             
             default:
-                toast.error(`Tipo de arquivo n√£o suportado: .${fileExtension}. Use CSV, Excel (.xlsx/.xls) ou JSON.`);
+                toast.error(`Tipo de arquivo n„o suportado: .${fileExtension}. Use CSV, Excel (.xlsx/.xls) ou JSON.`);
                 setIsImporting(false);
                 break;
         }
     };
 
-    // Fun√ß√£o para criar categoria se n√£o existir
+    // FunÁ„o para criar categoria se n„o existir
     const createCategoryIfNotExists = async (categoryName, categoriesMap) => {
         const normalizedName = categoryName.toLowerCase();
         if (categoriesMap.has(normalizedName)) {
@@ -164,7 +164,7 @@ const ProductBulkImport = () => {
         }
     };
 
-    // Fun√ß√£o para criar localidade se n√£o existir
+    // FunÁ„o para criar localidade se n„o existir
     const createLocationIfNotExists = async (locationName, locationsMap) => {
         const fieldName = `Estoque_${locationName.replace(/\s+/g, '_')}`;
         if (locationsMap.has(fieldName)) {
@@ -194,7 +194,7 @@ const ProductBulkImport = () => {
         const fileExtension = file.name.split('.').pop().toLowerCase();
         
         if (!allowedTypes.includes(fileExtension)) {
-            toast.error(`Tipo de arquivo n√£o suportado. Use: ${allowedTypes.join(', ')}`);
+            toast.error(`Tipo de arquivo n„o suportado. Use: ${allowedTypes.join(', ')}`);
             return;
         }
 
@@ -205,7 +205,7 @@ const ProductBulkImport = () => {
             const categoriesMap = new Map((categories || []).map(cat => [cat.name.toLowerCase(), cat.id]));
             const locationsMap = new Map((locations || []).map(loc => [`Estoque_${loc.name.replace(/\s+/g, '_')}`, loc.id]));
 
-            // Identificar todas as categorias e localidades √∫nicas da planilha
+            // Identificar todas as categorias e localidades ˙nicas da planilha
             const uniqueCategories = new Set();
             const uniqueLocations = new Set();
 
@@ -224,7 +224,7 @@ const ProductBulkImport = () => {
                 });
             });
 
-            // Criar categorias e localidades que n√£o existem
+            // Criar categorias e localidades que n„o existem
             toast.loading('Verificando e criando categorias e localidades...', { id: 'creating-entities' });
             
             for (const categoryName of uniqueCategories) {
@@ -242,7 +242,7 @@ const ProductBulkImport = () => {
                 const { Nome, Categoria, Unidade, EstoqueMinimo, ...stockFields } = productRow;
 
                 if (!Nome || !Categoria) {
-                    toast.error(`Produto "${Nome || 'Sem nome'}" ignorado: Nome e Categoria s√£o obrigat√≥rios.`);
+                    toast.error(`Produto "${Nome || 'Sem nome'}" ignorado: Nome e Categoria s„o obrigatÛrios.`);
                     return Promise.resolve();
                 }
 
@@ -280,7 +280,7 @@ const ProductBulkImport = () => {
                 toast.success(`${successCount} de ${productsToImport.length} produtos foram importados com sucesso!`);
             } catch (error) {
                 toast.dismiss('importing-products');
-                toast.error(`Ocorreu um erro durante a importa√ß√£o: ${error.message}`);
+                toast.error(`Ocorreu um erro durante a importaÁ„o: ${error.message}`);
             } finally {
                 setIsImporting(false);
                 event.target.value = null;
@@ -290,19 +290,19 @@ const ProductBulkImport = () => {
 
     return (
         <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">Importa√ß√£o em Massa de Produtos</h3>
+            <h3 className="text-xl font-bold text-gray-800 mb-4">ImportaÁ„o em Massa de Produtos</h3>
             <p className="text-gray-600 mb-6">
-                Para adicionar m√∫ltiplos produtos de uma vez, baixe uma planilha modelo, preencha com os dados e importe o arquivo aqui.
+                Para adicionar m˙ltiplos produtos de uma vez, baixe uma planilha modelo, preencha com os dados e importe o arquivo aqui.
                 Formatos suportados: <strong>CSV, Excel (.xlsx/.xls) e JSON</strong>.
                 <br />
-                <span className="text-green-600 font-medium"> Novo:</span> Categorias e localidades que n√£o existirem ser√£o criadas automaticamente durante a importa√ß√£o!
+                <span className="text-green-600 font-medium"> Novo:</span> Categorias e localidades que n„o existirem ser„o criadas automaticamente durante a importaÁ„o!
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div className="border border-gray-200 rounded-lg p-4 text-center">
                     <FaFileCsv className="mx-auto text-3xl text-green-600 mb-2" />
                     <h4 className="font-semibold text-gray-800 mb-2">CSV</h4>
-                    <p className="text-sm text-gray-600 mb-3">Formato simples e compat√≠vel</p>
+                    <p className="text-sm text-gray-600 mb-3">Formato simples e compatÌvel</p>
                     <button
                         onClick={() => handleDownloadTemplate('csv')}
                         className="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded hover:bg-green-700 transition duration-300 text-sm"
@@ -315,7 +315,7 @@ const ProductBulkImport = () => {
                 <div className="border border-gray-200 rounded-lg p-4 text-center">
                     <FaFileExcel className="mx-auto text-3xl text-blue-600 mb-2" />
                     <h4 className="font-semibold text-gray-800 mb-2">Excel</h4>
-                    <p className="text-sm text-gray-600 mb-3">Planilha com formata√ß√£o</p>
+                    <p className="text-sm text-gray-600 mb-3">Planilha com formataÁ„o</p>
                     <button
                         onClick={() => handleDownloadTemplate('xlsx')}
                         className="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-300 text-sm"

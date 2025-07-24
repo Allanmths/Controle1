@@ -15,7 +15,7 @@ const ProductManager = () => {
         handleCloseModal,
     } = useStockManagement();
     
-    // Ativar notifica√ß√µes autom√°ticas
+    // Ativar notifica„ß„µes autom„°ticas
     useAutoNotifications();
 
     return (
@@ -32,7 +32,7 @@ const ProductManager = () => {
                     </button>
                 </div>
                 <p className="text-gray-600">
-                    Clique no bot√£o para adicionar um novo item ao seu invent√°rio. Voc√™ poder√° definir nome, categoria, estoque m√≠nimo e as quantidades em cada local de armazenamento.
+                    Clique no bot„£o para adicionar um novo item ao seu invent„°rio. Voc„™ poder„° definir nome, categoria, estoque m„≠nimo e as quantidades em cada local de armazenamento.
                 </p>
             </div>
 

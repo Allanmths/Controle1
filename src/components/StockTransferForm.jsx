@@ -31,7 +31,7 @@ const StockTransferForm = () => {
             return;
         }
         if (fromLocationId === toLocationId) {
-            toast.error("A localidade de origem e destino nÃ£o podem ser iguais.");
+            toast.error("A localidade de origem e destino não podem ser iguais.");
             return;
         }
         if (Number(quantity) <= 0) {
@@ -44,7 +44,7 @@ const StockTransferForm = () => {
         }
         
         const transferQuantity = Number(quantity);
-        const toastId = toast.loading('Processando transferÃªncia...');
+        const toastId = toast.loading('Processando Transferência...');
 
         try {
             await runTransaction(db, async (transaction) => {
@@ -52,7 +52,7 @@ const StockTransferForm = () => {
                 const productDoc = await transaction.get(productRef);
 
                 if (!productDoc.exists()) {
-                    throw new Error("Produto nÃ£o encontrado!");
+                    throw new Error("Produto não encontrado!");
                 }
 
                 const productData = productDoc.data();
@@ -69,7 +69,7 @@ const StockTransferForm = () => {
                 transaction.update(productRef, {
                     [`locations.${fromLocationId}`]: newFromStock,
                     [`locations.${toLocationId}`]: newToStock,
-                    // O totalStock nÃ£o muda na transferÃªncia
+                    // O totalStock não muda na Transferência
                 });
 
                 // 2. Registrar movimento de SAÃDA no Kardex
@@ -85,7 +85,7 @@ const StockTransferForm = () => {
                     timestamp: serverTimestamp(),
                     userId: user.uid,
                     userEmail: userData?.email,
-                    details: `TransferÃªncia para local ${toLocationId}`
+                    details: `Transferência para local ${toLocationId}`
                 });
 
                 // 3. Registrar movimento de ENTRADA no Kardex
@@ -101,11 +101,11 @@ const StockTransferForm = () => {
                     timestamp: serverTimestamp(),
                     userId: user.uid,
                     userEmail: userData?.email,
-                    details: `TransferÃªncia de local ${fromLocationId}`
+                    details: `Transferência de local ${fromLocationId}`
                 });
             });
 
-            toast.success('TransferÃªncia realizada com sucesso!', { id: toastId });
+            toast.success('Transferência realizada com sucesso!', { id: toastId });
             // Resetar o formulÃ¡rio
             setSelectedProduct(null);
             setFromLocationId('');
@@ -113,14 +113,14 @@ const StockTransferForm = () => {
             setQuantity('');
 
         } catch (error) {
-            console.error("Erro na transferÃªncia: ", error);
-            toast.error(error.message || 'Falha ao realizar a transferÃªncia.', { id: toastId });
+            console.error("Erro na Transferência: ", error);
+            toast.error(error.message || 'Falha ao realizar a Transferência.', { id: toastId });
         }
     };
 
     return (
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">TransferÃªncia de Estoque</h3>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Transferência de Estoque</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <ProductSelector 
                     onProductSelect={setSelectedProduct} 
@@ -171,7 +171,7 @@ const StockTransferForm = () => {
                         <div className="flex justify-end pt-2">
                             <button type="submit" disabled={!selectedProduct || !fromLocationId || !toLocationId || !quantity} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 disabled:bg-blue-300">
                                 <FaExchangeAlt />
-                                Confirmar TransferÃªncia
+                                Confirmar Transferência
                             </button>
                         </div>
                     </>

@@ -74,7 +74,7 @@ const UserRoleManager = () => {
     // Atualizar role
     await updateUserRole(userId, userData.role);
     
-    // Atualizar permissões customizadas se houver
+    // Atualizar permiss�es customizadas se houver
     if (userData.customPermissions) {
       await updateUserPermissions(userId, userData.customPermissions);
     }
@@ -93,9 +93,9 @@ const UserRoleManager = () => {
   };
 
   const handleDeleteUser = (user) => {
-    // Verificar se não é o próprio usuário
+    // Verificar se n�o é o próprio usuário
     if (user.id === currentUser?.uid) {
-      toast.error('Você não pode excluir sua própria conta');
+      toast.error('Você n�o pode excluir sua pr�pria conta');
       return;
     }
     
@@ -148,7 +148,7 @@ const UserRoleManager = () => {
               Acesso Negado
             </h3>
             <p className="text-sm text-red-700 mt-1">
-              Você não tem permissão para gerenciar usuários do sistema.
+              Você n�o tem permissão para gerenciar usuários do sistema.
             </p>
           </div>
         </div>
@@ -164,7 +164,7 @@ const UserRoleManager = () => {
           <FaUsers className="text-2xl text-blue-600" />
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Gerenciamento de Usuários</h2>
-            <p className="text-gray-600">Gerencie roles e permissões dos usuários do sistema</p>
+            <p className="text-gray-600">Gerencie roles e permiss�es dos usuários do sistema</p>
           </div>
         </div>
       </div>
@@ -268,7 +268,7 @@ const UserRoleManager = () => {
                     Criado em
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Ações
+                    A��es
                   </th>
                 </tr>
               </thead>
@@ -284,7 +284,7 @@ const UserRoleManager = () => {
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900">
-                            {user.displayName || 'Nome não definido'}
+                            {user.displayName || 'Nome n�o definido'}
                           </div>
                           <div className="text-sm text-gray-500">{user.email}</div>
                         </div>
@@ -299,7 +299,7 @@ const UserRoleManager = () => {
                       </div>
                       {user.customPermissions && user.customPermissions.length > 0 && (
                         <div className="text-xs text-blue-600 mt-1">
-                          +{user.customPermissions.length} permissões customizadas
+                          +{user.customPermissions.length} permiss�es customizadas
                         </div>
                       )}
                     </td>
@@ -363,7 +363,7 @@ const UserRoleManager = () => {
                 <p className="text-gray-500">
                   {searchTerm || selectedRole 
                     ? 'Tente ajustar os filtros de busca' 
-                    : 'Não há usuários cadastrados no sistema'
+                    : 'n�o há usuários cadastrados no sistema'
                   }
                 </p>
               </div>

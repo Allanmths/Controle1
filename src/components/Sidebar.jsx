@@ -11,11 +11,11 @@ const mainNavLinks = [
     { to: '/', text: 'In√≠cio', icon: FaHome },
     { to: '/stock', text: 'Estoque', icon: FaBoxOpen },
     { to: '/registers', text: 'Cadastros', icon: FaPlusCircle },
-    { to: '/movements', text: 'Movimenta√ß√µes', icon: FaExchangeAlt },
+    { to: '/movements', text: 'MovimentaÁıes', icon: FaExchangeAlt },
     { to: '/counting', text: 'Contagem', icon: FaClipboardCheck },
-    { to: '/replenishment', text: 'Reposi√ß√£o', icon: FaBoxes },
+    { to: '/replenishment', text: 'ReposiÁ„o', icon: FaBoxes },
     { to: '/audit', text: 'Auditoria', icon: FaHistory },
-    { to: '/reports', text: 'Analytics & Relat√≥rios', icon: FaFileAlt },
+    { to: '/reports', text: 'Analytics & RelatÛrios', icon: FaFileAlt },
 ];
 
 // Componente de item de navega√ß√£o reutiliz√°vel
@@ -91,13 +91,13 @@ export default function Sidebar({ isOpen, onClose }) {
                         </ul>
                     </nav>
                     
-                    {/* Links Inferiores (Configura√ß√µes e Sair) */}
+                    {/* Links Inferiores (ConfiguraÁıes e Sair) */}
                     <nav>
                         <ul className="pt-2 mt-2 space-y-1 border-t border-slate-200 dark:border-slate-700">
                             <NavItem 
                                 to="/settings" 
                                 icon={FaCog} 
-                                text="Configura√ß√µes" 
+                                text="ConfiguraÁıes" 
                                 onNavigate={handleNavigate}
                             />
                             <NavItem 

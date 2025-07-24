@@ -48,7 +48,7 @@ const StockExitForm = () => {
                 const productDoc = await transaction.get(productRef);
 
                 if (!productDoc.exists()) {
-                    throw new Error("Produto n√£o encontrado!");
+                    throw new Error("Produto n„o encontrado!");
                 }
 
                 const productData = productDoc.data();

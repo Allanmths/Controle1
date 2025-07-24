@@ -1,4 +1,4 @@
-ï»¿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../services/firebase';
@@ -14,7 +14,7 @@ export default function CategoriesManager() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [categoryToEdit, setCategoryToEdit] = useState(null);
 
-    // Permite ediÃ§Ã£o para usuÃ¡rios autenticados (pode ser ajustado conforme necessÃ¡rio)
+    // Permite edição para usuários autenticados (pode ser ajustado conforme necessário)
     const canEdit = currentUser && (userData?.role === 'admin' || userData?.role === 'editor' || !userData?.role);
 
     const handleOpenModal = (category = null) => {
@@ -32,7 +32,7 @@ export default function CategoriesManager() {
             const promise = deleteDoc(doc(db, 'categories', categoryId));
             toast.promise(promise, {
                 loading: 'Excluindo categoria...',
-                success: 'Categoria excluÃ­da com sucesso!',
+                success: 'Categoria excluída com sucesso!',
                 error: 'Falha ao excluir a categoria.',
             });
         }
