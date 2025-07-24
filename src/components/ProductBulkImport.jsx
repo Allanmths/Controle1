@@ -144,6 +144,46 @@ const ProductBulkImport = () => {
         }
     };
 
+    // Função para criar categoria se não existir
+    const createCategoryIfNotExists = async (categoryName, categoriesMap) => {
+        const normalizedName = categoryName.toLowerCase();
+        if (categoriesMap.has(normalizedName)) {
+            return categoriesMap.get(normalizedName);
+        }
+
+        try {
+            const docRef = await addDoc(collection(db, 'categories'), {
+                name: categoryName.trim()
+            });
+            categoriesMap.set(normalizedName, docRef.id);
+            toast.success(`Nova categoria criada: "${categoryName}"`);
+            return docRef.id;
+        } catch (error) {
+            toast.error(`Erro ao criar categoria "${categoryName}": ${error.message}`);
+            return null;
+        }
+    };
+
+    // Função para criar localidade se não existir
+    const createLocationIfNotExists = async (locationName, locationsMap) => {
+        const fieldName = `Estoque_${locationName.replace(/\s+/g, '_')}`;
+        if (locationsMap.has(fieldName)) {
+            return locationsMap.get(fieldName);
+        }
+
+        try {
+            const docRef = await addDoc(collection(db, 'locations'), {
+                name: locationName.trim()
+            });
+            locationsMap.set(fieldName, docRef.id);
+            toast.success(`Nova localidade criada: "${locationName}"`);
+            return docRef.id;
+        } catch (error) {
+            toast.error(`Erro ao criar localidade "${locationName}": ${error.message}`);
+            return null;
+        }
+    };
+
     const handleFileUpload = (event) => {
         const file = event.target.files[0];
         if (!file) {
@@ -165,6 +205,39 @@ const ProductBulkImport = () => {
             const categoriesMap = new Map((categories || []).map(cat => [cat.name.toLowerCase(), cat.id]));
             const locationsMap = new Map((locations || []).map(loc => [`Estoque_${loc.name.replace(/\s+/g, '_')}`, loc.id]));
 
+            // Identificar todas as categorias e localidades únicas da planilha
+            const uniqueCategories = new Set();
+            const uniqueLocations = new Set();
+
+            productsToImport.forEach(productRow => {
+                const { Categoria, ...stockFields } = productRow;
+                if (Categoria) {
+                    uniqueCategories.add(Categoria.trim());
+                }
+                
+                // Extrair nomes de localidades dos campos de estoque
+                Object.keys(stockFields).forEach(field => {
+                    if (field.startsWith('Estoque_') && stockFields[field]) {
+                        const locationName = field.replace('Estoque_', '').replace(/_/g, ' ');
+                        uniqueLocations.add(locationName);
+                    }
+                });
+            });
+
+            // Criar categorias e localidades que não existem
+            toast.loading('Verificando e criando categorias e localidades...', { id: 'creating-entities' });
+            
+            for (const categoryName of uniqueCategories) {
+                await createCategoryIfNotExists(categoryName, categoriesMap);
+            }
+
+            for (const locationName of uniqueLocations) {
+                await createLocationIfNotExists(locationName, locationsMap);
+            }
+
+            toast.dismiss('creating-entities');
+            toast.loading('Importando produtos...', { id: 'importing-products' });
+
             const promises = (productsToImport || []).map(async (productRow) => {
                 const { Nome, Categoria, Unidade, EstoqueMinimo, ...stockFields } = productRow;
 
@@ -175,15 +248,17 @@ const ProductBulkImport = () => {
 
                 const categoryId = categoriesMap.get(Categoria.toLowerCase());
                 if (!categoryId) {
-                    toast.error(`Produto "${Nome}" ignorado: Categoria "${Categoria}" não encontrada.`);
+                    toast.error(`Produto "${Nome}" ignorado: Erro ao obter categoria "${Categoria}".`);
                     return Promise.resolve();
                 }
 
                 const locationQuantities = {};
                 for (const [field, value] of Object.entries(stockFields)) {
-                    const locationId = locationsMap.get(field);
-                    if (locationId) {
-                        locationQuantities[locationId] = Number(value) || 0;
+                    if (field.startsWith('Estoque_') && value) {
+                        const locationId = locationsMap.get(field);
+                        if (locationId) {
+                            locationQuantities[locationId] = Number(value) || 0;
+                        }
                     }
                 }
 
@@ -201,8 +276,10 @@ const ProductBulkImport = () => {
             try {
                 const results = await Promise.allSettled(promises);
                 const successCount = results.filter(r => r.status === 'fulfilled').length;
+                toast.dismiss('importing-products');
                 toast.success(`${successCount} de ${productsToImport.length} produtos foram importados com sucesso!`);
             } catch (error) {
+                toast.dismiss('importing-products');
                 toast.error(`Ocorreu um erro durante a importação: ${error.message}`);
             } finally {
                 setIsImporting(false);
@@ -217,6 +294,8 @@ const ProductBulkImport = () => {
             <p className="text-gray-600 mb-6">
                 Para adicionar múltiplos produtos de uma vez, baixe uma planilha modelo, preencha com os dados e importe o arquivo aqui.
                 Formatos suportados: <strong>CSV, Excel (.xlsx/.xls) e JSON</strong>.
+                <br />
+                <span className="text-green-600 font-medium"> Novo:</span> Categorias e localidades que não existirem serão criadas automaticamente durante a importação!
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
