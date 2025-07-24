@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../services/firebase';
@@ -41,14 +41,14 @@ export default function CategoriesManager() {
     return (
         <>
             <div className="bg-white p-6 rounded-lg shadow-md">
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4">
                     <h3 className="text-xl font-bold text-gray-800">Cadastro de Categorias</h3>
                     {canEdit && (
                         <button 
                             onClick={() => handleOpenModal()} 
-                            className="flex items-center bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300"
+                            className="flex items-center justify-center bg-blue-500 text-white font-semibold py-3 px-6 sm:py-4 sm:px-8 rounded-lg hover:bg-blue-600 transition duration-300 min-h-[44px] sm:min-h-[48px] text-sm sm:text-base w-full sm:w-auto"
                         >
-                            <FaPlus className="mr-2" />
+                            <FaPlus className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
                             Nova Categoria
                         </button>
                     )}
