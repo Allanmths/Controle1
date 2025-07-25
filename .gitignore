@@ -56,3 +56,5 @@ firebase-debug.log
 # Cypress
 cypress/videos/
 cypress/screenshots/
+
+/dist
