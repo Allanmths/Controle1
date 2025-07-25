@@ -5,8 +5,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+# Permissões atualizadas para garantir acesso adequado
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -20,6 +21,10 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        # Fetch entire history to evitar erros de git
+        fetch-depth: 0
+        persist-credentials: true
       
     - name: Setup Node.js
       uses: actions/setup-node@v4
