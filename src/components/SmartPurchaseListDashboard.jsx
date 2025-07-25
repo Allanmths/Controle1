@@ -185,7 +185,7 @@ const SmartPurchaseListDashboard = () => {
             Lista de Compras Inteligente
           </h2>
           <p className="text-gray-600">
-            GeraÃ§Ã£o automÃ¡tica baseada em anÃ¡lise de estoque baixo
+            Geração automática baseada em análise de estoque baixo
           </p>
         </div>
         
@@ -201,11 +201,11 @@ const SmartPurchaseListDashboard = () => {
         )}
       </div>
 
-      {/* AnÃ¡lise de Estoque Baixo */}
+      {/* Análise de Estoque Baixo */}
       {lowStockAnalysis && (
         <div className="bg-white rounded-lg shadow-sm border mb-6 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            AnÃ¡lise de Estoque Atual
+            Análise de Estoque Atual
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -336,7 +336,7 @@ const SmartPurchaseListDashboard = () => {
             </h3>
             <p className="text-gray-600">
               {purchaseLists.length === 0 
-                ? 'Gere sua primeira lista baseada na anÃ¡lise de estoque.'
+                ? 'Gere sua primeira lista baseada na análise de estoque.'
                 : 'Nenhuma lista corresponde aos filtros aplicados.'
               }
             </p>

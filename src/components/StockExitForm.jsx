@@ -84,27 +84,27 @@ const StockExitForm = () => {
                 });
             });
 
-            toast.success('SaÃ­da de estoque registrada com sucesso!', { id: toastId });
-            // Resetar o formulÃ¡rio
+            toast.success('Saída de estoque registrada com sucesso!', { id: toastId });
+            // Resetar o formulário
             setSelectedProduct(null);
             setFromLocationId('');
             setQuantity('');
             setReason('');
 
         } catch (error) {
-            console.error("Erro na saÃ­da de estoque: ", error);
-            toast.error(error.message || 'Falha ao registrar a saÃ­da.', { id: toastId });
+            console.error("Erro na saída de estoque: ", error);
+            toast.error(error.message || 'Falha ao registrar a saída.', { id: toastId });
         }
     };
 
     return (
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">SaÃ­da de Estoque</h3>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Saída de Estoque</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <ProductSelector 
                     onProductSelect={setSelectedProduct} 
                     selectedProductId={selectedProduct?.id}
-                    placeholder="Buscar produto para saÃ­da..." 
+                    placeholder="Buscar produto para saída..." 
                 />
 
                 {selectedProduct && (
@@ -127,11 +127,11 @@ const StockExitForm = () => {
 
                         <div>
                             <label htmlFor="quantity-exit" className="block text-sm font-medium text-gray-700 mb-1">Quantidade</label>
-                            <input type="number" id="quantity-exit" value={quantity} onChange={e => setQuantity(e.target.value)} min="1" max={availableStock > 0 ? availableStock : undefined} placeholder={`MÃ¡x: ${availableStock}`} className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
+                            <input type="number" id="quantity-exit" value={quantity} onChange={e => setQuantity(e.target.value)} min="1" max={availableStock > 0 ? availableStock : undefined} placeholder={`Máx: ${availableStock}`} className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
                         </div>
 
                         <div>
-                            <label htmlFor="reason-exit" className="block text-sm font-medium text-gray-700 mb-1">Motivo da SaÃ­da</label>
+                            <label htmlFor="reason-exit" className="block text-sm font-medium text-gray-700 mb-1">Motivo da Saída</label>
                             <input type="text" id="reason-exit" value={reason} onChange={e => setReason(e.target.value)} placeholder="Ex: Venda, Perda, Uso interno" className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
                         </div>
 

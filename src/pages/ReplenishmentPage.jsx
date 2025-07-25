@@ -173,7 +173,7 @@ const ReplenishmentPage = () => {
               className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               <FaPlus />
-              <span>Nova SolicitaÃ§Ã£o</span>
+              <span>Nova Solicitação</span>
             </button>
           )}
         </div>
@@ -241,7 +241,7 @@ const ReplenishmentPage = () => {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              AnÃ¡lise de Estoque
+              Análise de Estoque
             </button>
           )}
         </nav>
@@ -487,7 +487,7 @@ const ReplenishmentPage = () => {
         <SmartPurchaseListDashboard />
       )}
 
-      {/* Tab Content - AnÃ¡lise de Estoque */}
+      {/* Tab Content - Análise de Estoque */}
       {activeTab === 'analysis' && canGeneratePurchaseList && (
         <div className="space-y-6">
           {lowStockAnalysis ? (
@@ -628,10 +628,10 @@ const ReplenishmentPage = () => {
             <div className="text-center py-12">
               <FaBoxes size={48} className="mx-auto text-gray-400 mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                AnÃ¡lise de Estoque
+                Análise de Estoque
               </h3>
               <p className="text-gray-500 mb-4">
-                Clique no botÃ£o abaixo para analisar produtos com estoque baixo
+                Clique no botão abaixo para analisar produtos com estoque baixo
               </p>
               <button
                 onClick={loadLowStockAnalysis}

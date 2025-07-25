@@ -57,14 +57,14 @@ export const useReplenishmentManagement = () => {
       return requestsData;
     } catch (error) {
       console.error('Erro ao buscar solicitaÃ§Ãµes:', error);
-      setError('Erro ao carregar solicitaÃ§Ãµes de reposiÃ§Ã£o');
+      setError('Erro ao carregar solicitações de reposição');
       throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  // Criar nova solicitaÃ§Ã£o de reposiÃ§Ã£o
+  // Criar nova solicitação de reposição
   const createReplenishmentRequest = async (requestData) => {
     setLoading(true);
     setError(null);
@@ -82,11 +82,11 @@ export const useReplenishmentManagement = () => {
 
       const docRef = await addDoc(collection(db, 'replenishmentRequests'), newRequest);
       
-      // Notificar gestores sobre nova solicitaÃ§Ã£o
+      // Notificar gestores sobre nova solicitação
       addNotification({
         type: 'info',
-        title: 'Nova SolicitaÃ§Ã£o de ReposiÃ§Ã£o',
-        message: `${userData?.displayName || currentUser.email} criou uma solicitaÃ§Ã£o de reposiÃ§Ã£o`,
+        title: 'Nova Solicitação de Reposição',
+        message: `${userData?.displayName || currentUser.email} criou uma solicitação de reposição`,
         action: {
           label: 'Ver SolicitaÃ§Ã£o',
           route: `/replenishment/requests/${docRef.id}`

@@ -32,7 +32,7 @@ const ProductManager = () => {
                     </button>
                 </div>
                 <p className="text-gray-600">
-                    Clique no botã£o para adicionar um novo item ao seu inventã¡rio. Vocãª poderã¡ definir nome, categoria, estoque mã­nimo e as quantidades em cada local de armazenamento.
+                    Clique no botão para adicionar um novo item ao seu inventário. Você poderá definir nome, categoria, estoque mínimo e as quantidades em cada local de armazenamento.
                 </p>
             </div>
 

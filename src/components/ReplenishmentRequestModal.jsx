@@ -209,8 +209,8 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
           <div className="flex items-center space-x-3">
             <FaBoxes className="text-blue-600" />
             <div>
-              <h2 className="text-xl font-semibold">Nova SolicitaÃ§Ã£o de ReposiÃ§Ã£o</h2>
-              <p className="text-sm text-gray-600">Solicite reposiÃ§Ã£o de produtos com estoque baixo</p>
+              <h2 className="text-xl font-semibold">Nova Solicitação de Reposição</h2>
+              <p className="text-sm text-gray-600">Solicite reposição de produtos com estoque baixo</p>
             </div>
           </div>
           <button

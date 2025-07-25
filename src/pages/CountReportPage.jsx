@@ -66,7 +66,7 @@ export default function CountReportPage() {
                             productId: item.productId,
                             type: 'ajuste',
                             quantity: Math.abs(difference),
-                            motive: `Ajuste de inventÃ¡rio (${difference > 0 ? 'sobra' : 'perda'})`,
+                            motive: `Ajuste de inventário (${difference > 0 ? 'sobra' : 'perda'})`,
                             date: new Date(),
                             userEmail: currentUser?.email || 'N/A',
                         });
