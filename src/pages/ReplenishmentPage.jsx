@@ -202,7 +202,7 @@ const ReplenishmentPage = () => {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              Dashboard de AprovaÃ§Ãµes
+              Dashboard de Aprovações
             </button>
           )}
           
@@ -215,7 +215,7 @@ const ReplenishmentPage = () => {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              ExecuÃ§Ã£o
+              Execução
             </button>
           )}
           
@@ -472,12 +472,12 @@ const ReplenishmentPage = () => {
         </>
       )}
 
-      {/* Tab Content - Dashboard de AprovaÃ§Ãµes */}
+      {/* Tab Content - Dashboard de Aprovações */}
       {activeTab === 'approvals' && canApproveRequests && (
         <ApprovalDashboard />
       )}
 
-      {/* Tab Content - ExecuÃ§Ã£o */}
+      {/* Tab Content - Execução */}
       {activeTab === 'execution' && canExecuteReplenishment && (
         <ExecutionDashboard />
       )}
@@ -654,7 +654,7 @@ const ReplenishmentPage = () => {
         }}
       />
 
-      {/* Modal de AprovaÃ§Ã£o */}
+      {/* Modal de Aprovação */}
       <ReplenishmentApprovalModal
         isOpen={showApprovalModal}
         onClose={() => {
