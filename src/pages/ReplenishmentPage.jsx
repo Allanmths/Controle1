@@ -162,8 +162,8 @@ const ReplenishmentPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Sistema de ReposiÃ§Ã£o</h1>
-          <p className="text-gray-600">Gerencie solicitaÃ§Ãµes de reposiÃ§Ã£o e listas de compras</p>
+          <h1 className="text-2xl font-bold text-gray-900">Sistema de Reposição</h1>
+          <p className="text-gray-600">Gerencie solicitações de reposição e listas de compras</p>
         </div>
         
         <div className="flex items-center space-x-3">
@@ -190,7 +190,7 @@ const ReplenishmentPage = () => {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            SolicitaÃ§Ãµes de ReposiÃ§Ã£o
+            Solicitações de Reposição
           </button>
           
           {canApproveRequests && (
@@ -457,12 +457,12 @@ const ReplenishmentPage = () => {
                 <div className="text-center py-12">
                   <FaBoxes size={48} className="mx-auto text-gray-400 mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    Nenhuma solicitaÃ§Ã£o encontrada
+                    Nenhuma solicitação encontrada
                   </h3>
                   <p className="text-gray-500">
                     {canRequestReplenishment 
-                      ? "Crie sua primeira solicitaÃ§Ã£o de reposiÃ§Ã£o"
-                      : "NÃ£o hÃ¡ solicitaÃ§Ãµes que correspondam aos filtros aplicados"
+                      ? "Crie sua primeira solicitação de reposição"
+                      : "Não há solicitações que correspondam aos filtros aplicados"
                     }
                   </p>
                 </div>
