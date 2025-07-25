@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import UserRoleManager from '../components/UserRoleManager';
 import NotificationDemo from '../components/NotificationDemo';
 import NotificationHistory from '../components/NotificationHistory';
@@ -19,17 +19,17 @@ const SettingsPage = () => {
 
     const handleCreateDemoUsers = async () => {
         setCreatingDemo(true);
-        const toastId = toast.loading('Criando usuários de demonstração...');
+        const toastId = toast.loading('Criando usuÃ¡rios de demonstraÃ§Ã£o...');
         
         try {
             const success = await createDemoUsers();
             if (success) {
-                toast.success('Usuários demo criados com sucesso!', { id: toastId });
+                toast.success('UsuÃ¡rios demo criados com sucesso!', { id: toastId });
             } else {
-                toast.error('Erro ao criar usuários demo', { id: toastId });
+                toast.error('Erro ao criar usuÃ¡rios demo', { id: toastId });
             }
         } catch (error) {
-            toast.error('Erro ao criar usuários demo', { id: toastId });
+            toast.error('Erro ao criar usuÃ¡rios demo', { id: toastId });
         }
         
         setCreatingDemo(false);
@@ -37,17 +37,17 @@ const SettingsPage = () => {
 
     return (
         <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-200 mb-6">Configurações</h2>
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-200 mb-6">ConfiguraÃ§Ãµes</h2>
             
             <div className="space-y-8 max-w-4xl mx-auto">
                 {/* Card de Tema */}
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
                     <div className="flex items-center mb-4">
                         <FaPalette className="text-2xl text-purple-500 mr-3" />
-                        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">Aparência</h3>
+                        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">AparÃªncia</h3>
                     </div>
                     <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        Escolha entre o tema claro ou escuro para personalizar a aparência do sistema.
+                        Escolha entre o tema claro ou escuro para personalizar a aparÃªncia do sistema.
                     </p>
                     
                     <div className="flex items-center space-x-4">
@@ -81,16 +81,16 @@ const SettingsPage = () => {
                     </div>
                 </div>
 
-                {/* Card de Paginação */}
+                {/* Card de PaginaÃ§Ã£o */}
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
                     <div className="flex items-center mb-4">
                         <FaListOl className="text-2xl text-blue-500 mr-3" />
-                        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">Visualização de Listas</h3>
+                        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">VisualizaÃ§Ã£o de Listas</h3>
                     </div>
-                    <p className="text-gray-600 dark:text-gray-400 mb-4">Defina quantos itens devem ser exibidos por página nas tabelas do sistema.</p>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">Defina quantos itens devem ser exibidos por pÃ¡gina nas tabelas do sistema.</p>
                     
                     <div>
-                        <label htmlFor="itemsPerPage" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Itens por página</label>
+                        <label htmlFor="itemsPerPage" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Itens por pÃ¡gina</label>
                         <select
                             id="itemsPerPage"
                             value={itemsPerPage}
@@ -109,10 +109,10 @@ const SettingsPage = () => {
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
                     <div className="flex items-center mb-4">
                         <FaDatabase className="text-2xl text-green-500 mr-3" />
-                        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">Dados de Demonstração</h3>
+                        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">Dados de DemonstraÃ§Ã£o</h3>
                     </div>
                     <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        Crie usuários de demonstração para testar o sistema de gerenciamento de roles e permissões.
+                        Crie usuÃ¡rios de demonstraÃ§Ã£o para testar o sistema de gerenciamento de roles e permissÃµes.
                     </p>
                     
                     <button
@@ -121,35 +121,35 @@ const SettingsPage = () => {
                         className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 dark:bg-green-700 dark:hover:bg-green-600"
                     >
                         <FaUserPlus className="mr-2" />
-                        {creatingDemo ? 'Criando...' : 'Criar Usuários Demo'}
+                        {creatingDemo ? 'Criando...' : 'Criar UsuÃ¡rios Demo'}
                     </button>
                     
                     <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
-                        <p><strong>Usuários que serão criados:</strong></p>
+                        <p><strong>UsuÃ¡rios que serÃ£o criados:</strong></p>
                         <ul className="mt-1 space-y-1">
-                            <li>• admin@demo.com (Administrador)</li>
-                            <li>• manager@demo.com (Gerente)</li>
-                            <li>• editor@demo.com (Editor)</li>
-                            <li>• usuario@demo.com (Usuário)</li>
-                            <li>• viewer@demo.com (Visualizador)</li>
-                            <li>• inativo@demo.com (Usuário Inativo)</li>
+                            <li>â€¢ admin@demo.com (Administrador)</li>
+                            <li>â€¢ manager@demo.com (Gerente)</li>
+                            <li>â€¢ editor@demo.com (Editor)</li>
+                            <li>â€¢ usuario@demo.com (UsuÃ¡rio)</li>
+                            <li>â€¢ viewer@demo.com (Visualizador)</li>
+                            <li>â€¢ inativo@demo.com (UsuÃ¡rio Inativo)</li>
                         </ul>
                     </div>
                 </div>
 
-                {/* Demonstração de Notificações */}
+                {/* DemonstraÃ§Ã£o de NotificaÃ§Ãµes */}
                 <NotificationDemo />
 
-                {/* Debugger de Notificações */}
+                {/* Debugger de NotificaÃ§Ãµes */}
                 <NotificationDebugger />
 
-                {/* Administração de Notificações */}
+                {/* AdministraÃ§Ã£o de NotificaÃ§Ãµes */}
                 <NotificationAdmin />
 
-                {/* Histórico de Notificações */}
+                {/* HistÃ³rico de NotificaÃ§Ãµes */}
                 <NotificationHistory />
 
-                {/* Card de Usuários (existente) */}
+                {/* Card de UsuÃ¡rios (existente) */}
                 <UserRoleManager />
             </div>
         </div>

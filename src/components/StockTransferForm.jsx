@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { db } from '../services/firebase';
 import { runTransaction, doc, collection, serverTimestamp } from 'firebase/firestore';
@@ -31,7 +31,7 @@ const StockTransferForm = () => {
             return;
         }
         if (fromLocationId === toLocationId) {
-            toast.error("A localidade de origem e destino n�o podem ser iguais.");
+            toast.error("A localidade de origem e destino não podem ser iguais.");
             return;
         }
         if (Number(quantity) <= 0) {
@@ -39,12 +39,12 @@ const StockTransferForm = () => {
             return;
         }
         if (Number(quantity) > availableStock) {
-            toast.error(`Estoque insuficiente na origem. Disponível: ${availableStock}`);
+            toast.error(`Estoque insuficiente na origem. DisponÃ­vel: ${availableStock}`);
             return;
         }
         
         const transferQuantity = Number(quantity);
-        const toastId = toast.loading('Processando Transfer�ncia...');
+        const toastId = toast.loading('Processando Transferência...');
 
         try {
             await runTransaction(db, async (transaction) => {
@@ -52,14 +52,14 @@ const StockTransferForm = () => {
                 const productDoc = await transaction.get(productRef);
 
                 if (!productDoc.exists()) {
-                    throw new Error("Produto n�o encontrado!");
+                    throw new Error("Produto não encontrado!");
                 }
 
                 const productData = productDoc.data();
                 const currentFromStock = productData.locations?.[fromLocationId] || 0;
 
                 if (currentFromStock < transferQuantity) {
-                    throw new Error(`Estoque insuficiente na origem. Disponível: ${currentFromStock}`);
+                    throw new Error(`Estoque insuficiente na origem. DisponÃ­vel: ${currentFromStock}`);
                 }
 
                 const newFromStock = currentFromStock - transferQuantity;
@@ -69,10 +69,10 @@ const StockTransferForm = () => {
                 transaction.update(productRef, {
                     [`locations.${fromLocationId}`]: newFromStock,
                     [`locations.${toLocationId}`]: newToStock,
-                    // O totalStock n�o muda na Transfer�ncia
+                    // O totalStock não muda na Transferência
                 });
 
-                // 2. Registrar movimento de SAÍDA no Kardex
+                // 2. Registrar movimento de SAÃDA no Kardex
                 const kardexExitRef = doc(collection(db, 'kardex'));
                 transaction.set(kardexExitRef, {
                     productId: selectedProduct.id,
@@ -85,7 +85,7 @@ const StockTransferForm = () => {
                     timestamp: serverTimestamp(),
                     userId: user.uid,
                     userEmail: userData?.email,
-                    details: `Transfer�ncia para local ${toLocationId}`
+                    details: `Transferência para local ${toLocationId}`
                 });
 
                 // 3. Registrar movimento de ENTRADA no Kardex
@@ -101,26 +101,26 @@ const StockTransferForm = () => {
                     timestamp: serverTimestamp(),
                     userId: user.uid,
                     userEmail: userData?.email,
-                    details: `Transfer�ncia de local ${fromLocationId}`
+                    details: `Transferência de local ${fromLocationId}`
                 });
             });
 
-            toast.success('Transfer�ncia realizada com sucesso!', { id: toastId });
-            // Resetar o formulário
+            toast.success('Transferência realizada com sucesso!', { id: toastId });
+            // Resetar o formulÃ¡rio
             setSelectedProduct(null);
             setFromLocationId('');
             setToLocationId('');
             setQuantity('');
 
         } catch (error) {
-            console.error("Erro na Transfer�ncia: ", error);
-            toast.error(error.message || 'Falha ao realizar a Transfer�ncia.', { id: toastId });
+            console.error("Erro na Transferência: ", error);
+            toast.error(error.message || 'Falha ao realizar a Transferência.', { id: toastId });
         }
     };
 
     return (
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Transfer�ncia de Estoque</h3>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Transferência de Estoque</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <ProductSelector 
                     onProductSelect={setSelectedProduct} 
@@ -165,13 +165,13 @@ const StockTransferForm = () => {
 
                         <div>
                             <label htmlFor="quantity-transfer" className="block text-sm font-medium text-gray-700 mb-1">Quantidade a Transferir</label>
-                            <input type="number" id="quantity-transfer" value={quantity} onChange={e => setQuantity(e.target.value)} min="1" max={availableStock > 0 ? availableStock : undefined} placeholder={`Máx: ${availableStock}`} className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
+                            <input type="number" id="quantity-transfer" value={quantity} onChange={e => setQuantity(e.target.value)} min="1" max={availableStock > 0 ? availableStock : undefined} placeholder={`MÃ¡x: ${availableStock}`} className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
                         </div>
 
                         <div className="flex justify-end pt-2">
                             <button type="submit" disabled={!selectedProduct || !fromLocationId || !toLocationId || !quantity} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 disabled:bg-blue-300">
                                 <FaExchangeAlt />
-                                Confirmar Transfer�ncia
+                                Confirmar Transferência
                             </button>
                         </div>
                     </>

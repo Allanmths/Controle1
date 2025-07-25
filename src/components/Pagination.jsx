@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     if (totalPages <= 1) {
@@ -22,7 +22,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                     <i className="fas fa-chevron-left h-5 w-5"></i>
                 </button>
                 
-                {/* Placeholder para lógica de paginação mais complexa (ex: ... ) */}
+                {/* Placeholder para lÃ³gica de paginaÃ§Ã£o mais complexa (ex: ... ) */}
                 {pageNumbers.map(number => (
                     <button
                         key={number}
@@ -42,7 +42,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                     disabled={currentPage === totalPages}
                     className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
                 >
-                    <span className="sr-only">Próximo</span>
+                    <span className="sr-only">PrÃ³ximo</span>
                     <i className="fas fa-chevron-right h-5 w-5"></i>
                 </button>
             </nav>

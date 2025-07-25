@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNotifications } from '../context/NotificationContext';
 import { FaBug, FaPlay, FaPause, FaTrash, FaEye } from 'react-icons/fa';
 
@@ -18,7 +18,7 @@ const NotificationDebugger = () => {
 
     const interval = setInterval(() => {
       analyzeNotifications();
-    }, 5000); // Análise a cada 5 segundos
+    }, 5000); // AnÃ¡lise a cada 5 segundos
 
     return () => clearInterval(interval);
   }, [isMonitoring, notifications, filters]);
@@ -33,10 +33,10 @@ const NotificationDebugger = () => {
     // Detectar duplicatas
     const duplicates = findDuplicates(recentNotifications);
     
-    // Detectar notificações muito frequentes
+    // Detectar notificaÃ§Ãµes muito frequentes
     const frequent = findFrequentNotifications(recentNotifications);
     
-    // Atualizar estatísticas
+    // Atualizar estatÃ­sticas
     const newStats = {
       total: notifications.length,
       recent: recentNotifications.length,
@@ -58,7 +58,7 @@ const NotificationDebugger = () => {
         stats: newStats
       };
       
-      setDebugLog(prev => [logEntry, ...prev.slice(0, 19)]); // Manter últimas 20 entradas
+      setDebugLog(prev => [logEntry, ...prev.slice(0, 19)]); // Manter Ãºltimas 20 entradas
     }
   };
 
@@ -97,7 +97,7 @@ const NotificationDebugger = () => {
     });
 
     return Array.from(frequency.entries())
-      .filter(([key, count]) => count > 5) // Mais de 5 notificações no período
+      .filter(([key, count]) => count > 5) // Mais de 5 notificaÃ§Ãµes no perÃ­odo
       .map(([key, count]) => ({ key, count }));
   };
 
@@ -128,7 +128,7 @@ const NotificationDebugger = () => {
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
           <FaBug className="mr-3 text-red-500" />
-          Debugger de Notificações
+          Debugger de NotificaÃ§Ãµes
         </h3>
         <div className="flex gap-2">
           <button
@@ -152,7 +152,7 @@ const NotificationDebugger = () => {
         </div>
       </div>
 
-      {/* Configurações */}
+      {/* ConfiguraÃ§Ãµes */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -187,7 +187,7 @@ const NotificationDebugger = () => {
         </div>
       </div>
 
-      {/* Estatísticas */}
+      {/* EstatÃ­sticas */}
       {stats.timestamp && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg text-center">
@@ -213,11 +213,11 @@ const NotificationDebugger = () => {
       <div className="mb-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Status: {isMonitoring ? '🟢 Monitorando' : '🔴 Parado'}
+            Status: {isMonitoring ? 'ðŸŸ¢ Monitorando' : 'ðŸ”´ Parado'}
           </span>
           {stats.timestamp && (
             <span className="text-xs text-gray-500 dark:text-gray-400">
-              Última análise: {new Date(stats.timestamp).toLocaleTimeString()}
+              Ãšltima anÃ¡lise: {new Date(stats.timestamp).toLocaleTimeString()}
             </span>
           )}
         </div>
@@ -252,7 +252,7 @@ const NotificationDebugger = () => {
               <div key={entry.id} className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
-                    ⚠️ Problema Detectado
+                    âš ï¸ Problema Detectado
                   </span>
                   <span className="text-xs text-gray-500">
                     {new Date(entry.timestamp).toLocaleTimeString()}
@@ -262,11 +262,11 @@ const NotificationDebugger = () => {
                 {entry.duplicates.length > 0 && (
                   <div className="mb-2">
                     <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">
-                      🔄 Duplicatas encontradas: {entry.duplicates.length}
+                      ðŸ”„ Duplicatas encontradas: {entry.duplicates.length}
                     </p>
                     {entry.duplicates.slice(0, 3).map((dup, idx) => (
                       <p key={idx} className="text-xs text-gray-600 dark:text-gray-400 ml-4">
-                        • "{dup.duplicate.title}" (intervalo: {dup.timeDiff.toFixed(1)}s)
+                        â€¢ "{dup.duplicate.title}" (intervalo: {dup.timeDiff.toFixed(1)}s)
                       </p>
                     ))}
                   </div>
@@ -275,11 +275,11 @@ const NotificationDebugger = () => {
                 {entry.frequent.length > 0 && (
                   <div>
                     <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">
-                      🚨 Notificações frequentes: {entry.frequent.length} tipos
+                      ðŸš¨ NotificaÃ§Ãµes frequentes: {entry.frequent.length} tipos
                     </p>
                     {entry.frequent.slice(0, 3).map((freq, idx) => (
                       <p key={idx} className="text-xs text-gray-600 dark:text-gray-400 ml-4">
-                        • {freq.key}: {freq.count} vezes
+                        â€¢ {freq.key}: {freq.count} vezes
                       </p>
                     ))}
                   </div>

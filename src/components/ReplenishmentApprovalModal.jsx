@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { 
   FaTimes, 
   FaCheck, 
@@ -55,7 +55,7 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
       onSuccess?.();
       onClose();
     } catch (error) {
-      console.error('Erro ao processar solicitação:', error);
+      console.error('Erro ao processar solicitaÃ§Ã£o:', error);
     }
   };
 
@@ -93,7 +93,7 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
           <div className="flex items-center space-x-3">
             <FaBoxes className="text-blue-600" />
             <div>
-              <h2 className="text-xl font-semibold">Análise de Solicitação</h2>
+              <h2 className="text-xl font-semibold">AnÃ¡lise de SolicitaÃ§Ã£o</h2>
               <p className="text-sm text-gray-600">#{request.id}</p>
             </div>
           </div>
@@ -107,9 +107,9 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
 
         {/* Content */}
         <div className="p-6">
-          {/* Informações da Solicitação */}
+          {/* InformaÃ§Ãµes da SolicitaÃ§Ã£o */}
           <div className="bg-gray-50 rounded-lg p-4 mb-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Informações da Solicitação</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">InformaÃ§Ãµes da SolicitaÃ§Ã£o</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-3">
@@ -155,7 +155,7 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
             </div>
           </div>
 
-          {/* Título e Descrição */}
+          {/* TÃ­tulo e DescriÃ§Ã£o */}
           <div className="mb-6">
             <h4 className="text-lg font-medium text-gray-900 mb-2">{request.title}</h4>
             {request.description && (
@@ -201,7 +201,7 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
                       <td className="px-4 py-3 text-sm text-gray-900">
                         <div className="flex flex-col">
                           <span className="font-medium">{item.currentStock}</span>
-                          <span className="text-xs text-gray-500">Mín: {item.minStock}</span>
+                          <span className="text-xs text-gray-500">MÃ­n: {item.minStock}</span>
                         </div>
                       </td>
                       <td className="px-4 py-3 text-sm font-medium text-gray-900">
@@ -213,7 +213,7 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
                         </span>
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-700">
-                        {item.reason || 'Não informado'}
+                        {item.reason || 'NÃ£o informado'}
                       </td>
                     </tr>
                   ))}
@@ -222,15 +222,15 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
             </div>
           </div>
 
-          {/* Formulário de Aprovação/Rejeição */}
+          {/* FormulÃ¡rio de AprovaÃ§Ã£o/RejeiÃ§Ã£o */}
           {!showConfirmation && (
             <div className="space-y-4">
-              <h4 className="text-lg font-medium text-gray-900">Análise da Solicitação</h4>
+              <h4 className="text-lg font-medium text-gray-900">AnÃ¡lise da SolicitaÃ§Ã£o</h4>
               
               {action === 'reject' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Motivo da Rejeição *
+                    Motivo da RejeiÃ§Ã£o *
                   </label>
                   <select
                     value={formData.reason}
@@ -239,11 +239,11 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
                     required
                   >
                     <option value="">Selecione o motivo</option>
-                    <option value="Orçamento insuficiente">Orçamento insuficiente</option>
+                    <option value="OrÃ§amento insuficiente">OrÃ§amento insuficiente</option>
                     <option value="Produto descontinuado">Produto descontinuado</option>
                     <option value="Quantidade excessiva">Quantidade excessiva</option>
-                    <option value="Fornecedor indisponível">Fornecedor indisponível</option>
-                    <option value="Política da empresa">Política da empresa</option>
+                    <option value="Fornecedor indisponÃ­vel">Fornecedor indisponÃ­vel</option>
+                    <option value="PolÃ­tica da empresa">PolÃ­tica da empresa</option>
                     <option value="Outros">Outros</option>
                   </select>
                 </div>
@@ -251,7 +251,7 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Observações {action === 'reject' ? '(Obrigatório)' : '(Opcional)'}
+                  ObservaÃ§Ãµes {action === 'reject' ? '(ObrigatÃ³rio)' : '(Opcional)'}
                 </label>
                 <textarea
                   value={formData.notes}
@@ -260,15 +260,15 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder={
                     action === 'approve' 
-                      ? "Adicione observações sobre a aprovação (opcional)..."
-                      : "Explique detalhadamente o motivo da rejeição..."
+                      ? "Adicione observaÃ§Ãµes sobre a aprovaÃ§Ã£o (opcional)..."
+                      : "Explique detalhadamente o motivo da rejeiÃ§Ã£o..."
                   }
                 />
               </div>
             </div>
           )}
 
-          {/* Confirmação */}
+          {/* ConfirmaÃ§Ã£o */}
           {showConfirmation && (
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
               <div className="flex items-start space-x-3">
@@ -283,19 +283,19 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
                 </div>
                 <div className="flex-1">
                   <h5 className="text-lg font-medium text-gray-900">
-                    Confirmar {action === 'approve' ? 'Aprovação' : 'Rejeição'}
+                    Confirmar {action === 'approve' ? 'AprovaÃ§Ã£o' : 'RejeiÃ§Ã£o'}
                   </h5>
                   <p className="text-gray-700 mt-1">
-                    Tem certeza que deseja {action === 'approve' ? 'aprovar' : 'rejeitar'} esta solicitação?
+                    Tem certeza que deseja {action === 'approve' ? 'aprovar' : 'rejeitar'} esta solicitaÃ§Ã£o?
                   </p>
                   
                   {action === 'approve' && (
                     <div className="mt-3 p-3 bg-green-50 rounded-lg">
                       <p className="text-sm text-green-800">
-                        <strong>Após a aprovação:</strong><br />
-                        • O solicitante será notificado<br />
-                        • A solicitação ficará disponível para execução<br />
-                        • Um documento de reposição será gerado
+                        <strong>ApÃ³s a aprovaÃ§Ã£o:</strong><br />
+                        â€¢ O solicitante serÃ¡ notificado<br />
+                        â€¢ A solicitaÃ§Ã£o ficarÃ¡ disponÃ­vel para execuÃ§Ã£o<br />
+                        â€¢ Um documento de reposiÃ§Ã£o serÃ¡ gerado
                       </p>
                     </div>
                   )}
@@ -306,7 +306,7 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
                         <strong>Motivo:</strong> {formData.reason}<br />
                         {formData.notes && (
                           <>
-                            <strong>Observações:</strong> {formData.notes}
+                            <strong>ObservaÃ§Ãµes:</strong> {formData.notes}
                           </>
                         )}
                       </p>
@@ -372,7 +372,7 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
               >
                 {action === 'approve' ? <FaCheck /> : <FaTimesCircle />}
                 <span>
-                  {loading ? 'Processando...' : `Confirmar ${action === 'approve' ? 'Aprovação' : 'Rejeição'}`}
+                  {loading ? 'Processando...' : `Confirmar ${action === 'approve' ? 'AprovaÃ§Ã£o' : 'RejeiÃ§Ã£o'}`}
                 </span>
               </button>
             </>

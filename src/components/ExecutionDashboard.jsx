@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   FaSearch, 
   FaBox, 
@@ -29,7 +29,7 @@ const ExecutionDashboard = () => {
   const [executionModalOpen, setExecutionModalOpen] = useState(false);
   const [viewModalOpen, setViewModalOpen] = useState(false);
 
-  // Filtrar apenas reposições aprovadas ou em execução
+  // Filtrar apenas reposiÃ§Ãµes aprovadas ou em execuÃ§Ã£o
   const executableRequests = requests.filter(request => 
     [REPLENISHMENT_STATUS.APPROVED, REPLENISHMENT_STATUS.IN_PROGRESS].includes(request.status)
   );
@@ -49,7 +49,7 @@ const ExecutionDashboard = () => {
     return matchesSearch && matchesStatus;
   });
 
-  // Estatísticas
+  // EstatÃ­sticas
   const stats = {
     total: executableRequests.length,
     approved: executableRequests.filter(r => r.status === REPLENISHMENT_STATUS.APPROVED).length,
@@ -98,23 +98,23 @@ const ExecutionDashboard = () => {
 
   return (
     <div className="p-6">
-      {/* Cabeçalho */}
+      {/* CabeÃ§alho */}
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          Execução de Reposições
+          ExecuÃ§Ã£o de ReposiÃ§Ãµes
         </h2>
         <p className="text-gray-600">
-          Execute reposições aprovadas selecionando itens e destinos
+          Execute reposiÃ§Ãµes aprovadas selecionando itens e destinos
         </p>
       </div>
 
-      {/* Estatísticas */}
+      {/* EstatÃ­sticas */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
         <div className="bg-white p-6 rounded-lg shadow-sm border">
           <div className="flex items-center">
             <FaBox className="w-8 h-8 text-blue-600 mr-3" />
             <div>
-              <p className="text-sm text-gray-600">Total para Execução</p>
+              <p className="text-sm text-gray-600">Total para ExecuÃ§Ã£o</p>
               <p className="text-2xl font-bold text-blue-600">{stats.total}</p>
             </div>
           </div>
@@ -134,7 +134,7 @@ const ExecutionDashboard = () => {
           <div className="flex items-center">
             <FaClock className="w-8 h-8 text-blue-600 mr-3" />
             <div>
-              <p className="text-sm text-gray-600">Em Execução</p>
+              <p className="text-sm text-gray-600">Em ExecuÃ§Ã£o</p>
               <p className="text-2xl font-bold text-blue-600">{stats.inProgress}</p>
             </div>
           </div>
@@ -177,24 +177,24 @@ const ExecutionDashboard = () => {
             >
               <option value="all">Todos os Status</option>
               <option value={REPLENISHMENT_STATUS.APPROVED}>Aprovadas</option>
-              <option value={REPLENISHMENT_STATUS.IN_PROGRESS}>Em Execução</option>
+              <option value={REPLENISHMENT_STATUS.IN_PROGRESS}>Em ExecuÃ§Ã£o</option>
             </select>
           </div>
         </div>
       </div>
 
-      {/* Lista de Reposições */}
+      {/* Lista de ReposiÃ§Ãµes */}
       <div className="bg-white rounded-lg shadow-sm border">
         {filteredRequests.length === 0 ? (
           <div className="p-8 text-center">
             <FaBox className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Nenhuma reposição para execução
+              Nenhuma reposiÃ§Ã£o para execuÃ§Ã£o
             </h3>
             <p className="text-gray-600">
               {executableRequests.length === 0 
-                ? 'Não há reposições aprovadas no momento.'
-                : 'Nenhuma reposição corresponde aos filtros aplicados.'
+                ? 'NÃ£o hÃ¡ reposiÃ§Ãµes aprovadas no momento.'
+                : 'Nenhuma reposiÃ§Ã£o corresponde aos filtros aplicados.'
               }
             </p>
           </div>
@@ -204,7 +204,7 @@ const ExecutionDashboard = () => {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Solicitação
+                    SolicitaÃ§Ã£o
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Itens
@@ -219,7 +219,7 @@ const ExecutionDashboard = () => {
                     Data
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Ações
+                    AÃ§Ãµes
                   </th>
                 </tr>
               </thead>

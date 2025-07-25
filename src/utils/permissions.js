@@ -1,4 +1,4 @@
-// Sistema de permissões e roles
+﻿// Sistema de permissÃµes e roles
 
 export const ROLES = {
   ADMIN: 'admin',
@@ -9,55 +9,55 @@ export const ROLES = {
 };
 
 export const PERMISSIONS = {
-  // Permissões de produtos
+  // PermissÃµes de produtos
   CREATE_PRODUCTS: 'create_products',
   EDIT_PRODUCTS: 'edit_products',
   DELETE_PRODUCTS: 'delete_products',
   VIEW_PRODUCTS: 'view_products',
   
-  // Permissões de estoque
+  // PermissÃµes de estoque
   MANAGE_STOCK: 'manage_stock',
   VIEW_STOCK: 'view_stock',
   EXPORT_STOCK: 'export_stock',
   
-  // Permissões de movimentações
+  // PermissÃµes de movimentaÃ§Ãµes
   CREATE_MOVEMENTS: 'create_movements',
   VIEW_MOVEMENTS: 'view_movements',
   DELETE_MOVEMENTS: 'delete_movements',
   
-  // Permissões de relatórios
+  // PermissÃµes de relatÃ³rios
   VIEW_REPORTS: 'view_reports',
   EXPORT_REPORTS: 'export_reports',
   
-  // Permissões de configuração
+  // PermissÃµes de configuraÃ§Ã£o
   MANAGE_CATEGORIES: 'manage_categories',
   MANAGE_LOCATIONS: 'manage_locations',
   MANAGE_SUPPLIERS: 'manage_suppliers',
   
-  // Permissões de sistema
+  // PermissÃµes de sistema
   MANAGE_USERS: 'manage_users',
   DELETE_USERS: 'delete_users',
   SYSTEM_SETTINGS: 'system_settings',
   VIEW_AUDIT: 'view_audit',
   
-  // Permissões de reposição
+  // PermissÃµes de reposiÃ§Ã£o
   REQUEST_REPLENISHMENT: 'request_replenishment',
   VIEW_ALL_REQUESTS: 'view_all_requests',
   APPROVE_REPLENISHMENT: 'approve_replenishment',
   REJECT_REPLENISHMENT: 'reject_replenishment',
   EXECUTE_REPLENISHMENT: 'execute_replenishment',
   
-  // Permissões de lista de compras
+  // PermissÃµes de lista de compras
   GENERATE_PURCHASE_LIST: 'generate_purchase_list',
   EXPORT_PURCHASE_LIST: 'export_purchase_list',
   VIEW_REPLENISHMENT_REPORTS: 'view_replenishment_reports',
   EXPORT_REPLENISHMENT_REPORTS: 'export_replenishment_reports'
 };
 
-// Definição de permissões por role
+// DefiniÃ§Ã£o de permissÃµes por role
 export const ROLE_PERMISSIONS = {
   [ROLES.ADMIN]: [
-    // Admin tem todas as permissões
+    // Admin tem todas as permissÃµes
     ...Object.values(PERMISSIONS)
   ],
   [ROLES.MANAGER]: [
@@ -77,7 +77,7 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.MANAGE_LOCATIONS,
     PERMISSIONS.MANAGE_SUPPLIERS,
     PERMISSIONS.VIEW_AUDIT,
-    // Permissões de reposição para managers
+    // PermissÃµes de reposiÃ§Ã£o para managers
     PERMISSIONS.VIEW_ALL_REQUESTS,
     PERMISSIONS.APPROVE_REPLENISHMENT,
     PERMISSIONS.REJECT_REPLENISHMENT,
@@ -98,7 +98,7 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.VIEW_REPORTS,
     PERMISSIONS.MANAGE_CATEGORIES,
     PERMISSIONS.MANAGE_LOCATIONS,
-    // Permissões de reposição para editors
+    // PermissÃµes de reposiÃ§Ã£o para editors
     PERMISSIONS.REQUEST_REPLENISHMENT,
     PERMISSIONS.EXECUTE_REPLENISHMENT
   ],
@@ -108,7 +108,7 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.CREATE_MOVEMENTS,
     PERMISSIONS.VIEW_MOVEMENTS,
     PERMISSIONS.VIEW_REPORTS,
-    // Permissões de reposição para users
+    // PermissÃµes de reposiÃ§Ã£o para users
     PERMISSIONS.REQUEST_REPLENISHMENT
   ],
   [ROLES.VIEWER]: [
@@ -120,37 +120,37 @@ export const ROLE_PERMISSIONS = {
 };
 
 export const ROLE_DESCRIPTIONS = {
-  [ROLES.ADMIN]: 'Acesso total ao sistema, incluindo gerenciamento de usuários',
-  [ROLES.MANAGER]: 'Gerenciamento completo de estoque e configurações, exceto usuários',
-  [ROLES.EDITOR]: 'Pode editar produtos, categorias e fazer movimentações',
-  [ROLES.USER]: 'Pode visualizar dados e fazer movimentações básicas',
-  [ROLES.VIEWER]: 'Acesso apenas para visualização de dados'
+  [ROLES.ADMIN]: 'Acesso total ao sistema, incluindo gerenciamento de usuÃ¡rios',
+  [ROLES.MANAGER]: 'Gerenciamento completo de estoque e configuraÃ§Ãµes, exceto usuÃ¡rios',
+  [ROLES.EDITOR]: 'Pode editar produtos, categorias e fazer movimentaÃ§Ãµes',
+  [ROLES.USER]: 'Pode visualizar dados e fazer movimentaÃ§Ãµes bÃ¡sicas',
+  [ROLES.VIEWER]: 'Acesso apenas para visualizaÃ§Ã£o de dados'
 };
 
-// Função para verificar se o usuário tem uma permissão específica
+// FunÃ§Ã£o para verificar se o usuÃ¡rio tem uma permissÃ£o especÃ­fica
 export const hasPermission = (userRole, permission) => {
   if (!userRole || !permission) return false;
   return ROLE_PERMISSIONS[userRole]?.includes(permission) || false;
 };
 
-// Função para verificar se o usuário tem pelo menos uma das permissões
+// FunÃ§Ã£o para verificar se o usuÃ¡rio tem pelo menos uma das permissÃµes
 export const hasAnyPermission = (userRole, permissions) => {
   if (!userRole || !permissions || !Array.isArray(permissions)) return false;
   return permissions.some(permission => hasPermission(userRole, permission));
 };
 
-// Função para verificar se o usuário tem todas as permissões
+// FunÃ§Ã£o para verificar se o usuÃ¡rio tem todas as permissÃµes
 export const hasAllPermissions = (userRole, permissions) => {
   if (!userRole || !permissions || !Array.isArray(permissions)) return false;
   return permissions.every(permission => hasPermission(userRole, permission));
 };
 
-// Função para obter todas as permissões de um role
+// FunÃ§Ã£o para obter todas as permissÃµes de um role
 export const getRolePermissions = (role) => {
   return ROLE_PERMISSIONS[role] || [];
 };
 
-// Função para verificar se um role pode gerenciar outro role
+// FunÃ§Ã£o para verificar se um role pode gerenciar outro role
 export const canManageRole = (currentRole, targetRole) => {
   const hierarchy = {
     [ROLES.ADMIN]: 5,

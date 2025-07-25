@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import StockPage from '../StockPage';
@@ -31,7 +31,7 @@ const mockSettingsContext = {
 };
 
 describe('StockPage', () => {
-  it('deve renderizar o título principal da página', () => {
+  it('deve renderizar o tÃ­tulo principal da pÃ¡gina', () => {
     render(
       <AuthContext.Provider value={mockAuthContext}>
         <SettingsContext.Provider value={mockSettingsContext}>

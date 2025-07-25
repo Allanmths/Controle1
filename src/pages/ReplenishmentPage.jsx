@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   FaBoxes, 
   FaPlus, 
@@ -50,7 +50,7 @@ const ReplenishmentPage = () => {
   const [lowStockAnalysis, setLowStockAnalysis] = useState(null);
   const [activeTab, setActiveTab] = useState('requests');
 
-  // Verificar permissões do usuário
+  // Verificar permissÃµes do usuÃ¡rio
   const canRequestReplenishment = hasPermission(userData?.role, PERMISSIONS.REQUEST_REPLENISHMENT);
   const canViewAllRequests = hasPermission(userData?.role, PERMISSIONS.VIEW_ALL_REQUESTS);
   const canApproveRequests = hasPermission(userData?.role, PERMISSIONS.APPROVE_REPLENISHMENT);
@@ -75,7 +75,7 @@ const ReplenishmentPage = () => {
     }
   };
 
-  // Filtrar solicitações
+  // Filtrar solicitaÃ§Ãµes
   const filteredRequests = requests.filter(request => {
     let matchesFilter = true;
 
@@ -99,7 +99,7 @@ const ReplenishmentPage = () => {
       );
     }
 
-    // Se o usuário não pode ver todas as solicitações, mostrar apenas as próprias
+    // Se o usuÃ¡rio nÃ£o pode ver todas as solicitaÃ§Ãµes, mostrar apenas as prÃ³prias
     if (!canViewAllRequests) {
       matchesFilter = matchesFilter && request.requestedBy === userData?.uid;
     }
@@ -162,8 +162,8 @@ const ReplenishmentPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Sistema de Reposição</h1>
-          <p className="text-gray-600">Gerencie solicitações de reposição e listas de compras</p>
+          <h1 className="text-2xl font-bold text-gray-900">Sistema de ReposiÃ§Ã£o</h1>
+          <p className="text-gray-600">Gerencie solicitaÃ§Ãµes de reposiÃ§Ã£o e listas de compras</p>
         </div>
         
         <div className="flex items-center space-x-3">
@@ -173,7 +173,7 @@ const ReplenishmentPage = () => {
               className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               <FaPlus />
-              <span>Nova Solicitação</span>
+              <span>Nova SolicitaÃ§Ã£o</span>
             </button>
           )}
         </div>
@@ -190,7 +190,7 @@ const ReplenishmentPage = () => {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            Solicitações de Reposição
+            SolicitaÃ§Ãµes de ReposiÃ§Ã£o
           </button>
           
           {canApproveRequests && (
@@ -202,7 +202,7 @@ const ReplenishmentPage = () => {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              Dashboard de Aprovações
+              Dashboard de AprovaÃ§Ãµes
             </button>
           )}
           
@@ -215,7 +215,7 @@ const ReplenishmentPage = () => {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              Execução
+              ExecuÃ§Ã£o
             </button>
           )}
           
@@ -241,13 +241,13 @@ const ReplenishmentPage = () => {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              Análise de Estoque
+              AnÃ¡lise de Estoque
             </button>
           )}
         </nav>
       </div>
 
-      {/* Tab Content - Solicitações */}
+      {/* Tab Content - SolicitaÃ§Ãµes */}
       {activeTab === 'requests' && (
         <>
           {/* Stats Cards */}
@@ -285,7 +285,7 @@ const ReplenishmentPage = () => {
             <div className="bg-white p-4 rounded-lg shadow-sm border">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Concluídas</p>
+                  <p className="text-sm text-gray-600">ConcluÃ­das</p>
                   <p className="text-2xl font-bold text-gray-600">{stats.completed}</p>
                 </div>
                 <FaBoxes className="text-gray-500" size={20} />
@@ -306,7 +306,7 @@ const ReplenishmentPage = () => {
                   value={filters.search}
                   onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Título, solicitante..."
+                  placeholder="TÃ­tulo, solicitante..."
                 />
               </div>
               
@@ -338,9 +338,9 @@ const ReplenishmentPage = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Todas as prioridades</option>
-                  <option value={REPLENISHMENT_PRIORITY.CRITICAL}>Crítica</option>
+                  <option value={REPLENISHMENT_PRIORITY.CRITICAL}>CrÃ­tica</option>
                   <option value={REPLENISHMENT_PRIORITY.HIGH}>Alta</option>
-                  <option value={REPLENISHMENT_PRIORITY.MEDIUM}>Média</option>
+                  <option value={REPLENISHMENT_PRIORITY.MEDIUM}>MÃ©dia</option>
                   <option value={REPLENISHMENT_PRIORITY.LOW}>Baixa</option>
                 </select>
               </div>
@@ -356,14 +356,14 @@ const ReplenishmentPage = () => {
             </div>
           </div>
 
-          {/* Lista de Solicitações */}
+          {/* Lista de SolicitaÃ§Ãµes */}
           <div className="bg-white rounded-lg shadow-sm border">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Solicitação
+                      SolicitaÃ§Ã£o
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Status
@@ -381,7 +381,7 @@ const ReplenishmentPage = () => {
                       Itens
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Ações
+                      AÃ§Ãµes
                     </th>
                   </tr>
                 </thead>
@@ -457,12 +457,12 @@ const ReplenishmentPage = () => {
                 <div className="text-center py-12">
                   <FaBoxes size={48} className="mx-auto text-gray-400 mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    Nenhuma solicitação encontrada
+                    Nenhuma solicitaÃ§Ã£o encontrada
                   </h3>
                   <p className="text-gray-500">
                     {canRequestReplenishment 
-                      ? "Crie sua primeira solicitação de reposição"
-                      : "Não há solicitações que correspondam aos filtros aplicados"
+                      ? "Crie sua primeira solicitaÃ§Ã£o de reposiÃ§Ã£o"
+                      : "NÃ£o hÃ¡ solicitaÃ§Ãµes que correspondam aos filtros aplicados"
                     }
                   </p>
                 </div>
@@ -472,12 +472,12 @@ const ReplenishmentPage = () => {
         </>
       )}
 
-      {/* Tab Content - Dashboard de Aprovações */}
+      {/* Tab Content - Dashboard de AprovaÃ§Ãµes */}
       {activeTab === 'approvals' && canApproveRequests && (
         <ApprovalDashboard />
       )}
 
-      {/* Tab Content - Execução */}
+      {/* Tab Content - ExecuÃ§Ã£o */}
       {activeTab === 'execution' && canExecuteReplenishment && (
         <ExecutionDashboard />
       )}
@@ -487,7 +487,7 @@ const ReplenishmentPage = () => {
         <SmartPurchaseListDashboard />
       )}
 
-      {/* Tab Content - Análise de Estoque */}
+      {/* Tab Content - AnÃ¡lise de Estoque */}
       {activeTab === 'analysis' && canGeneratePurchaseList && (
         <div className="space-y-6">
           {lowStockAnalysis ? (
@@ -509,7 +509,7 @@ const ReplenishmentPage = () => {
                 <div className="bg-white p-4 rounded-lg shadow-sm border">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600">Itens Críticos</p>
+                      <p className="text-sm text-gray-600">Itens CrÃ­ticos</p>
                       <p className="text-2xl font-bold text-red-600">
                         {lowStockAnalysis.summary.criticalItems}
                       </p>
@@ -628,10 +628,10 @@ const ReplenishmentPage = () => {
             <div className="text-center py-12">
               <FaBoxes size={48} className="mx-auto text-gray-400 mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Análise de Estoque
+                AnÃ¡lise de Estoque
               </h3>
               <p className="text-gray-500 mb-4">
-                Clique no botão abaixo para analisar produtos com estoque baixo
+                Clique no botÃ£o abaixo para analisar produtos com estoque baixo
               </p>
               <button
                 onClick={loadLowStockAnalysis}
@@ -644,7 +644,7 @@ const ReplenishmentPage = () => {
         </div>
       )}
 
-      {/* Modal de Solicitação */}
+      {/* Modal de SolicitaÃ§Ã£o */}
       <ReplenishmentRequestModal
         isOpen={showRequestModal}
         onClose={() => setShowRequestModal(false)}
@@ -654,7 +654,7 @@ const ReplenishmentPage = () => {
         }}
       />
 
-      {/* Modal de Aprovação */}
+      {/* Modal de AprovaÃ§Ã£o */}
       <ReplenishmentApprovalModal
         isOpen={showApprovalModal}
         onClose={() => {

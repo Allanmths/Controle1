@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { 
   collection, 
   getDocs, 
@@ -19,7 +19,7 @@ export const useUserManagement = () => {
   const [loading, setLoading] = useState(true);
   const [totalUsers, setTotalUsers] = useState(0);
 
-  // Carregar usuários em tempo real
+  // Carregar usuÃ¡rios em tempo real
   useEffect(() => {
     setLoading(true);
     
@@ -42,15 +42,15 @@ export const useUserManagement = () => {
       setTotalUsers(usersData.length);
       setLoading(false);
     }, (error) => {
-      console.error('Erro ao carregar usuários:', error);
-      toast.error('Erro ao carregar usuários');
+      console.error('Erro ao carregar usuÃ¡rios:', error);
+      toast.error('Erro ao carregar usuÃ¡rios');
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  // Atualizar role do usuário
+  // Atualizar role do usuÃ¡rio
   const updateUserRole = async (userId, newRole) => {
     try {
       const userRef = doc(db, 'users', userId);
@@ -63,12 +63,12 @@ export const useUserManagement = () => {
       return true;
     } catch (error) {
       console.error('Erro ao atualizar role:', error);
-      toast.error('Erro ao atualizar role do usuário');
+      toast.error('Erro ao atualizar role do usuÃ¡rio');
       return false;
     }
   };
 
-  // Atualizar permissões customizadas do usuário
+  // Atualizar permissÃµes customizadas do usuÃ¡rio
   const updateUserPermissions = async (userId, customPermissions) => {
     try {
       const userRef = doc(db, 'users', userId);
@@ -77,16 +77,16 @@ export const useUserManagement = () => {
         updatedAt: new Date()
       });
       
-      toast.success('Permissões atualizadas com sucesso!');
+      toast.success('PermissÃµes atualizadas com sucesso!');
       return true;
     } catch (error) {
-      console.error('Erro ao atualizar permissões:', error);
-      toast.error('Erro ao atualizar permissões do usuário');
+      console.error('Erro ao atualizar permissÃµes:', error);
+      toast.error('Erro ao atualizar permissÃµes do usuÃ¡rio');
       return false;
     }
   };
 
-  // Ativar/desativar usuário
+  // Ativar/desativar usuÃ¡rio
   const toggleUserStatus = async (userId, isActive) => {
     try {
       const userRef = doc(db, 'users', userId);
@@ -95,31 +95,31 @@ export const useUserManagement = () => {
         updatedAt: new Date()
       });
       
-      toast.success(`Usuário ${isActive ? 'ativado' : 'desativado'} com sucesso!`);
+      toast.success(`UsuÃ¡rio ${isActive ? 'ativado' : 'desativado'} com sucesso!`);
       return true;
     } catch (error) {
-      console.error('Erro ao alterar status do usuário:', error);
-      toast.error('Erro ao alterar status do usuário');
+      console.error('Erro ao alterar status do usuÃ¡rio:', error);
+      toast.error('Erro ao alterar status do usuÃ¡rio');
       return false;
     }
   };
 
-  // Excluir usuário
+  // Excluir usuÃ¡rio
   const deleteUser = async (userId) => {
     try {
       const userRef = doc(db, 'users', userId);
       await deleteDoc(userRef);
       
-      toast.success('Usuário excluído com sucesso!');
+      toast.success('UsuÃ¡rio excluÃ­do com sucesso!');
       return true;
     } catch (error) {
-      console.error('Erro ao excluir usuário:', error);
-      toast.error('Erro ao excluir usuário');
+      console.error('Erro ao excluir usuÃ¡rio:', error);
+      toast.error('Erro ao excluir usuÃ¡rio');
       return false;
     }
   };
 
-  // Buscar usuários por termo
+  // Buscar usuÃ¡rios por termo
   const searchUsers = async (searchTerm) => {
     if (!searchTerm.trim()) {
       return users;
@@ -139,13 +139,13 @@ export const useUserManagement = () => {
 
       return filteredUsers;
     } catch (error) {
-      console.error('Erro ao buscar usuários:', error);
-      toast.error('Erro ao buscar usuários');
+      console.error('Erro ao buscar usuÃ¡rios:', error);
+      toast.error('Erro ao buscar usuÃ¡rios');
       return [];
     }
   };
 
-  // Obter estatísticas dos usuários
+  // Obter estatÃ­sticas dos usuÃ¡rios
   const getUserStats = () => {
     const stats = {
       total: users.length,
@@ -154,7 +154,7 @@ export const useUserManagement = () => {
       byRole: {}
     };
 
-    // Contar usuários por role
+    // Contar usuÃ¡rios por role
     Object.values(ROLES).forEach(role => {
       stats.byRole[role] = users.filter(u => u.role === role).length;
     });

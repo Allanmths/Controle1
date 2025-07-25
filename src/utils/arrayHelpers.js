@@ -1,13 +1,13 @@
-/**
- * Utilitários para manipulação segura de arrays
+﻿/**
+ * UtilitÃ¡rios para manipulaÃ§Ã£o segura de arrays
  */
 import debugLog from './debugLog';
 
 /**
- * Garante que um valor seja um array válido
+ * Garante que um valor seja um array vÃ¡lido
  * @param {any} value - Valor a ser verificado
  * @param {string} name - Nome do array para debug
- * @returns {Array} Array vazio se o valor for inválido, ou o próprio valor se for um array
+ * @returns {Array} Array vazio se o valor for invÃ¡lido, ou o prÃ³prio valor se for um array
  */
 export const ensureArray = (value, name = 'unknown') => {
     if (!Array.isArray(value)) {
@@ -20,7 +20,7 @@ export const ensureArray = (value, name = 'unknown') => {
 /**
  * Executa map de forma segura em um array
  * @param {any} array - Array para mapear
- * @param {Function} callback - Função de callback do map
+ * @param {Function} callback - FunÃ§Ã£o de callback do map
  * @param {string} name - Nome do array para debug
  * @returns {Array} Resultado do map ou array vazio
  */
@@ -33,7 +33,7 @@ export const safeMap = (array, callback, name = 'unknown') => {
 /**
  * Executa filter de forma segura em um array
  * @param {any} array - Array para filtrar
- * @param {Function} callback - Função de callback do filter
+ * @param {Function} callback - FunÃ§Ã£o de callback do filter
  * @param {string} name - Nome do array para debug
  * @returns {Array} Resultado do filter ou array vazio
  */
@@ -46,7 +46,7 @@ export const safeFilter = (array, callback, name = 'unknown') => {
 /**
  * Executa reduce de forma segura em um array
  * @param {any} array - Array para reduzir
- * @param {Function} callback - Função de callback do reduce
+ * @param {Function} callback - FunÃ§Ã£o de callback do reduce
  * @param {any} initialValue - Valor inicial
  * @param {string} name - Nome do array para debug
  * @returns {any} Resultado do reduce ou valor inicial

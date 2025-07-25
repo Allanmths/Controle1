@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { db } from '../services/firebase';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
@@ -99,17 +99,17 @@ export default function ProductFormModal({ isOpen, onClose, productToEdit }) {
                 </div>
 
                 <div>
-                    <label htmlFor="price" className="block text-sm font-medium text-gray-700">Preço (R$)</label>
+                    <label htmlFor="price" className="block text-sm font-medium text-gray-700">PreÃ§o (R$)</label>
                     <input type="number" name="price" id="price" value={formData.price || ''} onChange={handleChange} required min="0" step="0.01" className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" />
                 </div>
 
                 <div>
-                    <label htmlFor="minStock" className="block text-sm font-medium text-gray-700">Estoque Mínimo</label>
+                    <label htmlFor="minStock" className="block text-sm font-medium text-gray-700">Estoque MÃ­nimo</label>
                     <input type="number" name="minStock" id="minStock" value={formData.minStock || ''} onChange={handleChange} required min="0" className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" />
                 </div>
 
                 <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">Descrição</label>
+                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">DescriÃ§Ã£o</label>
                     <textarea name="description" id="description" value={formData.description || ''} onChange={handleChange} rows="3" className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"></textarea>
                 </div>
 

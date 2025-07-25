@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { db } from '../services/firebase';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
@@ -24,7 +24,7 @@ export default function LocationFormModal({ isOpen, onClose, locationToEdit }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!name.trim()) {
-            setError('O nome da localidade n�o pode estar vazio.');
+            setError('O nome da localidade nã£o pode estar vazio.');
             return;
         }
         setLoading(true);
@@ -68,7 +68,7 @@ export default function LocationFormModal({ isOpen, onClose, locationToEdit }) {
                             onChange={(e) => setName(e.target.value)}
                             required 
                             className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Ex: Armaz�m Principal"
+                            placeholder="Ex: Armazã©m Principal"
                             autoFocus
                         />
                     </div>

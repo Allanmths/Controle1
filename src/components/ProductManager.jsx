@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import ProductModal from './ProductModal';
 import { FaPlus } from 'react-icons/fa';
 import { useStockManagement } from '../hooks/useStockManagement';
@@ -15,7 +15,7 @@ const ProductManager = () => {
         handleCloseModal,
     } = useStockManagement();
     
-    // Ativar notifica��es autom�ticas
+    // Ativar notificaã§ãµes automã¡ticas
     useAutoNotifications();
 
     return (
@@ -32,7 +32,7 @@ const ProductManager = () => {
                     </button>
                 </div>
                 <p className="text-gray-600">
-                    Clique no bot�o para adicionar um novo item ao seu invent�rio. Voc� poder� definir nome, categoria, estoque m�nimo e as quantidades em cada local de armazenamento.
+                    Clique no botã£o para adicionar um novo item ao seu inventã¡rio. Vocãª poderã¡ definir nome, categoria, estoque mã­nimo e as quantidades em cada local de armazenamento.
                 </p>
             </div>
 

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { FaLightbulb, FaTimes, FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 
 const TourSteps = {
     dashboard: [
         {
             target: '[data-tour="dashboard-charts"]',
-            title: 'Gráficos Interativos',
-            content: 'Visualize suas movimentações de estoque em diferentes formatos de gráfico.',
+            title: 'GrÃ¡ficos Interativos',
+            content: 'Visualize suas movimentaÃ§Ãµes de estoque em diferentes formatos de grÃ¡fico.',
             position: 'bottom'
         },
         {
@@ -19,13 +19,13 @@ const TourSteps = {
     stock: [
         {
             target: '[data-tour="stock-filters"]',
-            title: 'Filtros Avançados',
+            title: 'Filtros AvanÃ§ados',
             content: 'Use os filtros para encontrar produtos rapidamente por nome, categoria ou local.',
             position: 'bottom'
         },
         {
             target: '[data-tour="stock-actions"]',
-            title: 'Ações Rápidas',
+            title: 'AÃ§Ãµes RÃ¡pidas',
             content: 'Edite, exclua ou visualize detalhes dos produtos com um clique.',
             position: 'left'
         }
@@ -40,7 +40,7 @@ const TourSteps = {
         {
             target: '[data-tour="add-product"]',
             title: 'Novo Produto',
-            content: 'Adicione produtos com estoque por localidade e informações completas.',
+            content: 'Adicione produtos com estoque por localidade e informaÃ§Ãµes completas.',
             position: 'bottom'
         }
     ]
@@ -136,7 +136,7 @@ const OnboardingTour = ({ page, onComplete }) => {
                                 onClick={nextStep}
                                 className="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                             >
-                                {currentStep === steps.length - 1 ? 'Concluir' : 'Próximo'}
+                                {currentStep === steps.length - 1 ? 'Concluir' : 'PrÃ³ximo'}
                                 {currentStep < steps.length - 1 && <FaArrowRight className="w-4 h-4 ml-1" />}
                             </button>
                         </div>

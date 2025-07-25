@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   FaClock, 
   FaExclamationTriangle, 
@@ -39,7 +39,7 @@ const ApprovalDashboard = () => {
     dateRange: 'all'
   });
 
-  // Verificar se usuário pode aprovar
+  // Verificar se usuÃ¡rio pode aprovar
   const canApprove = hasPermission(userData?.role, PERMISSIONS.APPROVE_REPLENISHMENT);
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const ApprovalDashboard = () => {
     }
   }, [canApprove, fetchReplenishmentRequests]);
 
-  // Filtrar apenas solicitações pendentes
+  // Filtrar apenas solicitaÃ§Ãµes pendentes
   const pendingRequests = requests.filter(request => 
     request.status === REPLENISHMENT_STATUS.PENDING
   );
@@ -96,7 +96,7 @@ const ApprovalDashboard = () => {
     return matches;
   });
 
-  // Estatísticas rápidas
+  // EstatÃ­sticas rÃ¡pidas
   const stats = {
     total: pendingRequests.length,
     critical: pendingRequests.filter(r => r.priority === REPLENISHMENT_PRIORITY.CRITICAL).length,
@@ -152,16 +152,16 @@ const ApprovalDashboard = () => {
     setSelectedRequest(null);
   };
 
-  // Ação rápida de aprovação
+  // AÃ§Ã£o rÃ¡pida de aprovaÃ§Ã£o
   const handleQuickApprove = async (request, e) => {
     e.stopPropagation();
     try {
       await approveRequest(request.id, {
-        notes: 'Aprovação rápida via dashboard'
+        notes: 'AprovaÃ§Ã£o rÃ¡pida via dashboard'
       });
       await fetchReplenishmentRequests();
     } catch (error) {
-      console.error('Erro na aprovação rápida:', error);
+      console.error('Erro na aprovaÃ§Ã£o rÃ¡pida:', error);
     }
   };
 
@@ -173,7 +173,7 @@ const ApprovalDashboard = () => {
           Acesso Restrito
         </h3>
         <p className="text-gray-500">
-          Você não tem permissão para aprovar solicitações
+          VocÃª nÃ£o tem permissÃ£o para aprovar solicitaÃ§Ãµes
         </p>
       </div>
     );
@@ -181,7 +181,7 @@ const ApprovalDashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Cards de Estatísticas */}
+      {/* Cards de EstatÃ­sticas */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-lg shadow-sm border">
           <div className="flex items-center justify-between">
@@ -196,7 +196,7 @@ const ApprovalDashboard = () => {
         <div className="bg-white p-4 rounded-lg shadow-sm border">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Críticas</p>
+              <p className="text-sm text-gray-600">CrÃ­ticas</p>
               <p className="text-2xl font-bold text-red-600">{stats.critical}</p>
             </div>
             <FaExclamationTriangle className="text-red-500" size={20} />
@@ -237,7 +237,7 @@ const ApprovalDashboard = () => {
               value={filters.search}
               onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Título, solicitante..."
+              placeholder="TÃ­tulo, solicitante..."
             />
           </div>
           
@@ -251,36 +251,36 @@ const ApprovalDashboard = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Todas as prioridades</option>
-              <option value={REPLENISHMENT_PRIORITY.CRITICAL}>Crítica</option>
+              <option value={REPLENISHMENT_PRIORITY.CRITICAL}>CrÃ­tica</option>
               <option value={REPLENISHMENT_PRIORITY.HIGH}>Alta</option>
-              <option value={REPLENISHMENT_PRIORITY.MEDIUM}>Média</option>
+              <option value={REPLENISHMENT_PRIORITY.MEDIUM}>MÃ©dia</option>
               <option value={REPLENISHMENT_PRIORITY.LOW}>Baixa</option>
             </select>
           </div>
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Período
+              PerÃ­odo
             </label>
             <select
               value={filters.dateRange}
               onChange={(e) => setFilters(prev => ({ ...prev, dateRange: e.target.value }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="all">Todos os períodos</option>
+              <option value="all">Todos os perÃ­odos</option>
               <option value="today">Hoje</option>
-              <option value="week">Última semana</option>
-              <option value="month">Último mês</option>
+              <option value="week">Ãšltima semana</option>
+              <option value="month">Ãšltimo mÃªs</option>
             </select>
           </div>
         </div>
       </div>
 
-      {/* Lista de Solicitações Pendentes */}
+      {/* Lista de SolicitaÃ§Ãµes Pendentes */}
       <div className="bg-white rounded-lg shadow-sm border">
         <div className="p-4 border-b border-gray-200">
           <h3 className="text-lg font-medium text-gray-900">
-            Solicitações Aguardando Aprovação ({filteredRequests.length})
+            SolicitaÃ§Ãµes Aguardando AprovaÃ§Ã£o ({filteredRequests.length})
           </h3>
         </div>
         
@@ -356,12 +356,12 @@ const ApprovalDashboard = () => {
                     </div>
                   </div>
                   
-                  {/* Ações */}
+                  {/* AÃ§Ãµes */}
                   <div className="flex items-center space-x-2 ml-4">
                     <button
                       onClick={(e) => handleQuickApprove(request, e)}
                       className="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors"
-                      title="Aprovação rápida"
+                      title="AprovaÃ§Ã£o rÃ¡pida"
                     >
                       <FaCheck size={16} />
                     </button>
@@ -382,12 +382,12 @@ const ApprovalDashboard = () => {
             <div className="text-center py-12">
               <FaCheck size={48} className="mx-auto text-gray-400 mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Nenhuma solicitação pendente
+                Nenhuma solicitaÃ§Ã£o pendente
               </h3>
               <p className="text-gray-500">
                 {pendingRequests.length === 0 
-                  ? "Não há solicitações aguardando aprovação" 
-                  : "Nenhuma solicitação corresponde aos filtros aplicados"
+                  ? "NÃ£o hÃ¡ solicitaÃ§Ãµes aguardando aprovaÃ§Ã£o" 
+                  : "Nenhuma solicitaÃ§Ã£o corresponde aos filtros aplicados"
                 }
               </p>
             </div>
@@ -395,7 +395,7 @@ const ApprovalDashboard = () => {
         </div>
       </div>
 
-      {/* Modal de Aprovação */}
+      {/* Modal de AprovaÃ§Ã£o */}
       <ReplenishmentApprovalModal
         isOpen={showApprovalModal}
         onClose={() => {

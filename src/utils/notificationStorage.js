@@ -1,43 +1,43 @@
-// Utilitário para acessar e gerenciar o histórico de notificações
+﻿// UtilitÃ¡rio para acessar e gerenciar o histÃ³rico de notificaÃ§Ãµes
 
 export const NotificationStorage = {
   // Chave do localStorage
   STORAGE_KEY: 'notifications',
 
-  // Obter todas as notificações
+  // Obter todas as notificaÃ§Ãµes
   getAll() {
     try {
       const data = localStorage.getItem(this.STORAGE_KEY);
       return data ? JSON.parse(data) : [];
     } catch (error) {
-      console.error('Erro ao ler notificações do localStorage:', error);
+      console.error('Erro ao ler notificaÃ§Ãµes do localStorage:', error);
       return [];
     }
   },
 
-  // Salvar notificações
+  // Salvar notificaÃ§Ãµes
   save(notifications) {
     try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(notifications));
       return true;
     } catch (error) {
-      console.error('Erro ao salvar notificações no localStorage:', error);
+      console.error('Erro ao salvar notificaÃ§Ãµes no localStorage:', error);
       return false;
     }
   },
 
-  // Limpar todas as notificações
+  // Limpar todas as notificaÃ§Ãµes
   clear() {
     try {
       localStorage.removeItem(this.STORAGE_KEY);
       return true;
     } catch (error) {
-      console.error('Erro ao limpar notificações:', error);
+      console.error('Erro ao limpar notificaÃ§Ãµes:', error);
       return false;
     }
   },
 
-  // Obter estatísticas
+  // Obter estatÃ­sticas
   getStats() {
     const notifications = this.getAll();
     const total = notifications.length;
@@ -57,7 +57,7 @@ export const NotificationStorage = {
       return acc;
     }, {});
 
-    // Contar por data (últimos 7 dias)
+    // Contar por data (Ãºltimos 7 dias)
     const last7Days = {};
     const now = new Date();
     for (let i = 0; i < 7; i++) {
@@ -86,7 +86,7 @@ export const NotificationStorage = {
     };
   },
 
-  // Exportar histórico
+  // Exportar histÃ³rico
   export() {
     const notifications = this.getAll();
     const stats = this.getStats();
@@ -111,20 +111,20 @@ export const NotificationStorage = {
     return exportData;
   },
 
-  // Importar histórico
+  // Importar histÃ³rico
   import(data) {
     try {
       if (data.notifications && Array.isArray(data.notifications)) {
         this.save(data.notifications);
         return { success: true, imported: data.notifications.length };
       }
-      return { success: false, error: 'Formato de dados inválido' };
+      return { success: false, error: 'Formato de dados invÃ¡lido' };
     } catch (error) {
       return { success: false, error: error.message };
     }
   },
 
-  // Buscar notificações
+  // Buscar notificaÃ§Ãµes
   search(query, filters = {}) {
     const notifications = this.getAll();
     const queryLower = query.toLowerCase();
@@ -162,7 +162,7 @@ export const NotificationStorage = {
     });
   },
 
-  // Limpar notificações antigas (mais de X dias)
+  // Limpar notificaÃ§Ãµes antigas (mais de X dias)
   cleanOldNotifications(daysToKeep = 30) {
     const notifications = this.getAll();
     const cutoffDate = new Date();
@@ -179,7 +179,7 @@ export const NotificationStorage = {
   }
 };
 
-// Hook para usar o storage de notificações
+// Hook para usar o storage de notificaÃ§Ãµes
 export const useNotificationStorage = () => {
   return NotificationStorage;
 };

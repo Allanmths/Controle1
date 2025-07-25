@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+ï»¿import React, { useState } from 'react';
 import useFirestore from '../hooks/useFirestore';
 import SkeletonLoader from './SkeletonLoader';
 import { db } from '../services/firebase';
@@ -23,14 +23,14 @@ const LocationManager = () => {
     };
 
     const handleDeleteLocation = async (locationId) => {
-        if (!window.confirm('Tem certeza que deseja excluir esta localidade? Esta ação não pode ser desfeita.')) return;
+        if (!window.confirm('Tem certeza que deseja excluir esta localidade? Esta aÃ§Ã£o nÃ£o pode ser desfeita.')) return;
 
         const locationRef = doc(db, 'locations', locationId);
         const promise = deleteDoc(locationRef);
         
         toast.promise(promise, {
             loading: 'Excluindo localidade...',
-            success: 'Localidade excluída com sucesso!',
+            success: 'Localidade excluÃ­da com sucesso!',
             error: (err) => `Falha ao excluir: ${err.message}`,
         });
     };

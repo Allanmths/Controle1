@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+﻿import React, { useMemo } from 'react';
 import useFirestore from '../../hooks/useFirestore';
 
 const formatCurrency = (value) => {
@@ -31,8 +31,8 @@ const StockValuationReport = () => {
 
     return (
         <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">Relatório de Valorização de Estoque</h3>
-            <p className="text-gray-600 mb-6">Este relatório calcula o valor monetário total do seu estoque com base no custo de cada produto.</p>
+            <h3 className="text-xl font-bold text-gray-800 mb-4">RelatÃ³rio de ValorizaÃ§Ã£o de Estoque</h3>
+            <p className="text-gray-600 mb-6">Este relatÃ³rio calcula o valor monetÃ¡rio total do seu estoque com base no custo de cada produto.</p>
             
             <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
@@ -40,7 +40,7 @@ const StockValuationReport = () => {
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produto</th>
                             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Estoque Total</th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Custo Unitário</th>
+                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Custo UnitÃ¡rio</th>
                             <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Valor Total</th>
                         </tr>
                     </thead>
@@ -57,7 +57,7 @@ const StockValuationReport = () => {
                                 </tr>
                             ))
                         ) : (
-                            <tr><td colSpan="4" className="text-center py-10">Nenhum produto encontrado. Adicione produtos com custo para ver este relatório.</td></tr>
+                            <tr><td colSpan="4" className="text-center py-10">Nenhum produto encontrado. Adicione produtos com custo para ver este relatÃ³rio.</td></tr>
                         )}
                     </tbody>
                     <tfoot className="bg-gray-100">

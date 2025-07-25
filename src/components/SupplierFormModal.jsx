@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { db } from '../services/firebase';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import Modal from './Modal';
@@ -41,7 +41,7 @@ export default function SupplierFormModal({ isOpen, onClose, supplierToEdit }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.name.trim() || !formData.email.trim()) {
-            setError('O nome e o e-mail do fornecedor são obrigatórios.');
+            setError('O nome e o e-mail do fornecedor sÃ£o obrigatÃ³rios.');
             return;
         }
         setLoading(true);

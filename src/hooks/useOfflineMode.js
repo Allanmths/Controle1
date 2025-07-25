@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import toast from 'react-hot-toast';
 
 // IndexedDB para armazenamento offline
@@ -26,22 +26,22 @@ export const useOfflineMode = () => {
     initializeDB();
   }, []);
 
-  // Monitorar status da conexão
+  // Monitorar status da conexÃ£o
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
-      toast.success('Conexão restaurada! Sincronizando dados...', {
+      toast.success('ConexÃ£o restaurada! Sincronizando dados...', {
         duration: 3000,
-        icon: '🌐'
+        icon: 'ðŸŒ'
       });
       syncOfflineData();
     };
 
     const handleOffline = () => {
       setIsOnline(false);
-      toast.error('Você está offline. Dados serão salvos localmente.', {
+      toast.error('VocÃª estÃ¡ offline. Dados serÃ£o salvos localmente.', {
         duration: 4000,
-        icon: '📱'
+        icon: 'ðŸ“±'
       });
     };
 
@@ -72,7 +72,7 @@ export const useOfflineMode = () => {
       case 'OFFLINE_MODE':
         toast.warning(message || 'Modo offline ativado', {
           duration: 3000,
-          icon: '📱'
+          icon: 'ðŸ“±'
         });
         break;
       
@@ -108,7 +108,7 @@ export const useOfflineMode = () => {
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
 
-        // Criar stores se não existirem
+        // Criar stores se nÃ£o existirem
         Object.values(STORES).forEach(storeName => {
           if (!db.objectStoreNames.contains(storeName)) {
             const store = db.createObjectStore(storeName, { 
@@ -116,7 +116,7 @@ export const useOfflineMode = () => {
               autoIncrement: true 
             });
             
-            // Adicionar índices
+            // Adicionar Ã­ndices
             if (storeName === STORES.COUNTS) {
               store.createIndex('timestamp', 'timestamp', { unique: false });
               store.createIndex('status', 'status', { unique: false });
@@ -217,7 +217,7 @@ export const useOfflineMode = () => {
   // Salvar contagem offline
   const saveOfflineCount = useCallback(async (countData) => {
     if (!db) {
-      toast.error('Armazenamento offline não disponível');
+      toast.error('Armazenamento offline nÃ£o disponÃ­vel');
       return false;
     }
 
@@ -238,9 +238,9 @@ export const useOfflineMode = () => {
         counts: [...prev.counts, offlineCount]
       }));
 
-      toast.success('Contagem salva offline! Será sincronizada quando voltar online.', {
+      toast.success('Contagem salva offline! SerÃ¡ sincronizada quando voltar online.', {
         duration: 4000,
-        icon: '💾'
+        icon: 'ðŸ’¾'
       });
 
       return true;
@@ -265,10 +265,10 @@ export const useOfflineMode = () => {
 
       console.log(`[Offline] Sincronizando ${pendingCounts.length} contagens...`);
 
-      // Simular sincronização (aqui você implementaria a lógica real)
+      // Simular sincronizaÃ§Ã£o (aqui vocÃª implementaria a lÃ³gica real)
       const syncPromises = pendingCounts.map(async (count) => {
         try {
-          // Aqui você faria a requisição real para o Firebase
+          // Aqui vocÃª faria a requisiÃ§Ã£o real para o Firebase
           // const result = await syncCountToFirebase(count);
           
           // Marcar como sincronizado
@@ -288,7 +288,7 @@ export const useOfflineMode = () => {
       if (successCount > 0) {
         toast.success(`${successCount} contagem(ns) sincronizada(s) com sucesso!`, {
           duration: 3000,
-          icon: '✅'
+          icon: 'âœ…'
         });
         
         // Recarregar dados offline
@@ -296,7 +296,7 @@ export const useOfflineMode = () => {
       }
 
     } catch (error) {
-      console.error('Erro durante sincronização:', error);
+      console.error('Erro durante sincronizaÃ§Ã£o:', error);
       toast.error('Erro ao sincronizar dados offline');
     }
   }, [isOnline, db, offlineData.counts]);

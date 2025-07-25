@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { 
   collection, 
   addDoc, 
@@ -55,7 +55,7 @@ export const usePurchaseListManagement = () => {
     setError(null);
 
     try {
-      // Configurações padrão
+      // ConfiguraÃ§Ãµes padrÃ£o
       const defaultConfig = {
         minStockPercentage: 20,
         criticalStockPercentage: 10,
@@ -94,7 +94,7 @@ export const usePurchaseListManagement = () => {
 
       products.forEach(product => {
         const currentStock = stockData[product.id] || 0;
-        const maxStock = product.maxStock || product.minStock * 5; // Estimativa se não houver maxStock
+        const maxStock = product.maxStock || product.minStock * 5; // Estimativa se nÃ£o houver maxStock
         const minStock = product.minStock || 0;
         
         const stockPercentage = maxStock > 0 ? (currentStock / maxStock) * 100 : 0;
@@ -223,7 +223,7 @@ export const usePurchaseListManagement = () => {
     }
   };
 
-  // Calcular previsão de gastos por categoria
+  // Calcular previsÃ£o de gastos por categoria
   const calculateCategoryExpenses = (items) => {
     const categoryExpenses = {};
 
@@ -241,7 +241,7 @@ export const usePurchaseListManagement = () => {
       categoryExpenses[category].totalCost += item.totalCost || 0;
     });
 
-    // Calcular média por categoria
+    // Calcular mÃ©dia por categoria
     Object.keys(categoryExpenses).forEach(category => {
       const data = categoryExpenses[category];
       data.averageCost = data.items > 0 ? data.totalCost / data.items : 0;
@@ -250,12 +250,12 @@ export const usePurchaseListManagement = () => {
     return categoryExpenses;
   };
 
-  // Calcular previsão de gastos por fornecedor
+  // Calcular previsÃ£o de gastos por fornecedor
   const calculateSupplierExpenses = (items) => {
     const supplierExpenses = {};
 
     items.forEach(item => {
-      const supplier = item.supplier || 'Fornecedor Não Definido';
+      const supplier = item.supplier || 'Fornecedor NÃ£o Definido';
       if (!supplierExpenses[supplier]) {
         supplierExpenses[supplier] = {
           items: 0,
@@ -268,7 +268,7 @@ export const usePurchaseListManagement = () => {
       supplierExpenses[supplier].totalCost += item.totalCost || 0;
     });
 
-    // Calcular média por fornecedor
+    // Calcular mÃ©dia por fornecedor
     Object.keys(supplierExpenses).forEach(supplier => {
       const data = supplierExpenses[supplier];
       data.averageCost = data.items > 0 ? data.totalCost / data.items : 0;
@@ -277,7 +277,7 @@ export const usePurchaseListManagement = () => {
     return supplierExpenses;
   };
 
-  // Sugerir otimizações na lista de compras
+  // Sugerir otimizaÃ§Ãµes na lista de compras
   const suggestOptimizations = (items) => {
     const suggestions = [];
 
@@ -286,8 +286,8 @@ export const usePurchaseListManagement = () => {
     if (itemsWithoutSupplier.length > 0) {
       suggestions.push({
         type: 'warning',
-        title: 'Fornecedores não definidos',
-        message: `${itemsWithoutSupplier.length} itens não possuem fornecedor definido`,
+        title: 'Fornecedores nÃ£o definidos',
+        message: `${itemsWithoutSupplier.length} itens nÃ£o possuem fornecedor definido`,
         items: itemsWithoutSupplier
       });
     }
@@ -297,8 +297,8 @@ export const usePurchaseListManagement = () => {
     if (itemsWithoutCost.length > 0) {
       suggestions.push({
         type: 'warning',
-        title: 'Custos não definidos',
-        message: `${itemsWithoutCost.length} itens não possuem custo definido`,
+        title: 'Custos nÃ£o definidos',
+        message: `${itemsWithoutCost.length} itens nÃ£o possuem custo definido`,
         items: itemsWithoutCost
       });
     }
@@ -323,7 +323,7 @@ export const usePurchaseListManagement = () => {
   const exportPurchaseList = async (list, format = 'excel') => {
     try {
       if (!list) {
-        throw new Error('Lista não encontrada');
+        throw new Error('Lista nÃ£o encontrada');
       }
 
       let success = false;
@@ -341,11 +341,11 @@ export const usePurchaseListManagement = () => {
           success = exportToCSV(list, filename);
           break;
         default:
-          throw new Error('Formato não suportado');
+          throw new Error('Formato nÃ£o suportado');
       }
 
       if (success) {
-        // Registrar exportação no histórico da lista
+        // Registrar exportaÃ§Ã£o no histÃ³rico da lista
         await updateDoc(doc(db, 'purchaseLists', list.id), {
           exportHistory: {
             [`export_${Date.now()}`]: {
@@ -415,7 +415,7 @@ export const usePurchaseListManagement = () => {
         },
         status: PURCHASE_LIST_STATUS.GENERATED,
         createdBy: currentUser.uid,
-        createdByName: userData?.displayName || userData?.email || 'Usuário',
+        createdByName: userData?.displayName || userData?.email || 'UsuÃ¡rio',
         createdAt: Timestamp.now()
       };
 

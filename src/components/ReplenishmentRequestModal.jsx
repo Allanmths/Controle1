@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { FaTimes, FaBoxes, FaExclamationTriangle, FaPlus, FaTrash, FaSearch } from 'react-icons/fa';
 import { useReplenishmentManagement } from '../hooks/useReplenishmentManagement';
 import { 
@@ -23,7 +23,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
   });
   const [errors, setErrors] = useState({});
 
-  // Buscar produtos disponíveis
+  // Buscar produtos disponÃ­veis
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -50,7 +50,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
           stockByProduct[stock.productId] += stock.quantity || 0;
         });
 
-        // Adicionar informações de estoque aos produtos
+        // Adicionar informaÃ§Ãµes de estoque aos produtos
         const productsWithStock = productsData
           .filter(product => product.isActive !== false)
           .map(product => ({
@@ -89,7 +89,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
     const existingItem = formData.items.find(item => item.productId === product.id);
     
     if (existingItem) {
-      // Se já existe, aumenta a quantidade
+      // Se jÃ¡ existe, aumenta a quantidade
       setFormData(prev => ({
         ...prev,
         items: prev.items.map(item =>
@@ -140,11 +140,11 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
     const newErrors = {};
 
     if (!formData.title.trim()) {
-      newErrors.title = 'Título é obrigatório';
+      newErrors.title = 'TÃ­tulo Ã© obrigatÃ³rio';
     }
 
     if (formData.items.length === 0) {
-      newErrors.items = 'Adicione pelo menos um item à solicitação';
+      newErrors.items = 'Adicione pelo menos um item Ã  solicitaÃ§Ã£o';
     }
 
     formData.items.forEach((item, index) => {
@@ -167,7 +167,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
     try {
       await createReplenishmentRequest(formData);
       
-      // Limpar formulário
+      // Limpar formulÃ¡rio
       setFormData({
         title: '',
         description: '',
@@ -180,7 +180,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
       onSuccess?.();
       onClose();
     } catch (error) {
-      console.error('Erro ao criar solicitação:', error);
+      console.error('Erro ao criar solicitaÃ§Ã£o:', error);
     }
   };
 
@@ -209,8 +209,8 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
           <div className="flex items-center space-x-3">
             <FaBoxes className="text-blue-600" />
             <div>
-              <h2 className="text-xl font-semibold">Nova Solicitação de Reposição</h2>
-              <p className="text-sm text-gray-600">Solicite reposição de produtos com estoque baixo</p>
+              <h2 className="text-xl font-semibold">Nova SolicitaÃ§Ã£o de ReposiÃ§Ã£o</h2>
+              <p className="text-sm text-gray-600">Solicite reposiÃ§Ã£o de produtos com estoque baixo</p>
             </div>
           </div>
           <button
@@ -225,13 +225,13 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
           {/* Content */}
           <div className="p-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Informações da Solicitação */}
+              {/* InformaÃ§Ãµes da SolicitaÃ§Ã£o */}
               <div className="space-y-4">
-                <h3 className="text-lg font-medium text-gray-900">Informações da Solicitação</h3>
+                <h3 className="text-lg font-medium text-gray-900">InformaÃ§Ãµes da SolicitaÃ§Ã£o</h3>
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Título da Solicitação *
+                    TÃ­tulo da SolicitaÃ§Ã£o *
                   </label>
                   <input
                     type="text"
@@ -240,7 +240,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
                     className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                       errors.title ? 'border-red-500' : 'border-gray-300'
                     }`}
-                    placeholder="Ex: Reposição urgente de materiais de escritório"
+                    placeholder="Ex: ReposiÃ§Ã£o urgente de materiais de escritÃ³rio"
                   />
                   {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
                 </div>
@@ -255,22 +255,22 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value={REPLENISHMENT_PRIORITY.LOW}>Baixa</option>
-                    <option value={REPLENISHMENT_PRIORITY.MEDIUM}>Média</option>
+                    <option value={REPLENISHMENT_PRIORITY.MEDIUM}>MÃ©dia</option>
                     <option value={REPLENISHMENT_PRIORITY.HIGH}>Alta</option>
-                    <option value={REPLENISHMENT_PRIORITY.CRITICAL}>Crítica</option>
+                    <option value={REPLENISHMENT_PRIORITY.CRITICAL}>CrÃ­tica</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Descrição / Justificativa
+                    DescriÃ§Ã£o / Justificativa
                   </label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                     rows={4}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Descreva o motivo da solicitação e qualquer informação adicional relevante..."
+                    placeholder="Descreva o motivo da solicitaÃ§Ã£o e qualquer informaÃ§Ã£o adicional relevante..."
                   />
                 </div>
 
@@ -296,7 +296,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
                             
                             <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 mb-2">
                               <span>Estoque atual: {item.currentStock}</span>
-                              <span>Estoque mínimo: {item.minStock}</span>
+                              <span>Estoque mÃ­nimo: {item.minStock}</span>
                             </div>
 
                             <div className="grid grid-cols-2 gap-2">
@@ -321,9 +321,9 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
                                   className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
                                   <option value={REPLENISHMENT_PRIORITY.LOW}>Baixa</option>
-                                  <option value={REPLENISHMENT_PRIORITY.MEDIUM}>Média</option>
+                                  <option value={REPLENISHMENT_PRIORITY.MEDIUM}>MÃ©dia</option>
                                   <option value={REPLENISHMENT_PRIORITY.HIGH}>Alta</option>
-                                  <option value={REPLENISHMENT_PRIORITY.CRITICAL}>Crítica</option>
+                                  <option value={REPLENISHMENT_PRIORITY.CRITICAL}>CrÃ­tica</option>
                                 </select>
                               </div>
                             </div>
@@ -335,7 +335,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
                                 value={item.reason}
                                 onChange={(e) => handleItemChange(item.productId, 'reason', e.target.value)}
                                 className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                placeholder="Motivo da solicitação..."
+                                placeholder="Motivo da solicitaÃ§Ã£o..."
                               />
                             </div>
                           </div>
@@ -362,7 +362,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
                 </div>
               </div>
 
-              {/* Seleção de Produtos */}
+              {/* SeleÃ§Ã£o de Produtos */}
               <div className="space-y-4">
                 <h3 className="text-lg font-medium text-gray-900">Selecionar Produtos</h3>
                 
@@ -408,7 +408,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
                             
                             <div className="flex items-center space-x-4 text-xs text-gray-600">
                               <span>Estoque: {product.currentStock}</span>
-                              <span>Mínimo: {product.minStock || 'N/A'}</span>
+                              <span>MÃ­nimo: {product.minStock || 'N/A'}</span>
                               {product.category && <span>Categoria: {product.category}</span>}
                             </div>
                           </div>
@@ -457,7 +457,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
               disabled={loading}
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
             >
-              {loading ? 'Criando...' : 'Criar Solicitação'}
+              {loading ? 'Criando...' : 'Criar SolicitaÃ§Ã£o'}
             </button>
           </div>
         </form>

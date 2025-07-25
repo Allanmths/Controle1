@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../services/firebase';
@@ -29,7 +29,7 @@ export default function SuppliersManager() {
             const promise = deleteDoc(doc(db, 'suppliers', supplierId));
             toast.promise(promise, {
                 loading: 'Excluindo fornecedor...',
-                success: 'Fornecedor excluído com sucesso!',
+                success: 'Fornecedor excluÃ­do com sucesso!',
                 error: 'Falha ao excluir o fornecedor.',
             });
         }
@@ -58,7 +58,7 @@ export default function SuppliersManager() {
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contato</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telefone</th>
-                                    {canEdit && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>}
+                                    {canEdit && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AÃ§Ãµes</th>}
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">

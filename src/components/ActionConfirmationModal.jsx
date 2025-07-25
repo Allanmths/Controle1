@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { FaEdit, FaTrash, FaExclamationTriangle, FaInfo } from 'react-icons/fa';
 
 const ActionConfirmationModal = ({ 
@@ -34,11 +34,11 @@ const ActionConfirmationModal = ({
     
     switch (action) {
       case 'edit':
-        return 'Confirmar Edição';
+        return 'Confirmar EdiÃ§Ã£o';
       case 'delete':
-        return 'Confirmar Exclusão';
+        return 'Confirmar ExclusÃ£o';
       default:
-        return 'Confirmar Ação';
+        return 'Confirmar AÃ§Ã£o';
     }
   };
 
@@ -47,11 +47,11 @@ const ActionConfirmationModal = ({
     
     switch (action) {
       case 'edit':
-        return `Você está prestes a editar o produto "${productName}". Deseja continuar?`;
+        return `VocÃª estÃ¡ prestes a editar o produto "${productName}". Deseja continuar?`;
       case 'delete':
-        return `Você está prestes a excluir o produto "${productName}". Esta ação não pode ser desfeita.`;
+        return `VocÃª estÃ¡ prestes a excluir o produto "${productName}". Esta aÃ§Ã£o nÃ£o pode ser desfeita.`;
       default:
-        return `Você está prestes a realizar uma ação no produto "${productName}". Deseja continuar?`;
+        return `VocÃª estÃ¡ prestes a realizar uma aÃ§Ã£o no produto "${productName}". Deseja continuar?`;
     }
   };
 
@@ -92,7 +92,7 @@ const ActionConfirmationModal = ({
               <div className="flex items-center">
                 <FaExclamationTriangle className="w-4 h-4 text-red-500 mr-2" />
                 <span className="text-sm text-red-700 dark:text-red-400 font-medium">
-                  Atenção: Esta ação é irreversível!
+                  AtenÃ§Ã£o: Esta aÃ§Ã£o Ã© irreversÃ­vel!
                 </span>
               </div>
             </div>

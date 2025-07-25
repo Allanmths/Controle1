@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../services/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -44,7 +44,7 @@ export default function NewCountPage() {
 
     const handleFinalizeCount = async () => {
         if (Object.values(countedQuantities).some(qty => qty === '')) {
-            if (!window.confirm('Existem produtos com quantidade não preenchida (serão contados como 0). Deseja continuar?')) {
+            if (!window.confirm('Existem produtos com quantidade nÃ£o preenchida (serÃ£o contados como 0). Deseja continuar?')) {
                 return;
             }
         }
@@ -109,7 +109,7 @@ export default function NewCountPage() {
                         </div>
                         {!isOnline && (
                             <div className="text-sm text-orange-600 bg-orange-50 px-3 py-1 rounded-full">
-                                Dados serão salvos localmente
+                                Dados serÃ£o salvos localmente
                             </div>
                         )}
                     </div>
@@ -117,8 +117,8 @@ export default function NewCountPage() {
             </div>
             
             <p className="mb-6 text-gray-600">
-                Insira a quantidade contada para cada produto. Itens não preenchidos serão considerados como 0.
-                {!isOnline && ' A contagem será sincronizada quando a conexão for restaurada.'}
+                Insira a quantidade contada para cada produto. Itens nÃ£o preenchidos serÃ£o considerados como 0.
+                {!isOnline && ' A contagem serÃ¡ sincronizada quando a conexÃ£o for restaurada.'}
             </p>
             
             <div className="mb-4 relative">

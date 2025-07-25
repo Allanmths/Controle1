@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   FaTimes, 
   FaBox, 
@@ -30,7 +30,7 @@ const ReplenishmentExecutionModal = ({ isOpen, onClose, request }) => {
 
   useEffect(() => {
     if (isOpen && request) {
-      // Inicializar itens com dados da solicitação
+      // Inicializar itens com dados da solicitaÃ§Ã£o
       const initialItems = request.items.map(item => ({
         ...item,
         selectedQuantity: item.quantity,
@@ -54,7 +54,7 @@ const ReplenishmentExecutionModal = ({ isOpen, onClose, request }) => {
       )
     }));
     
-    // Limpar erro específico do item
+    // Limpar erro especÃ­fico do item
     if (errors[`item_${index}`]) {
       setErrors(prev => ({
         ...prev,
@@ -127,8 +127,8 @@ const ReplenishmentExecutionModal = ({ isOpen, onClose, request }) => {
       await updateReplenishmentRequest(request.id, updateData);
       onClose();
     } catch (error) {
-      console.error('Erro ao executar reposição:', error);
-      setErrors({ general: 'Erro ao executar reposição. Tente novamente.' });
+      console.error('Erro ao executar reposiÃ§Ã£o:', error);
+      setErrors({ general: 'Erro ao executar reposiÃ§Ã£o. Tente novamente.' });
     } finally {
       setLoading(false);
     }
@@ -149,10 +149,10 @@ const ReplenishmentExecutionModal = ({ isOpen, onClose, request }) => {
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div>
             <h2 className="text-xl font-semibold text-gray-900">
-              Executar Reposição
+              Executar ReposiÃ§Ã£o
             </h2>
             <p className="text-sm text-gray-600 mt-1">
-              Solicitação #{request?.id?.slice(-8)} - {request?.requestedBy}
+              SolicitaÃ§Ã£o #{request?.id?.slice(-8)} - {request?.requestedBy}
             </p>
           </div>
           <button
@@ -179,7 +179,7 @@ const ReplenishmentExecutionModal = ({ isOpen, onClose, request }) => {
               <div className="flex items-center">
                 <FaMapMarkerAlt className="w-5 h-5 text-green-600 mr-2" />
                 <div>
-                  <p className="text-sm text-gray-600">Locais Únicos</p>
+                  <p className="text-sm text-gray-600">Locais Ãšnicos</p>
                   <p className="text-lg font-semibold">
                     {new Set(executionData.items
                       .filter(item => item.executed && item.selectedLocationId)
@@ -300,17 +300,17 @@ const ReplenishmentExecutionModal = ({ isOpen, onClose, request }) => {
             ))}
           </div>
 
-          {/* Observações */}
+          {/* ObservaÃ§Ãµes */}
           <div className="mt-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Observações da Execução
+              ObservaÃ§Ãµes da ExecuÃ§Ã£o
             </label>
             <textarea
               value={executionData.notes}
               onChange={(e) => setExecutionData(prev => ({ ...prev, notes: e.target.value }))}
               rows="3"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Adicione observações sobre a execução..."
+              placeholder="Adicione observaÃ§Ãµes sobre a execuÃ§Ã£o..."
             />
           </div>
 
@@ -330,7 +330,7 @@ const ReplenishmentExecutionModal = ({ isOpen, onClose, request }) => {
             <div className="text-sm text-gray-600">
               {executedItemsCount > 0 && executedItemsCount < totalItems && (
                 <span className="text-yellow-600 font-medium">
-                  ⚠️ Execução parcial: {executedItemsCount} de {totalItems} itens
+                  âš ï¸ ExecuÃ§Ã£o parcial: {executedItemsCount} de {totalItems} itens
                 </span>
               )}
             </div>
@@ -346,7 +346,7 @@ const ReplenishmentExecutionModal = ({ isOpen, onClose, request }) => {
                 disabled={loading}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
               >
-                {loading ? 'Executando...' : 'Executar Reposição'}
+                {loading ? 'Executando...' : 'Executar ReposiÃ§Ã£o'}
               </button>
             </div>
           </div>

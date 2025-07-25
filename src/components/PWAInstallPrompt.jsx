@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { FaDownload, FaTimes, FaMobile, FaDesktop } from 'react-icons/fa';
 
 const PWAInstallPrompt = () => {
@@ -7,7 +7,7 @@ const PWAInstallPrompt = () => {
   const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
-    // Verificar se já está instalado
+    // Verificar se jÃ¡ estÃ¡ instalado
     const checkStandalone = () => {
       const isStandaloneMode = window.matchMedia('(display-mode: standalone)').matches ||
                               window.navigator.standalone ||
@@ -19,20 +19,20 @@ const PWAInstallPrompt = () => {
 
     // Listener para o evento beforeinstallprompt
     const handleBeforeInstallPrompt = (e) => {
-      // Prevenir que o prompt apareça automaticamente
+      // Prevenir que o prompt apareÃ§a automaticamente
       e.preventDefault();
       
       // Salvar o evento para usar depois
       setDeferredPrompt(e);
       
-      // Mostrar nosso prompt customizado se não estiver instalado
+      // Mostrar nosso prompt customizado se nÃ£o estiver instalado
       if (!isStandalone) {
-        // Verificar se já foi dismissado recentemente
+        // Verificar se jÃ¡ foi dismissado recentemente
         const lastDismissed = localStorage.getItem('pwa-prompt-dismissed');
         const oneDayAgo = Date.now() - (24 * 60 * 60 * 1000);
         
         if (!lastDismissed || parseInt(lastDismissed) < oneDayAgo) {
-          setTimeout(() => setShowPrompt(true), 3000); // Mostrar após 3 segundos
+          setTimeout(() => setShowPrompt(true), 3000); // Mostrar apÃ³s 3 segundos
         }
       }
     };
@@ -56,16 +56,16 @@ const PWAInstallPrompt = () => {
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
 
-    // Mostrar o prompt de instalação
+    // Mostrar o prompt de instalaÃ§Ã£o
     deferredPrompt.prompt();
 
-    // Aguardar a escolha do usuário
+    // Aguardar a escolha do usuÃ¡rio
     const { outcome } = await deferredPrompt.userChoice;
     
     if (outcome === 'accepted') {
-      console.log('Usuário aceitou instalar o PWA');
+      console.log('UsuÃ¡rio aceitou instalar o PWA');
     } else {
-      console.log('Usuário rejeitou instalar o PWA');
+      console.log('UsuÃ¡rio rejeitou instalar o PWA');
     }
 
     // Limpar o deferredPrompt
@@ -90,23 +90,23 @@ const PWAInstallPrompt = () => {
     
     if (isIOS) {
       return {
-        title: 'Adicionar à Tela de Início',
-        description: 'Toque no ícone de compartilhar e selecione "Adicionar à Tela de Início"',
-        buttonText: 'Instruções iOS'
+        title: 'Adicionar Ã  Tela de InÃ­cio',
+        description: 'Toque no Ã­cone de compartilhar e selecione "Adicionar Ã  Tela de InÃ­cio"',
+        buttonText: 'InstruÃ§Ãµes iOS'
       };
     }
     
     if (isMobile) {
       return {
         title: 'Instalar Aplicativo',
-        description: 'Instale o Estoque HCM em seu dispositivo para acesso rápido e modo offline',
+        description: 'Instale o Estoque HCM em seu dispositivo para acesso rÃ¡pido e modo offline',
         buttonText: 'Instalar App'
       };
     }
     
     return {
       title: 'Instalar Aplicativo',
-      description: 'Instale o Estoque HCM em seu computador para uma experiência melhor',
+      description: 'Instale o Estoque HCM em seu computador para uma experiÃªncia melhor',
       buttonText: 'Instalar App'
     };
   };
@@ -114,10 +114,10 @@ const PWAInstallPrompt = () => {
   const handleIOSInstructions = () => {
     const instructions = `
 Para instalar no iOS:
-1. Toque no ícone de compartilhar (📤) na parte inferior da tela
-2. Role para baixo e toque em "Adicionar à Tela de Início"
+1. Toque no Ã­cone de compartilhar (ðŸ“¤) na parte inferior da tela
+2. Role para baixo e toque em "Adicionar Ã  Tela de InÃ­cio"
 3. Toque em "Adicionar" no canto superior direito
-4. O app será adicionado à sua tela de início
+4. O app serÃ¡ adicionado Ã  sua tela de inÃ­cio
     `;
     
     alert(instructions.trim());
@@ -171,7 +171,7 @@ Para instalar no iOS:
             onClick={handleDismiss}
             className="px-4 py-2 text-gray-600 text-sm font-medium hover:text-gray-800 transition-colors"
           >
-            Agora não
+            Agora nÃ£o
           </button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 
 export const useSwipeGesture = (onSwipeLeft, onSwipeRight, threshold = 50) => {
     const [touchStart, setTouchStart] = useState(null);

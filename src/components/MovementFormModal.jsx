@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { db } from '../services/firebase';
 import { collection, doc, runTransaction } from 'firebase/firestore';
 import Modal from './Modal';
@@ -51,7 +51,7 @@ export default function MovementFormModal({ isOpen, onClose }) {
             await runTransaction(db, async (transaction) => {
                 const productDoc = await transaction.get(productRef);
                 if (!productDoc.exists()) {
-                    throw new Error('Produto não encontrado!');
+                    throw new Error('Produto nÃ£o encontrado!');
                 }
 
                 const currentQuantity = productDoc.data().totalQuantity || 0;
@@ -61,7 +61,7 @@ export default function MovementFormModal({ isOpen, onClose }) {
                     newQuantity = currentQuantity + numQuantity;
                 } else { // saida
                     if (currentQuantity < numQuantity) {
-                        throw new Error('Estoque insuficiente para realizar a saída.');
+                        throw new Error('Estoque insuficiente para realizar a saÃ­da.');
                     }
                     newQuantity = currentQuantity - numQuantity;
                 }
@@ -80,27 +80,27 @@ export default function MovementFormModal({ isOpen, onClose }) {
             onClose();
         } catch (err) {
             console.error('Transaction failed: ', err);
-            setError(err.message || 'Falha ao registrar a movimentação.');
+            setError(err.message || 'Falha ao registrar a movimentaÃ§Ã£o.');
         }
         setLoading(false);
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Registrar Nova Movimentação">
+        <Modal isOpen={isOpen} onClose={onClose} title="Registrar Nova MovimentaÃ§Ã£o">
             <form onSubmit={handleSubmit} className="space-y-4">
                 {error && <p className="bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400 p-3 rounded-lg">{error}</p>}
                 
                 <ProductSelector 
                     onProductSelect={(product) => setFormData(prev => ({ ...prev, selectedProduct: product }))}
                     selectedProductId={formData.selectedProduct?.id}
-                    placeholder="Buscar produto para movimentação..."
+                    placeholder="Buscar produto para movimentaÃ§Ã£o..."
                 />
 
                 <div>
-                    <label htmlFor="type" className="block text-sm font-medium text-gray-700">Tipo de Movimentação</label>
+                    <label htmlFor="type" className="block text-sm font-medium text-gray-700">Tipo de MovimentaÃ§Ã£o</label>
                     <select name="type" id="type" value={formData.type} onChange={handleChange} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-white">
                         <option value="entrada">Entrada</option>
-                        <option value="saida">Saída</option>
+                        <option value="saida">SaÃ­da</option>
                     </select>
                 </div>
 

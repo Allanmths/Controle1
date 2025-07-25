@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo } from 'react';
 import { useSettings } from '../context/SettingsContext';
 import useFirestore from '../hooks/useFirestore';
 import { format } from 'date-fns';
@@ -14,9 +14,9 @@ const AuditLogRow = ({ log }) => {
         switch (type) {
             case 'entrada_inicial': return { label: 'Entrada Inicial', color: 'bg-green-100 text-green-800' };
             case 'ajuste_manual': return { label: 'Ajuste Manual', color: 'bg-yellow-100 text-yellow-800' };
-            case 'transfer_in': return { label: 'Transferência (Entrada)', color: 'bg-blue-100 text-blue-800' };
-            case 'transfer_out': return { label: 'Transferência (Saída)', color: 'bg-purple-100 text-purple-800' };
-            case 'saida': return { label: 'Saída Manual', color: 'bg-red-100 text-red-800' };
+            case 'transfer_in': return { label: 'TransferÃªncia (Entrada)', color: 'bg-blue-100 text-blue-800' };
+            case 'transfer_out': return { label: 'TransferÃªncia (SaÃ­da)', color: 'bg-purple-100 text-purple-800' };
+            case 'saida': return { label: 'SaÃ­da Manual', color: 'bg-red-100 text-red-800' };
             default: return { label: type, color: 'bg-gray-100 text-gray-800' };
         }
     };
@@ -50,9 +50,9 @@ const AuditPage = () => {
     const movementTypes = {
         'entrada_inicial': 'Entrada Inicial',
         'ajuste_manual': 'Ajuste Manual',
-        'transfer_in': 'Transferência (Entrada)',
-        'transfer_out': 'Transferência (Saída)',
-        'saida': 'Saída Manual'
+        'transfer_in': 'TransferÃªncia (Entrada)',
+        'transfer_out': 'TransferÃªncia (SaÃ­da)',
+        'saida': 'SaÃ­da Manual'
     };
 
     const filteredLogs = useMemo(() => {
@@ -83,13 +83,13 @@ const AuditPage = () => {
 
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
-            <h2 className="text-3xl font-bold text-gray-800 mb-6">Auditoria de Movimentações</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">Auditoria de MovimentaÃ§Ãµes</h2>
 
             <div className="bg-white p-4 rounded-lg shadow-md mb-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end">
                     {/* Date Start */}
                     <div className="relative">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Data Início</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Data InÃ­cio</label>
                         <FaCalendarAlt className="absolute top-9 left-3 text-gray-400 z-10" />
                         <DatePicker 
                             selected={startDate}
@@ -153,7 +153,7 @@ const AuditPage = () => {
                             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produto</th>
                             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
                             <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Qtd</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuário</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">UsuÃ¡rio</th>
                             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Detalhes</th>
                         </tr>
                     </thead>

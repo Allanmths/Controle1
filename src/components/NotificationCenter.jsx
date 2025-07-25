@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaBell, FaTimes, FaCheck, FaTrash, FaEye } from 'react-icons/fa';
 import { useNotifications } from '../context/NotificationContext';
@@ -38,7 +38,7 @@ const NotificationCenter = () => {
   };
 
   const handleNotificationClick = (notification) => {
-    // Marcar como lida se não foi lida ainda
+    // Marcar como lida se nÃ£o foi lida ainda
     if (!notification.read) {
       markAsRead(notification.id);
     }
@@ -46,9 +46,9 @@ const NotificationCenter = () => {
     // Fechar o dropdown
     setIsOpen(false);
     
-    // Lógica de redirecionamento baseada no tipo e categoria
+    // LÃ³gica de redirecionamento baseada no tipo e categoria
     if (notification.action?.href) {
-      // Se tem URL específica definida
+      // Se tem URL especÃ­fica definida
       if (notification.action.href.startsWith('http')) {
         // URL externa
         window.open(notification.action.href, '_blank');
@@ -57,13 +57,13 @@ const NotificationCenter = () => {
         navigate(notification.action.href);
       }
     } else if (notification.category === 'stock' && notification.productId) {
-      // Notificações de estoque - ir para página de estoque com busca do produto
-      navigate(`/stock?search=${encodeURIComponent(notification.title.replace('Produto ', '').replace(' está', ''))}`);
+      // NotificaÃ§Ãµes de estoque - ir para pÃ¡gina de estoque com busca do produto
+      navigate(`/stock?search=${encodeURIComponent(notification.title.replace('Produto ', '').replace(' estÃ¡', ''))}`);
     } else if (notification.category === 'movement' && notification.productId) {
-      // Notificações de movimento - ir para página de movimentações
+      // NotificaÃ§Ãµes de movimento - ir para pÃ¡gina de movimentaÃ§Ãµes
       navigate('/movements');
     } else if (notification.category === 'system') {
-      // Notificações de sistema - ir para configurações
+      // NotificaÃ§Ãµes de sistema - ir para configuraÃ§Ãµes
       navigate('/settings');
     } else {
       // Default - ir para dashboard
@@ -73,7 +73,7 @@ const NotificationCenter = () => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Botão de Notificações */}
+      {/* BotÃ£o de NotificaÃ§Ãµes */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -86,13 +86,13 @@ const NotificationCenter = () => {
         )}
       </button>
 
-      {/* Dropdown de Notificações */}
+      {/* Dropdown de NotificaÃ§Ãµes */}
       {isOpen && (
         <div className="absolute right-0 mt-2 w-96 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 max-h-96 overflow-hidden">
           {/* Header */}
           <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Notificações
+              NotificaÃ§Ãµes
             </h3>
             <div className="flex items-center gap-2">
               {unreadCount > 0 && (
@@ -112,13 +112,13 @@ const NotificationCenter = () => {
             </div>
           </div>
 
-          {/* Lista de Notificações */}
+          {/* Lista de NotificaÃ§Ãµes */}
           <div className="max-h-80 overflow-y-auto">
             {notifications.length === 0 ? (
               <div className="p-8 text-center text-gray-500 dark:text-gray-400">
                 <FaBell className="mx-auto mb-3 text-3xl opacity-50" />
-                <p>Nenhuma notificação</p>
-                <p className="text-sm">Você está em dia!</p>
+                <p>Nenhuma notificaÃ§Ã£o</p>
+                <p className="text-sm">VocÃª estÃ¡ em dia!</p>
               </div>
             ) : (
               notifications.map((notification) => (
@@ -131,12 +131,12 @@ const NotificationCenter = () => {
                   title={notification.action ? `Clique para: ${notification.action.label}` : 'Clique para marcar como lida'}
                 >
                   <div className="flex items-start gap-3">
-                    {/* Ícone */}
+                    {/* Ãcone */}
                     <div className="flex-shrink-0 mt-1">
                       {getNotificationIcon(notification.type)}
                     </div>
 
-                    {/* Conteúdo */}
+                    {/* ConteÃºdo */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
@@ -155,18 +155,18 @@ const NotificationCenter = () => {
                             {notification.message}
                           </p>
                           
-                          {/* Ação */}
+                          {/* AÃ§Ã£o */}
                           {notification.action && (
                             <div className="flex items-center gap-2 mt-2">
                               <button className="text-xs text-blue-600 dark:text-blue-400 hover:underline bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded">
                                 {notification.action.label}
                               </button>
-                              <span className="text-xs text-gray-400">• Clique para navegar</span>
+                              <span className="text-xs text-gray-400">â€¢ Clique para navegar</span>
                             </div>
                           )}
                         </div>
 
-                        {/* Ações */}
+                        {/* AÃ§Ãµes */}
                         <div className="flex items-center gap-1 ml-2">
                           {!notification.read && (
                             <button

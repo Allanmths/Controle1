@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { NotificationStorage } from '../utils/notificationStorage';
 import { FaDownload, FaUpload, FaTrash, FaChartLine, FaEye } from 'react-icons/fa';
 import { format } from 'date-fns';
@@ -50,30 +50,30 @@ const NotificationAdmin = () => {
         const result = NotificationStorage.import(data);
         
         if (result.success) {
-          alert(`✅ Importação concluída! ${result.imported} notificações importadas.`);
+          alert(`âœ… ImportaÃ§Ã£o concluÃ­da! ${result.imported} notificaÃ§Ãµes importadas.`);
           loadData();
         } else {
-          alert(`❌ Erro na importação: ${result.error}`);
+          alert(`âŒ Erro na importaÃ§Ã£o: ${result.error}`);
         }
       } catch (error) {
-        alert(`❌ Erro ao processar arquivo: ${error.message}`);
+        alert(`âŒ Erro ao processar arquivo: ${error.message}`);
       }
     };
     reader.readAsText(file);
   };
 
   const clearOldNotifications = () => {
-    if (confirm('Deseja remover notificações com mais de 30 dias?')) {
+    if (confirm('Deseja remover notificaÃ§Ãµes com mais de 30 dias?')) {
       const result = NotificationStorage.cleanOldNotifications(30);
-      alert(`✅ Limpeza concluída! ${result.removedCount} notificações removidas. ${result.remaining} restantes.`);
+      alert(`âœ… Limpeza concluÃ­da! ${result.removedCount} notificaÃ§Ãµes removidas. ${result.remaining} restantes.`);
       loadData();
     }
   };
 
   const clearAllNotifications = () => {
-    if (confirm('⚠️ ATENÇÃO: Isso irá remover TODAS as notificações permanentemente. Confirma?')) {
+    if (confirm('âš ï¸ ATENÃ‡ÃƒO: Isso irÃ¡ remover TODAS as notificaÃ§Ãµes permanentemente. Confirma?')) {
       NotificationStorage.clear();
-      alert('✅ Todas as notificações foram removidas.');
+      alert('âœ… Todas as notificaÃ§Ãµes foram removidas.');
       loadData();
     }
   };
@@ -96,7 +96,7 @@ const NotificationAdmin = () => {
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
             <FaChartLine className="mr-3 text-blue-500" />
-            Administração de Notificações
+            AdministraÃ§Ã£o de NotificaÃ§Ãµes
           </h3>
           <div className="flex gap-2">
             <button
@@ -120,20 +120,20 @@ const NotificationAdmin = () => {
         </div>
       </div>
 
-      {/* Estatísticas Detalhadas */}
+      {/* EstatÃ­sticas Detalhadas */}
       {stats && (
         <div className="p-6">
-          <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">📊 Estatísticas Detalhadas</h4>
+          <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">ðŸ“Š EstatÃ­sticas Detalhadas</h4>
           
           {/* Resumo Geral */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
               <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Total de Notificações</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Total de NotificaÃ§Ãµes</div>
             </div>
             <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
               <div className="text-2xl font-bold text-yellow-600">{stats.unread}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Não Lidas</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">NÃ£o Lidas</div>
             </div>
             <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
               <div className="text-2xl font-bold text-green-600">{stats.read}</div>
@@ -171,10 +171,10 @@ const NotificationAdmin = () => {
             </div>
           </div>
 
-          {/* Informações de Datas */}
+          {/* InformaÃ§Ãµes de Datas */}
           {stats.oldestNotification && stats.newestNotification && (
             <div className="mb-6">
-              <h5 className="font-semibold text-gray-900 dark:text-white mb-3">Período:</h5>
+              <h5 className="font-semibold text-gray-900 dark:text-white mb-3">PerÃ­odo:</h5>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded">
                   <div className="text-sm text-gray-600 dark:text-gray-400">Mais Antiga:</div>
@@ -192,9 +192,9 @@ const NotificationAdmin = () => {
             </div>
           )}
 
-          {/* Últimos 7 dias */}
+          {/* Ãšltimos 7 dias */}
           <div className="mb-6">
-            <h5 className="font-semibold text-gray-900 dark:text-white mb-3">Últimos 7 dias:</h5>
+            <h5 className="font-semibold text-gray-900 dark:text-white mb-3">Ãšltimos 7 dias:</h5>
             <div className="grid grid-cols-7 gap-1">
               {Object.entries(stats.last7Days).reverse().map(([date, count]) => (
                 <div key={date} className="bg-gray-50 dark:bg-gray-700 p-2 rounded text-center">
@@ -207,9 +207,9 @@ const NotificationAdmin = () => {
             </div>
           </div>
 
-          {/* Ações de Administração */}
+          {/* AÃ§Ãµes de AdministraÃ§Ã£o */}
           <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-            <h5 className="font-semibold text-gray-900 dark:text-white mb-3">🔧 Ações de Administração:</h5>
+            <h5 className="font-semibold text-gray-900 dark:text-white mb-3">ðŸ”§ AÃ§Ãµes de AdministraÃ§Ã£o:</h5>
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={clearOldNotifications}

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+﻿import React, { useMemo } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -29,7 +29,7 @@ ChartJS.register(
 );
 
 const AdvancedCharts = ({ products = [], categories = [] }) => {
-  // Configurações de tema para os gráficos
+  // ConfiguraÃ§Ãµes de tema para os grÃ¡ficos
   const isDark = document.documentElement.classList.contains('dark');
   
   const chartColors = {
@@ -43,7 +43,7 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
     grid: isDark ? '#374151' : '#E5E7EB'
   };
 
-  // Dados para gráfico de valor por categoria
+  // Dados para grÃ¡fico de valor por categoria
   const categoryValueData = useMemo(() => {
     const categoryValues = categories.map(category => {
       const categoryProducts = products.filter(p => p.categoryId === category.id);
@@ -84,7 +84,7 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
     };
   }, [products, categories, chartColors]);
 
-  // Dados para gráfico de quantidade por categoria
+  // Dados para grÃ¡fico de quantidade por categoria
   const categoryQuantityData = useMemo(() => {
     const categoryQuantities = categories.map(category => {
       const categoryProducts = products.filter(p => p.categoryId === category.id);
@@ -114,7 +114,7 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
           borderSkipped: false,
         },
         {
-          label: 'Número de Produtos',
+          label: 'NÃºmero de Produtos',
           data: categoryQuantities.map(cat => cat.productCount),
           backgroundColor: chartColors.secondary,
           borderColor: chartColors.secondary,
@@ -152,7 +152,7 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
     };
   }, [products, chartColors]);
 
-  // Análise ABC para gráfico de rosca
+  // AnÃ¡lise ABC para grÃ¡fico de rosca
   const abcAnalysisData = useMemo(() => {
     if (!products.length) return null;
 
@@ -189,7 +189,7 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
     };
   }, [products, chartColors]);
 
-  // Opções padrão para os gráficos
+  // OpÃ§Ãµes padrÃ£o para os grÃ¡ficos
   const defaultOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -273,7 +273,7 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* Gráfico de Valor por Categoria */}
+      {/* GrÃ¡fico de Valor por Categoria */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Valor em Estoque por Categoria
@@ -283,10 +283,10 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
         </div>
       </div>
 
-      {/* Análise ABC */}
+      {/* AnÃ¡lise ABC */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          Análise ABC - Distribuição de Produtos
+          AnÃ¡lise ABC - DistribuiÃ§Ã£o de Produtos
         </h3>
         <div className="h-80">
           {abcAnalysisData && <Doughnut data={abcAnalysisData} options={doughnutOptions} />}
@@ -337,7 +337,7 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
       {/* Comparativo Quantidade vs Produtos por Categoria */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg lg:col-span-2">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          Quantidade vs Número de Produtos por Categoria
+          Quantidade vs NÃºmero de Produtos por Categoria
         </h3>
         <div className="h-80">
           <Bar data={categoryQuantityData} options={{

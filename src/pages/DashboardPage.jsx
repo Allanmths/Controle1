@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+﻿import React, { useState, useMemo, useEffect } from 'react';
 import useFirestore from '../hooks/useFirestore';
 import { Bar, Line, Pie } from 'react-chartjs-2';
 import {
@@ -29,10 +29,10 @@ const chartTypes = [
 ];
 
 const periodOptions = {
-    'last7days': 'Últimos 7 dias',
-    'last30days': 'Últimos 30 dias',
-    'thisMonth': 'Este Mês',
-    'lastMonth': 'Mês Passado',
+    'last7days': 'Ãšltimos 7 dias',
+    'last30days': 'Ãšltimos 30 dias',
+    'thisMonth': 'Este MÃªs',
+    'lastMonth': 'MÃªs Passado',
     'custom': 'Personalizado'
 };
 
@@ -120,7 +120,7 @@ export default function DashboardPage() {
       ).reduce((sum, m) => sum + Math.abs(m.quantityChanged || 0), 0);
       
       return {
-        labels: ['Entradas', 'Saídas'],
+        labels: ['Entradas', 'SaÃ­das'],
         datasets: [{
           data: [entries, exits],
           backgroundColor: ['#16a34a', '#dc2626'],
@@ -136,7 +136,7 @@ export default function DashboardPage() {
         acc[day] = { entrada: 0, saida: 0 };
       }
       
-      // Determinar se é entrada ou saída baseado no tipo e quantidade
+      // Determinar se Ã© entrada ou saÃ­da baseado no tipo e quantidade
       if (mov.type === 'Entrada Inicial' || (mov.type === 'Ajuste Manual' && mov.quantityChanged > 0)) {
         acc[day].entrada += Math.abs(mov.quantityChanged || 0);
       } else if (mov.type === 'Ajuste Manual' && mov.quantityChanged < 0) {
@@ -152,7 +152,7 @@ export default function DashboardPage() {
       labels,
       datasets: [
         { label: 'Entradas', data: (labels || []).map(day => groupedByDay[day].entrada), backgroundColor: '#16a34a' },
-        { label: 'Saídas', data: (labels || []).map(day => groupedByDay[day].saida), backgroundColor: '#dc2626' },
+        { label: 'SaÃ­das', data: (labels || []).map(day => groupedByDay[day].saida), backgroundColor: '#dc2626' },
       ],
     };
   }, [movements, startDate, endDate, chartType]);
@@ -202,12 +202,12 @@ export default function DashboardPage() {
     const doc = new jsPDF();
     
     doc.setFontSize(18);
-    doc.text('Relatório de Estoque', 14, 22);
+    doc.text('RelatÃ³rio de Estoque', 14, 22);
     doc.setFontSize(11);
     doc.setTextColor(100);
-    doc.text(`Data de Emissão: ${format(new Date(), 'dd/MM/yyyy')}`, 14, 30);
+    doc.text(`Data de EmissÃ£o: ${format(new Date(), 'dd/MM/yyyy')}`, 14, 30);
 
-    const tableColumn = ["Nome", "Categoria", "Quantidade", "Preço Unit.", "Valor Total"];
+    const tableColumn = ["Nome", "Categoria", "Quantidade", "PreÃ§o Unit.", "Valor Total"];
     const tableRows = [];
 
     filteredProducts.forEach(product => {
@@ -231,7 +231,7 @@ export default function DashboardPage() {
     for(let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
         doc.setFontSize(9);
-        doc.text(`Página ${i} de ${pageCount}`, doc.internal.pageSize.width - 20, doc.internal.pageSize.height - 10);
+        doc.text(`PÃ¡gina ${i} de ${pageCount}`, doc.internal.pageSize.width - 20, doc.internal.pageSize.height - 10);
     }
 
     doc.save(`relatorio_estoque_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
@@ -243,12 +243,12 @@ export default function DashboardPage() {
 
   return (
     <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard de Movimentações</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard de MovimentaÃ§Ãµes</h1>
 
       <div className="bg-white p-4 rounded-lg shadow-md mb-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Gráfico</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de GrÃ¡fico</label>
             <div className="flex items-center border border-gray-300 rounded-md p-0.5 w-min">
                 {chartTypes.map(({key, name}) => (
                     <button key={key} onClick={() => setChartType(key)} className={`px-4 py-1.5 text-sm font-semibold rounded-md transition-colors ${chartType === key ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
@@ -258,7 +258,7 @@ export default function DashboardPage() {
             </div>
           </div>
           <div>
-            <label htmlFor="period-select" className="block text-sm font-medium text-gray-700 mb-1">Período</label>
+            <label htmlFor="period-select" className="block text-sm font-medium text-gray-700 mb-1">PerÃ­odo</label>
             <select id="period-select" value={periodOption} onChange={e => setPeriodOption(e.target.value)} className="w-full md:w-64 p-2 border border-gray-300 rounded-md shadow-sm">
                 {Object.entries(periodOptions).map(([key, name]) => <option key={key} value={key}>{name}</option>)}
             </select>
@@ -301,19 +301,19 @@ export default function DashboardPage() {
                 </div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow-md">
-                <h3 className="font-bold text-red-700 mb-2">Top 5 Saídas Recentes</h3>
+                <h3 className="font-bold text-red-700 mb-2">Top 5 SaÃ­das Recentes</h3>
                 <div className="space-y-1 text-sm text-gray-600">
                     {top5Exits && top5Exits.length > 0 ? (
                         top5Exits.map(m => <p key={m.id}><span className="font-semibold">{m.quantity}x</span> {m.productName}</p>)
-                    ) : <p>Nenhuma saída recente.</p>}
+                    ) : <p>Nenhuma saÃ­da recente.</p>}
                 </div>
             </div>
         </div>
       </div>
 
-      {/* Gerador de Relatório */}
+      {/* Gerador de RelatÃ³rio */}
       <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Gerar Relatório de Estoque</h3>
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">Gerar RelatÃ³rio de Estoque</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
             <div>
                 <label htmlFor="report-category" className="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
@@ -337,7 +337,7 @@ export default function DashboardPage() {
             </div>
             <button onClick={handleGenerateReport} className="flex items-center justify-center p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-semibold">
                 <FaFilePdf className="mr-2" />
-                Gerar Relatório
+                Gerar RelatÃ³rio
             </button>
         </div>
       </div>

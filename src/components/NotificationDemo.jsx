@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useNotifications } from '../context/NotificationContext';
 import { useUserActionNotifications } from '../hooks/useNotificationHelpers';
 
@@ -14,11 +14,11 @@ const NotificationDemo = () => {
 
   const demoNotifications = [
     {
-      title: 'Notificação de Sucesso',
+      title: 'NotificaÃ§Ã£o de Sucesso',
       action: () => addNotification({
         type: 'success',
-        title: 'Operação Concluída',
-        message: 'A operação foi executada com sucesso!',
+        title: 'OperaÃ§Ã£o ConcluÃ­da',
+        message: 'A operaÃ§Ã£o foi executada com sucesso!',
         action: {
           label: 'Ver Dashboard',
           href: '/'
@@ -30,7 +30,7 @@ const NotificationDemo = () => {
       action: () => addNotification({
         type: 'warning',
         title: 'Estoque Baixo - Cerveja Heineken',
-        message: 'O produto "Cerveja Heineken" está com estoque baixo (3 unidades restantes)',
+        message: 'O produto "Cerveja Heineken" estÃ¡ com estoque baixo (3 unidades restantes)',
         action: {
           label: 'Ver Produto',
           href: '/stock?search=Cerveja Heineken'
@@ -45,7 +45,7 @@ const NotificationDemo = () => {
       action: () => addNotification({
         type: 'error',
         title: 'Produto Sem Estoque - Vodka Absolut',
-        message: 'Vodka Absolut está sem estoque!',
+        message: 'Vodka Absolut estÃ¡ sem estoque!',
         action: {
           label: 'Repor Estoque',
           href: '/stock?search=Vodka Absolut'
@@ -56,13 +56,13 @@ const NotificationDemo = () => {
       })
     },
     {
-      title: 'Movimentação de Estoque',
+      title: 'MovimentaÃ§Ã£o de Estoque',
       action: () => addNotification({
         type: 'info',
-        title: 'Transferência de Estoque - Whisky',
+        title: 'TransferÃªncia de Estoque - Whisky',
         message: '15 unidades de Whisky Johnnie Walker transferidas',
         action: {
-          label: 'Ver Movimentações',
+          label: 'Ver MovimentaÃ§Ãµes',
           href: '/movements'
         },
         category: 'movement',
@@ -74,34 +74,34 @@ const NotificationDemo = () => {
       title: 'Backup do Sistema',
       action: () => addNotification({
         type: 'success',
-        title: 'Backup Concluído',
+        title: 'Backup ConcluÃ­do',
         message: 'Backup dos dados criado com sucesso! 150 itens salvos.',
         action: {
-          label: 'Ver Configurações',
+          label: 'Ver ConfiguraÃ§Ãµes',
           href: '/settings'
         },
         category: 'system'
       })
     },
     {
-      title: 'Novo Relatório',
+      title: 'Novo RelatÃ³rio',
       action: () => addNotification({
         type: 'info',
-        title: 'Relatório Disponível',
-        message: 'Novo relatório mensal de vendas está pronto para visualização',
+        title: 'RelatÃ³rio DisponÃ­vel',
+        message: 'Novo relatÃ³rio mensal de vendas estÃ¡ pronto para visualizaÃ§Ã£o',
         action: {
-          label: 'Ver Relatórios',
+          label: 'Ver RelatÃ³rios',
           href: '/reports'
         },
         category: 'reports'
       })
     },
     {
-      title: 'Erro de Sincronização',
+      title: 'Erro de SincronizaÃ§Ã£o',
       action: () => addNotification({
         type: 'error',
-        title: 'Falha na Sincronização',
-        message: 'Não foi possível sincronizar com o servidor. Verifique sua conexão.',
+        title: 'Falha na SincronizaÃ§Ã£o',
+        message: 'NÃ£o foi possÃ­vel sincronizar com o servidor. Verifique sua conexÃ£o.',
         action: {
           label: 'Tentar Novamente',
           href: '/settings'
@@ -113,7 +113,7 @@ const NotificationDemo = () => {
       title: 'Contagem Finalizada',
       action: () => addNotification({
         type: 'success',
-        title: 'Contagem Concluída',
+        title: 'Contagem ConcluÃ­da',
         message: 'Contagem de estoque "Mensal Janeiro" finalizada com 89 itens',
         action: {
           label: 'Ver Contagem',
@@ -127,7 +127,7 @@ const NotificationDemo = () => {
   return (
     <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-        🔔 Demonstração do Sistema de Notificações
+        ðŸ”” DemonstraÃ§Ã£o do Sistema de NotificaÃ§Ãµes
       </h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -146,18 +146,18 @@ const NotificationDemo = () => {
 
       <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
         <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-          ✨ Funcionalidades Implementadas:
+          âœ¨ Funcionalidades Implementadas:
         </h4>
         <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-          <li>• <strong>Notificações Automáticas:</strong> Estoque baixo, produtos zerados</li>
-          <li>• <strong>Notificações de Ações:</strong> Produtos adicionados, editados, removidos</li>
-          <li>• <strong>Redirecionamento Inteligente:</strong> Clique para navegar automaticamente</li>
-          <li>• <strong>Persistência:</strong> Notificações salvas no localStorage</li>
-          <li>• <strong>Interações:</strong> Marcar como lida, remover, limpar todas</li>
-          <li>• <strong>Integração:</strong> Toast para feedback imediato</li>
-          <li>• <strong>Design Responsivo:</strong> Funciona em todos os dispositivos</li>
-          <li>• <strong>Tema Escuro:</strong> Suporte completo ao modo escuro</li>
-          <li>• <strong>Categorização:</strong> Diferentes tipos por contexto (estoque, sistema, etc.)</li>
+          <li>â€¢ <strong>NotificaÃ§Ãµes AutomÃ¡ticas:</strong> Estoque baixo, produtos zerados</li>
+          <li>â€¢ <strong>NotificaÃ§Ãµes de AÃ§Ãµes:</strong> Produtos adicionados, editados, removidos</li>
+          <li>â€¢ <strong>Redirecionamento Inteligente:</strong> Clique para navegar automaticamente</li>
+          <li>â€¢ <strong>PersistÃªncia:</strong> NotificaÃ§Ãµes salvas no localStorage</li>
+          <li>â€¢ <strong>InteraÃ§Ãµes:</strong> Marcar como lida, remover, limpar todas</li>
+          <li>â€¢ <strong>IntegraÃ§Ã£o:</strong> Toast para feedback imediato</li>
+          <li>â€¢ <strong>Design Responsivo:</strong> Funciona em todos os dispositivos</li>
+          <li>â€¢ <strong>Tema Escuro:</strong> Suporte completo ao modo escuro</li>
+          <li>â€¢ <strong>CategorizaÃ§Ã£o:</strong> Diferentes tipos por contexto (estoque, sistema, etc.)</li>
         </ul>
       </div>
     </div>

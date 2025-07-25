@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+﻿import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   FaBox, FaBoxes, FaTags, FaExclamationTriangle, 
@@ -88,18 +88,18 @@ const QuickActionCard = ({ title, description, icon: Icon, color, onClick, badge
 const ActivityItem = ({ movement, products, locations }) => {
   const product = products?.find(p => p.id === movement.productId);
   const location = locations?.find(l => l.id === movement.locationId);
-  const productName = product ? product.name : 'Produto não encontrado';
-  const locationName = location ? location.name : movement.locationName || 'Local não especificado';
+  const productName = product ? product.name : 'Produto nÃ£o encontrado';
+  const locationName = location ? location.name : movement.locationName || 'Local nÃ£o especificado';
   
-  let date = 'Data inválida';
+  let date = 'Data invÃ¡lida';
   if (movement.timestamp?.toDate) {
     const moveDate = movement.timestamp.toDate();
     if (isToday(moveDate)) {
-      date = `Hoje às ${format(moveDate, 'HH:mm')}`;
+      date = `Hoje Ã s ${format(moveDate, 'HH:mm')}`;
     } else if (isYesterday(moveDate)) {
-      date = `Ontem às ${format(moveDate, 'HH:mm')}`;
+      date = `Ontem Ã s ${format(moveDate, 'HH:mm')}`;
     } else {
-      date = format(moveDate, "dd 'de' MMM 'às' HH:mm", { locale: ptBR });
+      date = format(moveDate, "dd 'de' MMM 'Ã s' HH:mm", { locale: ptBR });
     }
   }
 
@@ -117,11 +117,11 @@ const ActivityItem = ({ movement, products, locations }) => {
   } else if (movement.type === 'Ajuste Manual' && movement.quantityChanged < 0) {
     icon = FaArrowDown;
     color = 'text-red-600 bg-red-100';
-    description = `Saída de ${quantityChanged} ${product?.unit || 'un'} de ${productName}`;
+    description = `SaÃ­da de ${quantityChanged} ${product?.unit || 'un'} de ${productName}`;
   } else {
     icon = FaExchangeAlt;
     color = 'text-gray-600 bg-gray-100';
-    description = `Movimentação de ${productName}`;
+    description = `MovimentaÃ§Ã£o de ${productName}`;
   }
 
   return (
@@ -133,7 +133,7 @@ const ActivityItem = ({ movement, products, locations }) => {
         <p className="text-sm font-medium text-gray-900 truncate">{description}</p>
         <div className="flex items-center space-x-2 text-xs text-gray-500">
           <span>{locationName}</span>
-          <span>•</span>
+          <span>â€¢</span>
           <span>{date}</span>
         </div>
       </div>
@@ -164,7 +164,7 @@ const LowStockItem = ({ product, locations }) => {
     medium: 'border-yellow-400 bg-yellow-50'
   };
 
-  // Componente para renderizar gráficos
+  // Componente para renderizar grÃ¡ficos
   const ChartComponent = ({ options, data }) => {
     if (chartType === 'bar') {
       return <Bar options={options} data={data} />;
@@ -185,7 +185,7 @@ const LowStockItem = ({ product, locations }) => {
         </div>
         <div className="text-right">
           <p className="text-lg font-bold text-gray-900">{totalQuantity}</p>
-          <p className="text-xs text-gray-500">Mín: {product.minStock || 0}</p>
+          <p className="text-xs text-gray-500">MÃ­n: {product.minStock || 0}</p>
         </div>
       </div>
     </div>
@@ -230,7 +230,7 @@ export default function HomePage() {
         setDateRange([startOfMonth(lastMonth), endOfMonth(lastMonth)]);
         break;
       case 'custom':
-        // No-op, dateRange é definido pelo DatePicker
+        // No-op, dateRange Ã© definido pelo DatePicker
         break;
       default:
         setDateRange([startOfDay(subDays(now, 6)), endOfDay(now)]);
@@ -275,7 +275,7 @@ export default function HomePage() {
     };
   }, [products, categories, movements, selectedTimeRange]);
 
-  // Dados para gráficos de movimentação
+  // Dados para grÃ¡ficos de movimentaÃ§Ã£o
   const movementsChartData = useMemo(() => {
     if (!movements || !startDate || !endDate) return { labels: [], datasets: [] };
 
@@ -296,7 +296,7 @@ export default function HomePage() {
       ).reduce((sum, m) => sum + Math.abs(m.quantityChanged || 0), 0);
       
       return {
-        labels: ['Entradas', 'Saídas'],
+        labels: ['Entradas', 'SaÃ­das'],
         datasets: [{
           data: [entries, exits],
           backgroundColor: ['#16a34a', '#dc2626'],
@@ -337,7 +337,7 @@ export default function HomePage() {
           borderWidth: 2
         },
         { 
-          label: 'Saídas', 
+          label: 'SaÃ­das', 
           data: labels.map(day => groupedByDay[day]?.saida || 0), 
           backgroundColor: '#dc2626',
           borderColor: '#b91c1c',
@@ -365,7 +365,7 @@ export default function HomePage() {
     return Bar;
   }, [chartType]);
 
-  // Função para gerar relatório
+  // FunÃ§Ã£o para gerar relatÃ³rio
   const handleGenerateReport = () => {
     const augmentedProducts = (products || []).map(p => ({
       ...p,
@@ -399,10 +399,10 @@ export default function HomePage() {
     const doc = new jsPDF();
     
     doc.setFontSize(18);
-    doc.text('Relatório de Estoque', 14, 22);
+    doc.text('RelatÃ³rio de Estoque', 14, 22);
     doc.setFontSize(11);
     doc.setTextColor(100);
-    doc.text(`Data de Emissão: ${format(new Date(), 'dd/MM/yyyy')}`, 14, 30);
+    doc.text(`Data de EmissÃ£o: ${format(new Date(), 'dd/MM/yyyy')}`, 14, 30);
 
     const tableColumn = ["Nome", "Categoria", "Quantidade", "Custo Unit.", "Valor Total"];
     const tableRows = [];
@@ -428,7 +428,7 @@ export default function HomePage() {
     for(let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFontSize(9);
-      doc.text(`Página ${i} de ${pageCount}`, doc.internal.pageSize.width - 20, doc.internal.pageSize.height - 10);
+      doc.text(`PÃ¡gina ${i} de ${pageCount}`, doc.internal.pageSize.width - 20, doc.internal.pageSize.height - 10);
     }
 
     doc.save(`relatorio_estoque_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
@@ -455,7 +455,7 @@ export default function HomePage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-1">Visão geral completa do seu sistema de controle de estoque</p>
+          <p className="text-gray-600 mt-1">VisÃ£o geral completa do seu sistema de controle de estoque</p>
         </div>
         <div className="flex items-center space-x-3">
           <FaCalendarAlt className="text-gray-400" />
@@ -464,9 +464,9 @@ export default function HomePage() {
             onChange={(e) => setSelectedTimeRange(e.target.value)}
             className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
-            <option value="7">Últimos 7 dias</option>
-            <option value="30">Últimos 30 dias</option>
-            <option value="90">Últimos 90 dias</option>
+            <option value="7">Ãšltimos 7 dias</option>
+            <option value="30">Ãšltimos 30 dias</option>
+            <option value="90">Ãšltimos 90 dias</option>
           </select>
         </div>
       </div>
@@ -504,14 +504,14 @@ export default function HomePage() {
           color="border-l-red-400" 
           description="Produtos com baixo estoque"
           trend={stats.criticalStockCount > 0 ? 'down' : null}
-          trendValue={stats.criticalStockCount > 0 ? `${stats.criticalStockCount} críticos` : null}
+          trendValue={stats.criticalStockCount > 0 ? `${stats.criticalStockCount} crÃ­ticos` : null}
           loading={loading}
         />
       </div>
 
       {/* Quick Actions */}
       <div className="bg-white rounded-xl shadow-sm p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Ações Rápidas</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">AÃ§Ãµes RÃ¡pidas</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <QuickActionCard
             title="Adicionar Produto"
@@ -528,8 +528,8 @@ export default function HomePage() {
             onClick={() => navigate('/stock')}
           />
           <QuickActionCard
-            title="Relatórios"
-            description="Gerar relatórios detalhados"
+            title="RelatÃ³rios"
+            description="Gerar relatÃ³rios detalhados"
             icon={FaChartLine}
             color="border-l-purple-400"
             onClick={() => navigate('/reports')}
@@ -541,28 +541,28 @@ export default function HomePage() {
       {/* Charts Section */}
       <div className="bg-white rounded-xl shadow-sm p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-900">Análise de Movimentações</h2>
+          <h2 className="text-xl font-semibold text-gray-900">AnÃ¡lise de MovimentaÃ§Ãµes</h2>
           <div className="flex items-center space-x-4">
             {/* Chart Type Selector */}
             <div className="flex items-center border border-gray-300 rounded-lg p-1">
               <button 
                 onClick={() => setChartType('bar')}
                 className={`p-2 rounded-md transition-colors ${chartType === 'bar' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
-                title="Gráfico de Barras"
+                title="GrÃ¡fico de Barras"
               >
                 <FaChartBar />
               </button>
               <button 
                 onClick={() => setChartType('line')}
                 className={`p-2 rounded-md transition-colors ${chartType === 'line' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
-                title="Gráfico de Linha"
+                title="GrÃ¡fico de Linha"
               >
                 <FaChartArea />
               </button>
               <button 
                 onClick={() => setChartType('pie')}
                 className={`p-2 rounded-md transition-colors ${chartType === 'pie' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
-                title="Gráfico de Pizza"
+                title="GrÃ¡fico de Pizza"
               >
                 <FaChartPie />
               </button>
@@ -574,10 +574,10 @@ export default function HomePage() {
               onChange={(e) => setPeriodOption(e.target.value)}
               className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
             >
-              <option value="last7days">Últimos 7 dias</option>
-              <option value="last30days">Últimos 30 dias</option>
-              <option value="thisMonth">Este Mês</option>
-              <option value="lastMonth">Mês Passado</option>
+              <option value="last7days">Ãšltimos 7 dias</option>
+              <option value="last30days">Ãšltimos 30 dias</option>
+              <option value="thisMonth">Este MÃªs</option>
+              <option value="lastMonth">MÃªs Passado</option>
               <option value="custom">Personalizado</option>
             </select>
           </div>
@@ -593,7 +593,7 @@ export default function HomePage() {
               isClearable={true}
               className="w-full md:w-64 p-2 border border-gray-300 rounded-md"
               dateFormat="dd/MM/yyyy"
-              placeholderText="Selecione o período"
+              placeholderText="Selecione o perÃ­odo"
             />
           </div>
         )}
@@ -614,7 +614,7 @@ export default function HomePage() {
         <div className="bg-white rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-gray-900">Atividade Recente</h2>
-            <span className="text-sm text-gray-500">{stats.recentMovements?.length || 0} movimentações</span>
+            <span className="text-sm text-gray-500">{stats.recentMovements?.length || 0} movimentaÃ§Ãµes</span>
           </div>
           <div className="space-y-1 max-h-96 overflow-y-auto">
             {stats.recentMovements?.length > 0 ? (
@@ -629,7 +629,7 @@ export default function HomePage() {
             ) : (
               <div className="text-center py-8">
                 <FaExchangeAlt className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">Nenhuma movimentação recente</p>
+                <p className="text-gray-500">Nenhuma movimentaÃ§Ã£o recente</p>
               </div>
             )}
           </div>
@@ -662,7 +662,7 @@ export default function HomePage() {
 
       {/* Reports Section */}
       <div id="reports-section" className="bg-white rounded-xl shadow-sm p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Gerador de Relatórios</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Gerador de RelatÃ³rios</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
@@ -695,7 +695,7 @@ export default function HomePage() {
             className="flex items-center justify-center p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-semibold transition-colors"
           >
             <FaFilePdf className="mr-2" />
-            Gerar Relatório
+            Gerar RelatÃ³rio
           </button>
         </div>
       </div>

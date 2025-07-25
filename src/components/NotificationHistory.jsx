@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '../context/NotificationContext';
 import { FaHistory, FaFilter, FaCalendarAlt, FaTrash, FaEye, FaDownload, FaExternalLinkAlt } from 'react-icons/fa';
@@ -36,7 +36,7 @@ const NotificationHistory = () => {
     });
   }, [notifications, filterType, filterStatus, searchTerm]);
 
-  // Estatísticas
+  // EstatÃ­sticas
   const stats = useMemo(() => {
     const total = notifications.length;
     const unread = notifications.filter(n => !n.read).length;
@@ -48,7 +48,7 @@ const NotificationHistory = () => {
     return { total, unread, read: total - unread, byType };
   }, [notifications]);
 
-  // Exportar histórico
+  // Exportar histÃ³rico
   const exportHistory = () => {
     const data = {
       exportDate: new Date().toISOString(),
@@ -74,12 +74,12 @@ const NotificationHistory = () => {
   };
 
   const handleNotificationClick = (notification) => {
-    // Marcar como lida se não foi lida ainda
+    // Marcar como lida se nÃ£o foi lida ainda
     if (!notification.read) {
       markAsRead(notification.id);
     }
     
-    // Lógica de redirecionamento
+    // LÃ³gica de redirecionamento
     if (notification.action?.href) {
       if (notification.action.href.startsWith('http')) {
         window.open(notification.action.href, '_blank');
@@ -99,11 +99,11 @@ const NotificationHistory = () => {
 
   const getTypeIcon = (type) => {
     switch (type) {
-      case 'success': return '✅';
-      case 'warning': return '⚠️';
-      case 'error': return '❌';
-      case 'info': return 'ℹ️';
-      default: return '📢';
+      case 'success': return 'âœ…';
+      case 'warning': return 'âš ï¸';
+      case 'error': return 'âŒ';
+      case 'info': return 'â„¹ï¸';
+      default: return 'ðŸ“¢';
     }
   };
 
@@ -119,13 +119,13 @@ const NotificationHistory = () => {
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md">
-      {/* Header com estatísticas */}
+      {/* Header com estatÃ­sticas */}
       <div className="p-6 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <FaHistory className="text-2xl text-blue-500 mr-3" />
             <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-              Histórico de Notificações
+              HistÃ³rico de NotificaÃ§Ãµes
             </h3>
           </div>
           <button
@@ -137,7 +137,7 @@ const NotificationHistory = () => {
           </button>
         </div>
 
-        {/* Estatísticas */}
+        {/* EstatÃ­sticas */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div className="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
             <div className="text-2xl font-bold text-gray-900 dark:text-white">{stats.total}</div>
@@ -145,7 +145,7 @@ const NotificationHistory = () => {
           </div>
           <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
             <div className="text-2xl font-bold text-blue-600">{stats.unread}</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Não Lidas</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">NÃ£o Lidas</div>
           </div>
           <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
             <div className="text-2xl font-bold text-green-600">{stats.read}</div>
@@ -162,7 +162,7 @@ const NotificationHistory = () => {
           <div className="flex-1 min-w-[200px]">
             <input
               type="text"
-              placeholder="Buscar notificações..."
+              placeholder="Buscar notificaÃ§Ãµes..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
@@ -177,7 +177,7 @@ const NotificationHistory = () => {
             <option value="success">Sucesso</option>
             <option value="warning">Aviso</option>
             <option value="error">Erro</option>
-            <option value="info">Informação</option>
+            <option value="info">InformaÃ§Ã£o</option>
           </select>
           <select
             value={filterStatus}
@@ -185,18 +185,18 @@ const NotificationHistory = () => {
             className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
           >
             <option value="all">Todos os status</option>
-            <option value="unread">Não lidas</option>
+            <option value="unread">NÃ£o lidas</option>
             <option value="read">Lidas</option>
           </select>
         </div>
       </div>
 
-      {/* Lista de notificações */}
+      {/* Lista de notificaÃ§Ãµes */}
       <div className="max-h-96 overflow-y-auto">
         {filteredNotifications.length === 0 ? (
           <div className="p-8 text-center text-gray-500 dark:text-gray-400">
             <FaHistory className="mx-auto mb-3 text-3xl opacity-50" />
-            <p>Nenhuma notificação encontrada</p>
+            <p>Nenhuma notificaÃ§Ã£o encontrada</p>
             {searchTerm && (
               <p className="text-sm">Tente ajustar os filtros de busca</p>
             )}
@@ -212,12 +212,12 @@ const NotificationHistory = () => {
               title={notification.action?.href ? 'Clique para navegar' : ''}
             >
               <div className="flex items-start gap-3">
-                {/* Tipo/Ícone */}
+                {/* Tipo/Ãcone */}
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${getTypeColor(notification.type)}`}>
                   <span className="text-sm">{getTypeIcon(notification.type)}</span>
                 </div>
 
-                {/* Conteúdo */}
+                {/* ConteÃºdo */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -248,7 +248,7 @@ const NotificationHistory = () => {
                       </div>
                     </div>
 
-                    {/* Ações */}
+                    {/* AÃ§Ãµes */}
                     <div className="flex items-center gap-1 ml-2">
                       <button
                         onClick={() => setShowDetails(showDetails === notification.id ? null : notification.id)}
@@ -282,13 +282,13 @@ const NotificationHistory = () => {
                       <div className="grid grid-cols-2 gap-2">
                         <div><strong>ID:</strong> {notification.id}</div>
                         <div><strong>Tipo:</strong> {notification.type}</div>
-                        <div><strong>Status:</strong> {notification.read ? 'Lida' : 'Não lida'}</div>
+                        <div><strong>Status:</strong> {notification.read ? 'Lida' : 'NÃ£o lida'}</div>
                         <div><strong>Categoria:</strong> {notification.category || 'N/A'}</div>
                         {notification.productId && (
                           <div><strong>Produto ID:</strong> {notification.productId}</div>
                         )}
                         {notification.action && (
-                          <div><strong>Ação:</strong> {notification.action.label}</div>
+                          <div><strong>AÃ§Ã£o:</strong> {notification.action.label}</div>
                         )}
                       </div>
                     </div>

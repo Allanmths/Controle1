@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { FaExclamationTriangle, FaTimes, FaTrash } from 'react-icons/fa';
 
 const DeleteUserModal = ({ isOpen, onClose, user, onConfirm, isDeleting }) => {
@@ -18,8 +18,8 @@ const DeleteUserModal = ({ isOpen, onClose, user, onConfirm, isDeleting }) => {
               <FaExclamationTriangle className="text-red-600" />
             </div>
             <div>
-              <h3 className="text-lg font-medium text-gray-900">Confirmar Exclusão</h3>
-              <p className="text-sm text-gray-500">Esta ação não pode ser desfeita</p>
+              <h3 className="text-lg font-medium text-gray-900">Confirmar ExclusÃ£o</h3>
+              <p className="text-sm text-gray-500">Esta aÃ§Ã£o nÃ£o pode ser desfeita</p>
             </div>
           </div>
           <button
@@ -35,7 +35,7 @@ const DeleteUserModal = ({ isOpen, onClose, user, onConfirm, isDeleting }) => {
         <div className="p-6">
           <div className="mb-4">
             <p className="text-gray-700 mb-4">
-              Tem certeza que deseja excluir o usuário:
+              Tem certeza que deseja excluir o usuÃ¡rio:
             </p>
             
             <div className="bg-gray-50 p-4 rounded-lg border">
@@ -47,7 +47,7 @@ const DeleteUserModal = ({ isOpen, onClose, user, onConfirm, isDeleting }) => {
                 </div>
                 <div>
                   <p className="font-medium text-gray-900">
-                    {user.displayName || 'Nome não definido'}
+                    {user.displayName || 'Nome nÃ£o definido'}
                   </p>
                   <p className="text-sm text-gray-500">{user.email}</p>
                   <p className="text-xs text-gray-400">
@@ -62,11 +62,11 @@ const DeleteUserModal = ({ isOpen, onClose, user, onConfirm, isDeleting }) => {
             <div className="flex items-start space-x-2">
               <FaExclamationTriangle className="text-red-500 mt-0.5 flex-shrink-0" />
               <div className="text-sm text-red-700">
-                <p className="font-medium mb-1">Atenção:</p>
+                <p className="font-medium mb-1">AtenÃ§Ã£o:</p>
                 <ul className="list-disc list-inside space-y-1">
-                  <li>O usuário será permanentemente removido do sistema</li>
-                  <li>Todos os dados associados serão perdidos</li>
-                  <li>Esta ação não pode ser desfeita</li>
+                  <li>O usuÃ¡rio serÃ¡ permanentemente removido do sistema</li>
+                  <li>Todos os dados associados serÃ£o perdidos</li>
+                  <li>Esta aÃ§Ã£o nÃ£o pode ser desfeita</li>
                 </ul>
               </div>
             </div>
@@ -88,7 +88,7 @@ const DeleteUserModal = ({ isOpen, onClose, user, onConfirm, isDeleting }) => {
             className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 transition-colors flex items-center space-x-2"
           >
             <FaTrash className="text-sm" />
-            <span>{isDeleting ? 'Excluindo...' : 'Excluir Usuário'}</span>
+            <span>{isDeleting ? 'Excluindo...' : 'Excluir UsuÃ¡rio'}</span>
           </button>
         </div>
       </div>

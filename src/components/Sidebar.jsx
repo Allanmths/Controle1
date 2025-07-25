@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
@@ -6,19 +6,19 @@ import {
     FaExchangeAlt, FaClipboardCheck, FaHistory, FaFileAlt, FaCog, FaSignOutAlt, FaBoxes 
 } from 'react-icons/fa';
 
-// Links de navegação principais
+// Links de navegaÃ§Ã£o principais
 const mainNavLinks = [
-    { to: '/', text: 'Início', icon: FaHome },
+    { to: '/', text: 'InÃ­cio', icon: FaHome },
     { to: '/stock', text: 'Estoque', icon: FaBoxOpen },
     { to: '/registers', text: 'Cadastros', icon: FaPlusCircle },
-    { to: '/movements', text: 'Movimenta��es', icon: FaExchangeAlt },
+    { to: '/movements', text: 'Movimentações', icon: FaExchangeAlt },
     { to: '/counting', text: 'Contagem', icon: FaClipboardCheck },
-    { to: '/replenishment', text: 'Reposi��o', icon: FaBoxes },
+    { to: '/replenishment', text: 'Reposição', icon: FaBoxes },
     { to: '/audit', text: 'Auditoria', icon: FaHistory },
-    { to: '/reports', text: 'Analytics & Relat�rios', icon: FaFileAlt },
+    { to: '/reports', text: 'Analytics & Relatórios', icon: FaFileAlt },
 ];
 
-// Componente de item de navegação reutilizável
+// Componente de item de navegaÃ§Ã£o reutilizÃ¡vel
 const NavItem = ({ to, text, icon: Icon, onClick, onNavigate }) => (
     <li>
         <NavLink
@@ -55,9 +55,9 @@ export default function Sidebar({ isOpen, onClose }) {
         navigate('/auth');
     };
 
-    // Função para fechar o sidebar após navegar (principalmente para mobile)
+    // FunÃ§Ã£o para fechar o sidebar apÃ³s navegar (principalmente para mobile)
     const handleNavigate = () => {
-        // Fecha o sidebar em telas menores quando uma opção é selecionada
+        // Fecha o sidebar em telas menores quando uma opÃ§Ã£o Ã© selecionada
         if (window.innerWidth < 1024) { // lg breakpoint do Tailwind
             onClose();
         }
@@ -91,13 +91,13 @@ export default function Sidebar({ isOpen, onClose }) {
                         </ul>
                     </nav>
                     
-                    {/* Links Inferiores (Configura��es e Sair) */}
+                    {/* Links Inferiores (Configurações e Sair) */}
                     <nav>
                         <ul className="pt-2 mt-2 space-y-1 border-t border-slate-200 dark:border-slate-700">
                             <NavItem 
                                 to="/settings" 
                                 icon={FaCog} 
-                                text="Configura��es" 
+                                text="Configurações" 
                                 onNavigate={handleNavigate}
                             />
                             <NavItem 

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+﻿import { useState, useMemo } from 'react';
 import { doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import useFirestore from './useFirestore';
@@ -6,8 +6,8 @@ import toast from 'react-hot-toast';
 import { useSettings } from '../context/SettingsContext';
 
 /**
- * Hook customizado para gerenciar toda a lógica da página de estoque.
- * Encapsula o carregamento de dados, filtros, paginação, e o estado dos modais.
+ * Hook customizado para gerenciar toda a lÃ³gica da pÃ¡gina de estoque.
+ * Encapsula o carregamento de dados, filtros, paginaÃ§Ã£o, e o estado dos modais.
  */
 export const useStockManagement = () => {
   // 1. Carregamento de Dados
@@ -25,14 +25,14 @@ export const useStockManagement = () => {
   const [productToEdit, setProductToEdit] = useState(null);
   const [productToDeleteConfirm, setProductToDeleteConfirm] = useState(null);
 
-  // 3. Estado de Filtros e Paginação
+  // 3. Estado de Filtros e PaginaÃ§Ã£o
   const { itemsPerPage } = useSettings(); // Consome do contexto
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   
-  // 4. Lógica de Negócio
+  // 4. LÃ³gica de NegÃ³cio
 
   // Combina os estados de loading
   const isLoading = productsLoading || categoriesLoading || locationsLoading;
@@ -45,11 +45,11 @@ export const useStockManagement = () => {
     if (locationsError) errorMessages.push(`Erro ao carregar locais: ${locationsError.message}`);
     
     if (errorMessages.length === 0) return null;
-    // Retorna um objeto de erro para consistência, em vez de apenas uma string.
+    // Retorna um objeto de erro para consistÃªncia, em vez de apenas uma string.
     return new Error(errorMessages.join('; '));
   }, [productsError, categoriesError, locationsError]);
 
-  // Memoiza os produtos filtrados para evitar recálculos desnecessários
+  // Memoiza os produtos filtrados para evitar recÃ¡lculos desnecessÃ¡rios
   const filteredProducts = useMemo(() => {
     return (products || []).filter(product => {
       // Filtro por nome
@@ -62,7 +62,7 @@ export const useStockManagement = () => {
         matchesCategory = category ? category.name === categoryFilter : false;
       }
       
-      // Filtro por localização - verificando se tem estoque na localização selecionada
+      // Filtro por localizaÃ§Ã£o - verificando se tem estoque na localizaÃ§Ã£o selecionada
       let matchesLocation = true;
       if (locationFilter !== '') {
         const location = locations?.find(loc => loc.name === locationFilter);
@@ -78,13 +78,13 @@ export const useStockManagement = () => {
     });
   }, [products, searchTerm, categoryFilter, locationFilter, categories, locations]);
 
-  // Memoiza os produtos para a página atual
+  // Memoiza os produtos para a pÃ¡gina atual
   const paginatedProducts = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return filteredProducts.slice(startIndex, startIndex + itemsPerPage);
   }, [filteredProducts, currentPage, itemsPerPage]);
 
-  // 5. Funções de Manipulação de Eventos (Handlers)
+  // 5. FunÃ§Ãµes de ManipulaÃ§Ã£o de Eventos (Handlers)
 
   const handleOpenEditConfirmModal = (product) => {
     setProductToEdit(product);
@@ -145,7 +145,7 @@ export const useStockManagement = () => {
     const toastId = toast.loading('Excluindo produto...');
     try {
       await deleteDoc(doc(db, 'products', productToDelete.id));
-      toast.success('Produto excluído com sucesso!', { id: toastId });
+      toast.success('Produto excluÃ­do com sucesso!', { id: toastId });
     } catch (error) {
       console.error('Erro ao excluir produto:', error);
       toast.error('Erro ao excluir produto.', { id: toastId });
@@ -153,7 +153,7 @@ export const useStockManagement = () => {
   };
 
   // 6. Retorno do Hook
-  // Expõe todos os estados e funções que a UI precisa para renderizar e interagir
+  // ExpÃµe todos os estados e funÃ§Ãµes que a UI precisa para renderizar e interagir
   return {
     // Dados
     products: paginatedProducts,
@@ -171,28 +171,28 @@ export const useStockManagement = () => {
     handleOpenModal,
     handleCloseModal,
 
-    // Estado e Handlers do Modal de Confirmação de Edição
+    // Estado e Handlers do Modal de ConfirmaÃ§Ã£o de EdiÃ§Ã£o
     isEditConfirmModalOpen,
     productToEdit,
     handleOpenEditConfirmModal,
     handleCloseEditConfirmModal,
     handleConfirmEdit,
 
-    // Estado e Handlers do Modal de Exclusão
+    // Estado e Handlers do Modal de ExclusÃ£o
     isDeleteModalOpen,
     productToDelete,
     handleOpenDeleteModal,
     handleCloseDeleteModal,
     handleDeleteProduct,
 
-    // Estado e Handlers do Modal de Confirmação de Exclusão
+    // Estado e Handlers do Modal de ConfirmaÃ§Ã£o de ExclusÃ£o
     isDeleteConfirmModalOpen,
     productToDeleteConfirm,
     handleOpenDeleteConfirmModal,
     handleCloseDeleteConfirmModal,
     handleConfirmDelete,
 
-    // Handlers de Filtro e Paginação
+    // Handlers de Filtro e PaginaÃ§Ã£o
     searchTerm,
     setSearchTerm,
     categoryFilter,

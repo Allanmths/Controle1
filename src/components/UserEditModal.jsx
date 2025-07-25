@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { FaTimes, FaUser, FaShieldAlt, FaCheck, FaTimes as FaTimesIcon, FaTrash, FaExclamationTriangle } from 'react-icons/fa';
 import { ROLES, PERMISSIONS, ROLE_PERMISSIONS, ROLE_DESCRIPTIONS, getRolePermissions, hasPermission } from '../utils/permissions';
 import { useAuth } from '../context/AuthContext';
@@ -36,14 +36,14 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onDelete }) => {
       await onSave(user.id, formData);
       onClose();
     } catch (error) {
-      console.error('Erro ao salvar usuário:', error);
+      console.error('Erro ao salvar usuÃ¡rio:', error);
     }
     setSaving(false);
   };
 
   const handleDelete = () => {
     if (user.id === currentUser?.uid) {
-      alert('Você não pode excluir sua própria conta');
+      alert('VocÃª nÃ£o pode excluir sua prÃ³pria conta');
       return;
     }
     setShowDeleteConfirm(true);
@@ -56,7 +56,7 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onDelete }) => {
       setShowDeleteConfirm(false);
       onClose();
     } catch (error) {
-      console.error('Erro ao excluir usuário:', error);
+      console.error('Erro ao excluir usuÃ¡rio:', error);
     }
     setIsDeleting(false);
   };
@@ -109,7 +109,7 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onDelete }) => {
           <div className="flex items-center space-x-3">
             <FaUser className="text-blue-600" />
             <div>
-              <h2 className="text-xl font-semibold">Editar Usuário</h2>
+              <h2 className="text-xl font-semibold">Editar UsuÃ¡rio</h2>
               <p className="text-sm text-gray-600">{user?.email}</p>
             </div>
           </div>
@@ -124,20 +124,20 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onDelete }) => {
         {/* Content */}
         <div className="p-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Informações Básicas */}
+            {/* InformaÃ§Ãµes BÃ¡sicas */}
             <div className="space-y-4">
-              <h3 className="text-lg font-medium text-gray-900">Informações Básicas</h3>
+              <h3 className="text-lg font-medium text-gray-900">InformaÃ§Ãµes BÃ¡sicas</h3>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Nome de Exibição
+                  Nome de ExibiÃ§Ã£o
                 </label>
                 <input
                   type="text"
                   value={formData.displayName}
                   onChange={(e) => setFormData(prev => ({ ...prev, displayName: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Nome do usuário"
+                  placeholder="Nome do usuÃ¡rio"
                 />
               </div>
 
@@ -151,7 +151,7 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onDelete }) => {
                   disabled
                   className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500"
                 />
-                <p className="text-xs text-gray-500 mt-1">O email não pode ser alterado</p>
+                <p className="text-xs text-gray-500 mt-1">O email nÃ£o pode ser alterado</p>
               </div>
 
               <div>
@@ -182,10 +182,10 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onDelete }) => {
                     onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                   />
-                  <span className="text-sm font-medium text-gray-700">Usuário Ativo</span>
+                  <span className="text-sm font-medium text-gray-700">UsuÃ¡rio Ativo</span>
                 </label>
                 <p className="text-xs text-gray-600 ml-6">
-                  Desmarque para desativar o acesso do usuário
+                  Desmarque para desativar o acesso do usuÃ¡rio
                 </p>
               </div>
 
@@ -197,19 +197,19 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onDelete }) => {
                     onChange={(e) => setShowCustomPermissions(e.target.checked)}
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                   />
-                  <span className="text-sm font-medium text-gray-700">Permissões Customizadas</span>
+                  <span className="text-sm font-medium text-gray-700">PermissÃµes Customizadas</span>
                 </label>
                 <p className="text-xs text-gray-600 ml-6">
-                  Adicione ou remova permissões específicas além do role padrão
+                  Adicione ou remova permissÃµes especÃ­ficas alÃ©m do role padrÃ£o
                 </p>
               </div>
             </div>
 
-            {/* Permissões */}
+            {/* PermissÃµes */}
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <FaShieldAlt className="text-green-600" />
-                <h3 className="text-lg font-medium text-gray-900">Sistema de Permissões</h3>
+                <h3 className="text-lg font-medium text-gray-900">Sistema de PermissÃµes</h3>
               </div>
 
               {/* Legenda */}
@@ -218,11 +218,11 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onDelete }) => {
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div className="flex items-center space-x-1">
                     <FaCheck className="text-blue-600" />
-                    <span>Permissão do Role</span>
+                    <span>PermissÃ£o do Role</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <FaCheck className="text-green-600" />
-                    <span>Permissão Customizada</span>
+                    <span>PermissÃ£o Customizada</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <FaCheck className="text-purple-600" />
@@ -230,12 +230,12 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onDelete }) => {
                   </div>
                   <div className="flex items-center space-x-1">
                     <FaTimesIcon className="text-gray-400" />
-                    <span>Sem Permissão</span>
+                    <span>Sem PermissÃ£o</span>
                   </div>
                 </div>
               </div>
 
-              {/* Lista de Permissões */}
+              {/* Lista de PermissÃµes */}
               <div className="max-h-64 overflow-y-auto border border-gray-200 rounded-md">
                 {Object.entries(PERMISSIONS).map(([key, permission]) => {
                   const status = getPermissionStatus(permission);
@@ -258,7 +258,7 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onDelete }) => {
                           )}
                         </div>
                         
-                        {/* Toggle Permissão Customizada */}
+                        {/* Toggle PermissÃ£o Customizada */}
                         {showCustomPermissions && (
                           <button
                             onClick={() => handlePermissionToggle(permission)}
@@ -296,22 +296,22 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onDelete }) => {
 
         {/* Footer */}
         <div className="flex items-center justify-between p-6 border-t bg-gray-50">
-          {/* Botão de Exclusão (esquerda) */}
+          {/* BotÃ£o de ExclusÃ£o (esquerda) */}
           <div>
             {canDeleteUser && (
               <button
                 onClick={handleDelete}
                 disabled={loading || isDeleting}
                 className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 flex items-center space-x-2"
-                title="Excluir usuário"
+                title="Excluir usuÃ¡rio"
               >
                 <FaTrash className="text-sm" />
-                <span>Excluir Usuário</span>
+                <span>Excluir UsuÃ¡rio</span>
               </button>
             )}
           </div>
 
-          {/* Botões principais (direita) */}
+          {/* BotÃµes principais (direita) */}
           <div className="flex items-center space-x-3">
             <button
               onClick={onClose}
@@ -325,50 +325,50 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onDelete }) => {
               disabled={loading || isDeleting}
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
             >
-              {loading ? 'Salvando...' : 'Salvar Alterações'}
+              {loading ? 'Salvando...' : 'Salvar AlteraÃ§Ãµes'}
             </button>
           </div>
         </div>
 
-        {/* Modal de Confirmação de Exclusão */}
+        {/* Modal de ConfirmaÃ§Ã£o de ExclusÃ£o */}
         {showDeleteConfirm && (
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
             <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-              {/* Header do modal de confirmação */}
+              {/* Header do modal de confirmaÃ§Ã£o */}
               <div className="flex items-center justify-between p-4 border-b border-gray-200">
                 <div className="flex items-center space-x-3">
                   <div className="flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
                     <FaExclamationTriangle className="text-red-600" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900">Confirmar Exclusão</h3>
-                    <p className="text-sm text-gray-500">Esta ação não pode ser desfeita</p>
+                    <h3 className="text-lg font-medium text-gray-900">Confirmar ExclusÃ£o</h3>
+                    <p className="text-sm text-gray-500">Esta aÃ§Ã£o nÃ£o pode ser desfeita</p>
                   </div>
                 </div>
               </div>
 
-              {/* Content do modal de confirmação */}
+              {/* Content do modal de confirmaÃ§Ã£o */}
               <div className="p-4">
                 <p className="text-gray-700 mb-4">
-                  Tem certeza que deseja excluir o usuário <strong>{user?.displayName || user?.email}</strong>?
+                  Tem certeza que deseja excluir o usuÃ¡rio <strong>{user?.displayName || user?.email}</strong>?
                 </p>
                 
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
                   <div className="flex items-start space-x-2">
                     <FaExclamationTriangle className="text-red-500 mt-0.5 flex-shrink-0" />
                     <div className="text-sm text-red-700">
-                      <p className="font-medium mb-1">Atenção:</p>
+                      <p className="font-medium mb-1">AtenÃ§Ã£o:</p>
                       <ul className="list-disc list-inside space-y-1">
-                        <li>O usuário será permanentemente removido</li>
-                        <li>Todos os dados associados serão perdidos</li>
-                        <li>Esta ação não pode ser desfeita</li>
+                        <li>O usuÃ¡rio serÃ¡ permanentemente removido</li>
+                        <li>Todos os dados associados serÃ£o perdidos</li>
+                        <li>Esta aÃ§Ã£o nÃ£o pode ser desfeita</li>
                       </ul>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Footer do modal de confirmação */}
+              {/* Footer do modal de confirmaÃ§Ã£o */}
               <div className="flex items-center justify-end space-x-3 p-4 border-t border-gray-200">
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
@@ -383,7 +383,7 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onDelete }) => {
                   className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 flex items-center space-x-2"
                 >
                   <FaTrash className="text-sm" />
-                  <span>{isDeleting ? 'Excluindo...' : 'Confirmar Exclusão'}</span>
+                  <span>{isDeleting ? 'Excluindo...' : 'Confirmar ExclusÃ£o'}</span>
                 </button>
               </div>
             </div>

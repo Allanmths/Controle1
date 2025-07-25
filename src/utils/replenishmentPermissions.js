@@ -1,26 +1,26 @@
-// Permissões específicas para sistema de reposição
+﻿// PermissÃµes especÃ­ficas para sistema de reposiÃ§Ã£o
 export const REPLENISHMENT_PERMISSIONS = {
-  // Solicitações
+  // SolicitaÃ§Ãµes
   REQUEST_REPLENISHMENT: 'request_replenishment',
   VIEW_ALL_REQUESTS: 'view_all_requests',
   
-  // Aprovações
+  // AprovaÃ§Ãµes
   APPROVE_REPLENISHMENT: 'approve_replenishment',
   REJECT_REPLENISHMENT: 'reject_replenishment',
   
-  // Execução
+  // ExecuÃ§Ã£o
   EXECUTE_REPLENISHMENT: 'execute_replenishment',
   
   // Lista de Compras
   GENERATE_PURCHASE_LIST: 'generate_purchase_list',
   EXPORT_PURCHASE_LIST: 'export_purchase_list',
   
-  // Relatórios
+  // RelatÃ³rios
   VIEW_REPLENISHMENT_REPORTS: 'view_replenishment_reports',
   EXPORT_REPLENISHMENT_REPORTS: 'export_replenishment_reports'
 };
 
-// Status das solicitações de reposição
+// Status das solicitaÃ§Ãµes de reposiÃ§Ã£o
 export const REPLENISHMENT_STATUS = {
   PENDING: 'pending',
   APPROVED: 'approved',
@@ -47,13 +47,13 @@ export const PURCHASE_LIST_STATUS = {
   COMPLETED: 'completed'
 };
 
-// Descrições dos status
+// DescriÃ§Ãµes dos status
 export const STATUS_DESCRIPTIONS = {
-  [REPLENISHMENT_STATUS.PENDING]: 'Aguardando aprovação',
-  [REPLENISHMENT_STATUS.APPROVED]: 'Aprovado - Aguardando execução',
+  [REPLENISHMENT_STATUS.PENDING]: 'Aguardando aprovaÃ§Ã£o',
+  [REPLENISHMENT_STATUS.APPROVED]: 'Aprovado - Aguardando execuÃ§Ã£o',
   [REPLENISHMENT_STATUS.REJECTED]: 'Rejeitado',
-  [REPLENISHMENT_STATUS.IN_PROGRESS]: 'Em execução',
-  [REPLENISHMENT_STATUS.COMPLETED]: 'Concluído',
+  [REPLENISHMENT_STATUS.IN_PROGRESS]: 'Em execuÃ§Ã£o',
+  [REPLENISHMENT_STATUS.COMPLETED]: 'ConcluÃ­do',
   [REPLENISHMENT_STATUS.CANCELLED]: 'Cancelado'
 };
 
@@ -67,16 +67,16 @@ export const STATUS_COLORS = {
   [REPLENISHMENT_STATUS.CANCELLED]: 'gray'
 };
 
-// Configurações padrão do sistema
+// ConfiguraÃ§Ãµes padrÃ£o do sistema
 export const REPLENISHMENT_CONFIG = {
-  // Limites de aprovação automática
+  // Limites de aprovaÃ§Ã£o automÃ¡tica
   AUTO_APPROVE_LIMIT: 1000, // Valor em R$
   
-  // Configurações de estoque baixo
-  DEFAULT_MIN_STOCK_PERCENTAGE: 20, // 20% do estoque máximo
-  CRITICAL_STOCK_PERCENTAGE: 10,    // 10% = crítico
+  // ConfiguraÃ§Ãµes de estoque baixo
+  DEFAULT_MIN_STOCK_PERCENTAGE: 20, // 20% do estoque mÃ¡ximo
+  CRITICAL_STOCK_PERCENTAGE: 10,    // 10% = crÃ­tico
   
-  // Configurações de notificação
+  // ConfiguraÃ§Ãµes de notificaÃ§Ã£o
   NOTIFICATION_SETTINGS: {
     NOTIFY_ON_REQUEST: true,
     NOTIFY_ON_APPROVAL: true,

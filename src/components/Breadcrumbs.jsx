@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { FaHome, FaChevronRight } from 'react-icons/fa';
 
@@ -10,9 +10,9 @@ const Breadcrumbs = () => {
         'dashboard': 'Dashboard',
         'stock': 'Estoque',
         'registers': 'Cadastros',
-        'movements': 'Movimentações',
-        'reports': 'Relatórios',
-        'settings': 'Configurações',
+        'movements': 'MovimentaÃ§Ãµes',
+        'reports': 'RelatÃ³rios',
+        'settings': 'ConfiguraÃ§Ãµes',
         'counting': 'Contagem',
         'audit': 'Auditoria'
     };

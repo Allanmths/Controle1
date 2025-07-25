@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+﻿import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { FaSearch, FaTimes, FaChevronDown, FaBox } from 'react-icons/fa';
 import useFirestore from '../hooks/useFirestore';
 
@@ -51,7 +51,7 @@ const ProductSelector = ({ onProductSelect, selectedProductId, placeholder = "Se
             // Filtro por nome
             const matchesName = product.name.toLowerCase().includes(searchTerm.toLowerCase());
             
-            // Filtro por código (se existir)
+            // Filtro por cÃ³digo (se existir)
             const matchesCode = product.code ? 
                 product.code.toLowerCase().includes(searchTerm.toLowerCase()) : false;
             
@@ -139,13 +139,13 @@ const ProductSelector = ({ onProductSelect, selectedProductId, placeholder = "Se
                     <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-96 overflow-hidden">
                         {/* Header com filtros */}
                         <div className="p-3 border-b border-gray-200 dark:border-gray-600 space-y-3">
-                            {/* Busca por nome/código */}
+                            {/* Busca por nome/cÃ³digo */}
                             <div className="relative">
                                 <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 <input
                                     ref={searchInputRef}
                                     type="text"
-                                    placeholder="Buscar por nome ou código..."
+                                    placeholder="Buscar por nome ou cÃ³digo..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
@@ -198,7 +198,7 @@ const ProductSelector = ({ onProductSelect, selectedProductId, placeholder = "Se
                                                     </h4>
                                                     <div className="flex items-center gap-3 mt-1 text-sm text-gray-500 dark:text-gray-400">
                                                         {product.code && (
-                                                            <span>Código: {product.code}</span>
+                                                            <span>CÃ³digo: {product.code}</span>
                                                         )}
                                                         {category && (
                                                             <span>Categoria: {category.name}</span>
@@ -226,7 +226,7 @@ const ProductSelector = ({ onProductSelect, selectedProductId, placeholder = "Se
                             )}
                         </div>
 
-                        {/* Footer com informações */}
+                        {/* Footer com informaÃ§Ãµes */}
                         {filteredProducts.length > 0 && (
                             <div className="p-2 border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
                                 <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
@@ -238,7 +238,7 @@ const ProductSelector = ({ onProductSelect, selectedProductId, placeholder = "Se
                 )}
             </div>
 
-            {/* Informações do produto selecionado */}
+            {/* InformaÃ§Ãµes do produto selecionado */}
             {selectedProduct && (
                 <div className="mt-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                     <div className="flex items-center justify-between">
@@ -248,7 +248,7 @@ const ProductSelector = ({ onProductSelect, selectedProductId, placeholder = "Se
                             </h4>
                             <div className="flex items-center gap-3 mt-1 text-sm text-blue-700 dark:text-blue-300">
                                 {selectedProduct.code && (
-                                    <span>Código: {selectedProduct.code}</span>
+                                    <span>CÃ³digo: {selectedProduct.code}</span>
                                 )}
                                 <span>
                                     Estoque: {Object.values(selectedProduct.locations || {})

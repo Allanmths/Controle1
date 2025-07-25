@@ -1,5 +1,5 @@
-/**
- * Sistema de logging para debug em produção
+﻿/**
+ * Sistema de logging para debug em produÃ§Ã£o
  */
 
 const isDevelopment = import.meta.env.DEV;
@@ -19,7 +19,7 @@ export const debugLog = {
     error: (message, error = null) => {
         console.error(`[ERROR] ${message}`, error);
         
-        // Em produção, podemos enviar erros para um serviço de monitoramento
+        // Em produÃ§Ã£o, podemos enviar erros para um serviÃ§o de monitoramento
         if (isProduction) {
             // Aqui poderia enviar para Sentry, LogRocket, etc.
         }

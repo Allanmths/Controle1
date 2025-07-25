@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Card } from '../components/ui';
 import CategoriesManager from '../components/CategoriesManager';
 import LocationManager from '../components/LocationManager';
@@ -11,7 +11,7 @@ export default function RegistersPage() {
             <header className="mb-6">
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Cadastros</h1>
                 <p className="text-gray-600 mt-1 text-sm sm:text-base">
-                    Gerencie seus produtos, categorias e localidades em um s� lugar.
+                    Gerencie seus produtos, categorias e localidades em um só lugar.
                 </p>
             </header>
             

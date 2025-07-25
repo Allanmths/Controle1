@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { db } from '../services/firebase';
 import { collection, addDoc, doc, updateDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import toast from 'react-hot-toast';
@@ -49,7 +49,7 @@ const ProductModal = ({ isOpen, onClose, productToEdit, locations, userData }) =
         e.preventDefault();
 
         if (!name || !categoryId || !unit) {
-            toast.error('Por favor, preencha todos os campos obrigatórios.');
+            toast.error('Por favor, preencha todos os campos obrigatÃ³rios.');
             return;
         }
 
@@ -122,7 +122,7 @@ const ProductModal = ({ isOpen, onClose, productToEdit, locations, userData }) =
         toast.promise(promise(), {
             loading: 'Salvando produto...',
             success: (result) => {
-                // Adicionar notificação baseada na ação
+                // Adicionar notificaÃ§Ã£o baseada na aÃ§Ã£o
                 if (productToEdit) {
                     notifyProductUpdated(name);
                 } else {
@@ -195,7 +195,7 @@ const ProductModal = ({ isOpen, onClose, productToEdit, locations, userData }) =
                         </div>
 
                         <div className="md:col-span-2">
-                            <label htmlFor="minStock" className="block text-sm font-medium text-gray-700 mb-1">Estoque Mínimo (Total)</label>
+                            <label htmlFor="minStock" className="block text-sm font-medium text-gray-700 mb-1">Estoque MÃ­nimo (Total)</label>
                             <input
                                 type="number"
                                 id="minStock"
@@ -251,7 +251,7 @@ const ProductModal = ({ isOpen, onClose, productToEdit, locations, userData }) =
                             Cancelar
                         </button>
                         <button type="submit" className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition duration-300">
-                            {productToEdit ? 'Salvar Alterações' : 'Adicionar Produto'}
+                            {productToEdit ? 'Salvar AlteraÃ§Ãµes' : 'Adicionar Produto'}
                         </button>
                     </div>
                 </form>

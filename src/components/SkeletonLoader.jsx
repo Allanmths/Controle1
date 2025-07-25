@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 const SkeletonLoader = ({ count = 5, type = 'list', columns = 5 }) => {
     const renderSkeletons = () => {

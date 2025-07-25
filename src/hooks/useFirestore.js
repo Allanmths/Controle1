@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { db } from '../services/firebase';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 
@@ -12,7 +12,7 @@ const useFirestore = (collectionName, options) => {
     const stableOptions = JSON.stringify(options);
 
     useEffect(() => {
-        setError(null); // Reseta o erro a cada nova execução
+        setError(null); // Reseta o erro a cada nova execuÃ§Ã£o
         try {
             let q = query(collection(db, collectionName));
 

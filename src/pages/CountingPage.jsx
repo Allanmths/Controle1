@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import useFirestore from '../hooks/useFirestore';
@@ -9,7 +9,7 @@ const CountStatusBadge = ({ status }) => {
     let label, color;
     switch (status) {
         case 'concluido':
-            label = 'Concluído';
+            label = 'ConcluÃ­do';
             color = 'bg-green-100 text-green-800';
             break;
         case 'aplicado':
@@ -71,9 +71,9 @@ export default function CountingPage() {
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Histórico de Contagens</h3>
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">HistÃ³rico de Contagens</h3>
                 {loading ? (
-                    <p className="text-center text-gray-500 py-4">Carregando histórico...</p>
+                    <p className="text-center text-gray-500 py-4">Carregando histÃ³rico...</p>
                 ) : allCounts.length === 0 ? (
                     <p className="text-center text-gray-500 py-4">Nenhuma contagem realizada ainda.</p>
                 ) : (
@@ -102,7 +102,7 @@ export default function CountingPage() {
                                         </p>
                                         {isOfflineCount && !count.synced && (
                                             <p className="text-xs text-orange-600 mt-1">
-                                                Aguardando sincronização
+                                                Aguardando sincronizaÃ§Ã£o
                                             </p>
                                         )}
                                     </div>
@@ -113,7 +113,7 @@ export default function CountingPage() {
                                                 onClick={() => navigate(`/counting/${count.id}`)} 
                                                 className="text-indigo-600 hover:text-indigo-900 transition-colors"
                                             >
-                                                Ver Relatório
+                                                Ver RelatÃ³rio
                                             </button>
                                         )}
                                     </div>

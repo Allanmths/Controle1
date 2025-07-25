@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { db } from '../services/firebase';
 import { runTransaction, doc, collection, serverTimestamp } from 'firebase/firestore';
@@ -27,7 +27,7 @@ const StockExitForm = () => {
         const handleSubmit = async (e) => {
         e.preventDefault();
         if (!selectedProduct || !fromLocationId || !quantity) {
-            toast.error("Por favor, preencha todos os campos obrigatórios.");
+            toast.error("Por favor, preencha todos os campos obrigatÃ³rios.");
             return;
         }
         if (Number(quantity) <= 0) {
@@ -35,12 +35,12 @@ const StockExitForm = () => {
             return;
         }
         if (Number(quantity) > availableStock) {
-            toast.error(`Estoque insuficiente. Disponível: ${availableStock}`);
+            toast.error(`Estoque insuficiente. DisponÃ­vel: ${availableStock}`);
             return;
         }
         
         const exitQuantity = Number(quantity);
-        const toastId = toast.loading('Processando saída de estoque...');
+        const toastId = toast.loading('Processando saÃ­da de estoque...');
 
         try {
             await runTransaction(db, async (transaction) => {
@@ -48,14 +48,14 @@ const StockExitForm = () => {
                 const productDoc = await transaction.get(productRef);
 
                 if (!productDoc.exists()) {
-                    throw new Error("Produto n�o encontrado!");
+                    throw new Error("Produto não encontrado!");
                 }
 
                 const productData = productDoc.data();
                 const currentStock = productData.locations?.[fromLocationId] || 0;
 
                 if (currentStock < exitQuantity) {
-                    throw new Error(`Estoque insuficiente. Disponível: ${currentStock}`);
+                    throw new Error(`Estoque insuficiente. DisponÃ­vel: ${currentStock}`);
                 }
 
                 const newStock = currentStock - exitQuantity;
@@ -67,7 +67,7 @@ const StockExitForm = () => {
                     totalStock: newTotalStock,
                 });
 
-                // 2. Registrar movimento de SAÍDA no Kardex
+                // 2. Registrar movimento de SAÃDA no Kardex
                 const kardexRef = doc(collection(db, 'kardex'));
                 transaction.set(kardexRef, {
                     productId: selectedProduct.id,
@@ -80,31 +80,31 @@ const StockExitForm = () => {
                     timestamp: serverTimestamp(),
                     userId: user.uid,
                     userEmail: userData?.email,
-                    details: reason || 'Saída manual'
+                    details: reason || 'SaÃ­da manual'
                 });
             });
 
-            toast.success('Saída de estoque registrada com sucesso!', { id: toastId });
-            // Resetar o formulário
+            toast.success('SaÃ­da de estoque registrada com sucesso!', { id: toastId });
+            // Resetar o formulÃ¡rio
             setSelectedProduct(null);
             setFromLocationId('');
             setQuantity('');
             setReason('');
 
         } catch (error) {
-            console.error("Erro na saída de estoque: ", error);
-            toast.error(error.message || 'Falha ao registrar a saída.', { id: toastId });
+            console.error("Erro na saÃ­da de estoque: ", error);
+            toast.error(error.message || 'Falha ao registrar a saÃ­da.', { id: toastId });
         }
     };
 
     return (
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Saída de Estoque</h3>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">SaÃ­da de Estoque</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <ProductSelector 
                     onProductSelect={setSelectedProduct} 
                     selectedProductId={selectedProduct?.id}
-                    placeholder="Buscar produto para saída..." 
+                    placeholder="Buscar produto para saÃ­da..." 
                 />
 
                 {selectedProduct && (
@@ -127,18 +127,18 @@ const StockExitForm = () => {
 
                         <div>
                             <label htmlFor="quantity-exit" className="block text-sm font-medium text-gray-700 mb-1">Quantidade</label>
-                            <input type="number" id="quantity-exit" value={quantity} onChange={e => setQuantity(e.target.value)} min="1" max={availableStock > 0 ? availableStock : undefined} placeholder={`Máx: ${availableStock}`} className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
+                            <input type="number" id="quantity-exit" value={quantity} onChange={e => setQuantity(e.target.value)} min="1" max={availableStock > 0 ? availableStock : undefined} placeholder={`MÃ¡x: ${availableStock}`} className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
                         </div>
 
                         <div>
-                            <label htmlFor="reason-exit" className="block text-sm font-medium text-gray-700 mb-1">Motivo da Saída</label>
+                            <label htmlFor="reason-exit" className="block text-sm font-medium text-gray-700 mb-1">Motivo da SaÃ­da</label>
                             <input type="text" id="reason-exit" value={reason} onChange={e => setReason(e.target.value)} placeholder="Ex: Venda, Perda, Uso interno" className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
                         </div>
 
                         <div className="flex justify-end pt-2">
                             <button type="submit" disabled={!selectedProduct || !fromLocationId || !quantity} className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 disabled:bg-red-300">
                                 <FaArrowCircleDown />
-                                Confirmar Saída
+                                Confirmar SaÃ­da
                             </button>
                         </div>
                     </>

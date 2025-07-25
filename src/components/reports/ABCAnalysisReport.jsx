@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import useFirestore from '../../hooks/useFirestore';
 import { subDays, isAfter } from 'date-fns';
 
@@ -8,9 +8,9 @@ const formatCurrency = (value) => {
 
 const getClassStyle = (classification) => {
     switch (classification) {
-        case 'A': return { label: 'Classe A', color: 'bg-red-500 text-white', description: 'Produtos de altíssimo impacto. Requerem atenção máxima.' };
-        case 'B': return { label: 'Classe B', color: 'bg-yellow-400 text-gray-800', description: 'Produtos de impacto intermediário. Bom controle é necessário.' };
-        case 'C': return { label: 'Classe C', color: 'bg-green-500 text-white', description: 'Produtos de baixo impacto. Gestão mais simples.' };
+        case 'A': return { label: 'Classe A', color: 'bg-red-500 text-white', description: 'Produtos de altÃ­ssimo impacto. Requerem atenÃ§Ã£o mÃ¡xima.' };
+        case 'B': return { label: 'Classe B', color: 'bg-yellow-400 text-gray-800', description: 'Produtos de impacto intermediÃ¡rio. Bom controle Ã© necessÃ¡rio.' };
+        case 'C': return { label: 'Classe C', color: 'bg-green-500 text-white', description: 'Produtos de baixo impacto. GestÃ£o mais simples.' };
         default: return { label: '', color: 'bg-gray-200', description: '' };
     }
 };
@@ -74,17 +74,17 @@ const ABCAnalysisReport = () => {
         <div className="bg-white p-6 rounded-lg shadow-md">
             <div className="flex justify-between items-start mb-4">
                 <div>
-                    <h3 className="text-xl font-bold text-gray-800">Análise de Curva ABC</h3>
-                    <p className="text-gray-600 mt-1">Classifica os produtos por relevância de consumo para otimizar a gestão de estoque.</p>
+                    <h3 className="text-xl font-bold text-gray-800">AnÃ¡lise de Curva ABC</h3>
+                    <p className="text-gray-600 mt-1">Classifica os produtos por relevÃ¢ncia de consumo para otimizar a gestÃ£o de estoque.</p>
                 </div>
                 <div>
-                    <label htmlFor="period" className="block text-sm font-medium text-gray-700">Período de Análise</label>
+                    <label htmlFor="period" className="block text-sm font-medium text-gray-700">PerÃ­odo de AnÃ¡lise</label>
                     <select id="period" value={periodDays} onChange={e => setPeriodDays(Number(e.target.value))} className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-                        <option value="30">Últimos 30 dias</option>
-                        <option value="60">Últimos 60 dias</option>
-                        <option value="90">Últimos 90 dias</option>
-                        <option value="180">Últimos 6 meses</option>
-                        <option value="365">Último ano</option>
+                        <option value="30">Ãšltimos 30 dias</option>
+                        <option value="60">Ãšltimos 60 dias</option>
+                        <option value="90">Ãšltimos 90 dias</option>
+                        <option value="180">Ãšltimos 6 meses</option>
+                        <option value="365">Ãšltimo ano</option>
                     </select>
                 </div>
             </div>
@@ -119,7 +119,7 @@ const ABCAnalysisReport = () => {
                                 );
                             })
                         ) : (
-                            <tr><td colSpan="4" className="text-center py-10">Nenhuma movimentação de saída encontrada no período para análise.</td></tr>
+                            <tr><td colSpan="4" className="text-center py-10">Nenhuma movimentaÃ§Ã£o de saÃ­da encontrada no perÃ­odo para anÃ¡lise.</td></tr>
                         )}
                     </tbody>
                 </table>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaSearch, FaTimes, FaBox, FaTags, FaMapMarkerAlt } from 'react-icons/fa';
 import useFirestore from '../hooks/useFirestore';
@@ -43,7 +43,7 @@ const GlobalSearch = () => {
                 searchResults.push({
                     type: 'product',
                     title: product.name,
-                    subtitle: `Produto • Estoque: ${product.totalQuantity || 0}`,
+                    subtitle: `Produto â€¢ Estoque: ${product.totalQuantity || 0}`,
                     icon: FaBox,
                     action: () => navigate('/stock'),
                     data: product
@@ -183,7 +183,7 @@ const GlobalSearch = () => {
                 )}
 
                 <div className="p-3 bg-gray-50 border-t text-xs text-gray-500 flex justify-between">
-                    <span>Use ↑↓ para navegar, Enter para selecionar</span>
+                    <span>Use â†‘â†“ para navegar, Enter para selecionar</span>
                     <span>Esc para fechar</span>
                 </div>
             </div>

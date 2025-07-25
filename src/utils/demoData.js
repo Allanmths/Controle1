@@ -1,4 +1,4 @@
-import { db } from '../services/firebase';
+﻿import { db } from '../services/firebase';
 import { collection, doc, setDoc, getDocs } from 'firebase/firestore';
 import { ROLES } from '../utils/permissions';
 
@@ -37,7 +37,7 @@ export const createDemoUsers = async () => {
     {
       id: 'demo-user',
       email: 'usuario@demo.com',
-      displayName: 'Usuário Demo',
+      displayName: 'UsuÃ¡rio Demo',
       role: ROLES.USER,
       isActive: true,
       createdAt: new Date('2024-04-20'),
@@ -57,7 +57,7 @@ export const createDemoUsers = async () => {
     {
       id: 'demo-inactive',
       email: 'inativo@demo.com',
-      displayName: 'Usuário Inativo',
+      displayName: 'UsuÃ¡rio Inativo',
       role: ROLES.USER,
       isActive: false,
       createdAt: new Date('2024-06-01'),
@@ -69,22 +69,22 @@ export const createDemoUsers = async () => {
   try {
     const usersRef = collection(db, 'users');
     
-    // Verificar se já existem usuários demo
+    // Verificar se jÃ¡ existem usuÃ¡rios demo
     const snapshot = await getDocs(usersRef);
     const existingEmails = snapshot.docs.map(doc => doc.data().email);
     
     for (const user of demoUsers) {
-      // Só criar se não existir
+      // SÃ³ criar se nÃ£o existir
       if (!existingEmails.includes(user.email)) {
         const userRef = doc(db, 'users', user.id);
         await setDoc(userRef, user);
-        console.log(`Usuário demo criado: ${user.email}`);
+        console.log(`UsuÃ¡rio demo criado: ${user.email}`);
       }
     }
     
     return true;
   } catch (error) {
-    console.error('Erro ao criar usuários demo:', error);
+    console.error('Erro ao criar usuÃ¡rios demo:', error);
     return false;
   }
 };
@@ -94,11 +94,11 @@ export const checkAndCreateDemoUsers = async () => {
     const usersRef = collection(db, 'users');
     const snapshot = await getDocs(usersRef);
     
-    // Se há menos de 3 usuários, criar dados demo
+    // Se hÃ¡ menos de 3 usuÃ¡rios, criar dados demo
     if (snapshot.docs.length < 3) {
       await createDemoUsers();
     }
   } catch (error) {
-    console.error('Erro ao verificar usuários:', error);
+    console.error('Erro ao verificar usuÃ¡rios:', error);
   }
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { db } from '../services/firebase';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
@@ -24,7 +24,7 @@ export default function CategoryFormModal({ isOpen, onClose, categoryToEdit }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!name.trim()) {
-            setError('O nome da categoria n�o pode estar vazio.');
+            setError('O nome da categoria nã£o pode estar vazio.');
             return;
         }
         setLoading(true);
@@ -44,7 +44,7 @@ export default function CategoryFormModal({ isOpen, onClose, categoryToEdit }) {
                 });
                 toast.success('Categoria criada com sucesso!', { id: toastId });
             }
-            setName(''); // Limpa o formul�rio
+            setName(''); // Limpa o formulã¡rio
             onClose();
         } catch (err) {
             console.error('Error saving category:', err);
@@ -56,13 +56,13 @@ export default function CategoryFormModal({ isOpen, onClose, categoryToEdit }) {
             
             let errorMessage = 'Falha ao salvar a categoria.';
             
-            // Mensagens de erro mais espec�ficas
+            // Mensagens de erro mais especã­ficas
             if (err.code === 'permission-denied') {
-                errorMessage = 'Voc� n�o tem permiss�o para salvar categorias. Verifique se est� autenticado.';
+                errorMessage = 'Vocãª nã£o tem permissã£o para salvar categorias. Verifique se estã¡ autenticado.';
             } else if (err.code === 'unavailable') {
-                errorMessage = 'Servi�o temporariamente indispon�vel. Tente novamente.';
+                errorMessage = 'Serviã§o temporariamente indisponã­vel. Tente novamente.';
             } else if (err.code === 'invalid-argument') {
-                errorMessage = 'Dados inv�lidos fornecidos.';
+                errorMessage = 'Dados invã¡lidos fornecidos.';
             }
             
             setError(errorMessage);
@@ -89,7 +89,7 @@ export default function CategoryFormModal({ isOpen, onClose, categoryToEdit }) {
                             onChange={(e) => setName(e.target.value)}
                             required 
                             className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Ex: Eletr�nicos"
+                            placeholder="Ex: Eletrã´nicos"
                             autoFocus
                         />
                     </div>

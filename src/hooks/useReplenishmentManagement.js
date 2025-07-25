@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { 
   collection, 
   addDoc, 
@@ -23,7 +23,7 @@ export const useReplenishmentManagement = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Buscar solicitações de reposição
+  // Buscar solicitaÃ§Ãµes de reposiÃ§Ã£o
   const fetchReplenishmentRequests = async (filters = {}) => {
     setLoading(true);
     setError(null);
@@ -44,7 +44,7 @@ export const useReplenishmentManagement = () => {
         q = query(q, where('priority', '==', filters.priority));
       }
 
-      // Ordenar por data de criação (mais recentes primeiro)
+      // Ordenar por data de criaÃ§Ã£o (mais recentes primeiro)
       q = query(q, orderBy('requestDate', 'desc'));
 
       const querySnapshot = await getDocs(q);
@@ -56,15 +56,15 @@ export const useReplenishmentManagement = () => {
       setRequests(requestsData);
       return requestsData;
     } catch (error) {
-      console.error('Erro ao buscar solicitações:', error);
-      setError('Erro ao carregar solicitações de reposição');
+      console.error('Erro ao buscar solicitaÃ§Ãµes:', error);
+      setError('Erro ao carregar solicitaÃ§Ãµes de reposiÃ§Ã£o');
       throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  // Criar nova solicitação de reposição
+  // Criar nova solicitaÃ§Ã£o de reposiÃ§Ã£o
   const createReplenishmentRequest = async (requestData) => {
     setLoading(true);
     setError(null);
@@ -82,13 +82,13 @@ export const useReplenishmentManagement = () => {
 
       const docRef = await addDoc(collection(db, 'replenishmentRequests'), newRequest);
       
-      // Notificar gestores sobre nova solicitação
+      // Notificar gestores sobre nova solicitaÃ§Ã£o
       addNotification({
         type: 'info',
-        title: 'Nova Solicitação de Reposição',
-        message: `${userData?.displayName || currentUser.email} criou uma solicitação de reposição`,
+        title: 'Nova SolicitaÃ§Ã£o de ReposiÃ§Ã£o',
+        message: `${userData?.displayName || currentUser.email} criou uma solicitaÃ§Ã£o de reposiÃ§Ã£o`,
         action: {
-          label: 'Ver Solicitação',
+          label: 'Ver SolicitaÃ§Ã£o',
           route: `/replenishment/requests/${docRef.id}`
         }
       });
@@ -96,15 +96,15 @@ export const useReplenishmentManagement = () => {
       await fetchReplenishmentRequests();
       return docRef.id;
     } catch (error) {
-      console.error('Erro ao criar solicitação:', error);
-      setError('Erro ao criar solicitação de reposição');
+      console.error('Erro ao criar solicitaÃ§Ã£o:', error);
+      setError('Erro ao criar solicitaÃ§Ã£o de reposiÃ§Ã£o');
       throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  // Aprovar solicitação
+  // Aprovar solicitaÃ§Ã£o
   const approveRequest = async (requestId, approvalData = {}) => {
     setLoading(true);
     setError(null);
@@ -128,8 +128,8 @@ export const useReplenishmentManagement = () => {
       if (request) {
         addNotification({
           type: 'success',
-          title: 'Solicitação Aprovada',
-          message: `Sua solicitação de reposição foi aprovada por ${userData?.displayName || currentUser.email}`,
+          title: 'SolicitaÃ§Ã£o Aprovada',
+          message: `Sua solicitaÃ§Ã£o de reposiÃ§Ã£o foi aprovada por ${userData?.displayName || currentUser.email}`,
           targetUserId: request.requestedBy,
           action: {
             label: 'Ver Detalhes',
@@ -141,15 +141,15 @@ export const useReplenishmentManagement = () => {
       await fetchReplenishmentRequests();
       return true;
     } catch (error) {
-      console.error('Erro ao aprovar solicitação:', error);
-      setError('Erro ao aprovar solicitação');
+      console.error('Erro ao aprovar solicitaÃ§Ã£o:', error);
+      setError('Erro ao aprovar solicitaÃ§Ã£o');
       throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  // Rejeitar solicitação
+  // Rejeitar solicitaÃ§Ã£o
   const rejectRequest = async (requestId, rejectionData = {}) => {
     setLoading(true);
     setError(null);
@@ -174,8 +174,8 @@ export const useReplenishmentManagement = () => {
       if (request) {
         addNotification({
           type: 'warning',
-          title: 'Solicitação Rejeitada',
-          message: `Sua solicitação de reposição foi rejeitada. Motivo: ${rejectionData.reason || 'Não informado'}`,
+          title: 'SolicitaÃ§Ã£o Rejeitada',
+          message: `Sua solicitaÃ§Ã£o de reposiÃ§Ã£o foi rejeitada. Motivo: ${rejectionData.reason || 'NÃ£o informado'}`,
           targetUserId: request.requestedBy
         });
       }
@@ -183,15 +183,15 @@ export const useReplenishmentManagement = () => {
       await fetchReplenishmentRequests();
       return true;
     } catch (error) {
-      console.error('Erro ao rejeitar solicitação:', error);
-      setError('Erro ao rejeitar solicitação');
+      console.error('Erro ao rejeitar solicitaÃ§Ã£o:', error);
+      setError('Erro ao rejeitar solicitaÃ§Ã£o');
       throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  // Executar reposição
+  // Executar reposiÃ§Ã£o
   const executeReplenishment = async (requestId, executionData) => {
     setLoading(true);
     setError(null);
@@ -210,13 +210,13 @@ export const useReplenishmentManagement = () => {
 
       await updateDoc(requestRef, updateData);
 
-      // Notificar gestor sobre conclusão
+      // Notificar gestor sobre conclusÃ£o
       const request = requests.find(r => r.id === requestId);
       if (request && request.approvedBy) {
         addNotification({
           type: 'success',
-          title: 'Reposição Concluída',
-          message: `A reposição foi executada por ${userData?.displayName || currentUser.email}`,
+          title: 'ReposiÃ§Ã£o ConcluÃ­da',
+          message: `A reposiÃ§Ã£o foi executada por ${userData?.displayName || currentUser.email}`,
           targetUserId: request.approvedBy
         });
       }
@@ -224,15 +224,15 @@ export const useReplenishmentManagement = () => {
       await fetchReplenishmentRequests();
       return true;
     } catch (error) {
-      console.error('Erro ao executar reposição:', error);
-      setError('Erro ao executar reposição');
+      console.error('Erro ao executar reposiÃ§Ã£o:', error);
+      setError('Erro ao executar reposiÃ§Ã£o');
       throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  // Cancelar solicitação
+  // Cancelar solicitaÃ§Ã£o
   const cancelRequest = async (requestId, reason = '') => {
     setLoading(true);
     setError(null);
@@ -253,20 +253,20 @@ export const useReplenishmentManagement = () => {
       await fetchReplenishmentRequests();
       return true;
     } catch (error) {
-      console.error('Erro ao cancelar solicitação:', error);
-      setError('Erro ao cancelar solicitação');
+      console.error('Erro ao cancelar solicitaÃ§Ã£o:', error);
+      setError('Erro ao cancelar solicitaÃ§Ã£o');
       throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  // Buscar solicitação por ID
+  // Buscar solicitaÃ§Ã£o por ID
   const getRequestById = (requestId) => {
     return requests.find(request => request.id === requestId);
   };
 
-  // Estatísticas das solicitações
+  // EstatÃ­sticas das solicitaÃ§Ãµes
   const getRequestStats = () => {
     return {
       total: requests.length,
@@ -278,7 +278,7 @@ export const useReplenishmentManagement = () => {
     };
   };
 
-  // Listener em tempo real para solicitações
+  // Listener em tempo real para solicitaÃ§Ãµes
   useEffect(() => {
     if (!currentUser) return;
 

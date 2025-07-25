@@ -1,4 +1,4 @@
-import * as XLSX from 'xlsx';
+﻿import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
@@ -10,7 +10,7 @@ export const exportToExcel = (data, filename = 'lista_compras') => {
     // Preparar dados para a planilha
     const worksheetData = [];
     
-    // Cabeçalho
+    // CabeÃ§alho
     worksheetData.push([
       'Lista de Compras',
       '',
@@ -21,7 +21,7 @@ export const exportToExcel = (data, filename = 'lista_compras') => {
     ]);
     
     worksheetData.push([
-      'Título:',
+      'TÃ­tulo:',
       data.title,
       '',
       'Data:',
@@ -52,7 +52,7 @@ export const exportToExcel = (data, filename = 'lista_compras') => {
     ]);
     
     worksheetData.push([
-      'Itens Críticos:',
+      'Itens CrÃ­ticos:',
       data.summary?.criticalItems || 0,
       '',
       'Fornecedores:',
@@ -62,13 +62,13 @@ export const exportToExcel = (data, filename = 'lista_compras') => {
     
     worksheetData.push(['']); // Linha vazia
     
-    // Cabeçalhos dos itens
+    // CabeÃ§alhos dos itens
     worksheetData.push([
       'Produto',
       'Fornecedor',
       'Estoque Atual',
       'Qtd. Sugerida',
-      'Preço Unit.',
+      'PreÃ§o Unit.',
       'Total',
       'Prioridade'
     ]);
@@ -83,9 +83,9 @@ export const exportToExcel = (data, filename = 'lista_compras') => {
           item.suggestedQuantity,
           `R$ ${(item.unitCost || 0).toFixed(2)}`,
           `R$ ${(item.totalCost || 0).toFixed(2)}`,
-          item.priority === 'critical' ? 'Crítico' :
+          item.priority === 'critical' ? 'CrÃ­tico' :
           item.priority === 'high' ? 'Alto' :
-          item.priority === 'medium' ? 'Médio' : 'Baixo'
+          item.priority === 'medium' ? 'MÃ©dio' : 'Baixo'
         ]);
       });
     }
@@ -93,7 +93,7 @@ export const exportToExcel = (data, filename = 'lista_compras') => {
     // Criar worksheet
     const ws = XLSX.utils.aoa_to_sheet(worksheetData);
     
-    // Estilização
+    // EstilizaÃ§Ã£o
     const range = XLSX.utils.decode_range(ws['!ref']);
     
     // Largura das colunas
@@ -102,7 +102,7 @@ export const exportToExcel = (data, filename = 'lista_compras') => {
       { width: 20 }, // Fornecedor
       { width: 15 }, // Estoque Atual
       { width: 15 }, // Qtd. Sugerida
-      { width: 15 }, // Preço Unit.
+      { width: 15 }, // PreÃ§o Unit.
       { width: 15 }, // Total
       { width: 15 }  // Prioridade
     ];
@@ -125,13 +125,13 @@ export const exportToPDF = (data, filename = 'lista_compras') => {
   try {
     const doc = new jsPDF();
     
-    // Título
+    // TÃ­tulo
     doc.setFontSize(20);
     doc.text('Lista de Compras', 20, 20);
     
-    // Informações básicas
+    // InformaÃ§Ãµes bÃ¡sicas
     doc.setFontSize(12);
-    doc.text(`Título: ${data.title}`, 20, 35);
+    doc.text(`TÃ­tulo: ${data.title}`, 20, 35);
     doc.text(`Data: ${new Date(data.createdAt).toLocaleDateString()}`, 20, 45);
     doc.text(`Criado por: ${data.createdByName}`, 20, 55);
     doc.text(`Status: ${data.status}`, 20, 65);
@@ -142,7 +142,7 @@ export const exportToPDF = (data, filename = 'lista_compras') => {
     
     doc.setFontSize(10);
     doc.text(`Total de Itens: ${data.summary?.totalItems || 0}`, 20, 90);
-    doc.text(`Itens Críticos: ${data.summary?.criticalItems || 0}`, 20, 100);
+    doc.text(`Itens CrÃ­ticos: ${data.summary?.criticalItems || 0}`, 20, 100);
     doc.text(`Custo Total: R$ ${(data.summary?.totalCost || 0).toFixed(2)}`, 20, 110);
     doc.text(`Fornecedores: ${data.summary?.suppliers || 0}`, 20, 120);
     
@@ -155,13 +155,13 @@ export const exportToPDF = (data, filename = 'lista_compras') => {
         item.suggestedQuantity.toString(),
         `R$ ${(item.unitCost || 0).toFixed(2)}`,
         `R$ ${(item.totalCost || 0).toFixed(2)}`,
-        item.priority === 'critical' ? 'Crítico' :
+        item.priority === 'critical' ? 'CrÃ­tico' :
         item.priority === 'high' ? 'Alto' :
-        item.priority === 'medium' ? 'Médio' : 'Baixo'
+        item.priority === 'medium' ? 'MÃ©dio' : 'Baixo'
       ]);
       
       doc.autoTable({
-        head: [['Produto', 'Fornecedor', 'Estoque', 'Qtd.', 'Preço', 'Total', 'Prioridade']],
+        head: [['Produto', 'Fornecedor', 'Estoque', 'Qtd.', 'PreÃ§o', 'Total', 'Prioridade']],
         body: tableData,
         startY: 135,
         styles: {
@@ -180,20 +180,20 @@ export const exportToPDF = (data, filename = 'lista_compras') => {
           1: { cellWidth: 30 }, // Fornecedor
           2: { cellWidth: 20 }, // Estoque
           3: { cellWidth: 20 }, // Quantidade
-          4: { cellWidth: 25 }, // Preço
+          4: { cellWidth: 25 }, // PreÃ§o
           5: { cellWidth: 25 }, // Total
           6: { cellWidth: 25 }  // Prioridade
         }
       });
     }
     
-    // Rodapé
+    // RodapÃ©
     const pageCount = doc.internal.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFontSize(8);
       doc.text(
-        `Página ${i} de ${pageCount} - Gerado em ${new Date().toLocaleString()}`,
+        `PÃ¡gina ${i} de ${pageCount} - Gerado em ${new Date().toLocaleString()}`,
         20,
         doc.internal.pageSize.height - 10
       );
@@ -214,13 +214,13 @@ export const exportToCSV = (data, filename = 'lista_compras') => {
   try {
     const csvData = [];
     
-    // Cabeçalho
+    // CabeÃ§alho
     csvData.push([
       'Produto',
       'Fornecedor',
       'Estoque Atual',
       'Quantidade Sugerida',
-      'Preço Unitário',
+      'PreÃ§o UnitÃ¡rio',
       'Total',
       'Prioridade'
     ]);
@@ -235,9 +235,9 @@ export const exportToCSV = (data, filename = 'lista_compras') => {
           item.suggestedQuantity,
           (item.unitCost || 0).toFixed(2),
           (item.totalCost || 0).toFixed(2),
-          item.priority === 'critical' ? 'Crítico' :
+          item.priority === 'critical' ? 'CrÃ­tico' :
           item.priority === 'high' ? 'Alto' :
-          item.priority === 'medium' ? 'Médio' : 'Baixo'
+          item.priority === 'medium' ? 'MÃ©dio' : 'Baixo'
         ]);
       });
     }

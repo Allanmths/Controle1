@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaKeyboard, FaTimes } from 'react-icons/fa';
 
@@ -7,10 +7,10 @@ const KeyboardShortcuts = () => {
     const navigate = useNavigate();
 
     const shortcuts = [
-        { key: 'Ctrl + D', action: 'Ir para Início', path: '/' },
+        { key: 'Ctrl + D', action: 'Ir para InÃ­cio', path: '/' },
         { key: 'Ctrl + E', action: 'Ir para Estoque', path: '/stock' },
         { key: 'Ctrl + R', action: 'Ir para Cadastros', path: '/registers' },
-        { key: 'Ctrl + M', action: 'Ir para Movimentações', path: '/movements' },
+        { key: 'Ctrl + M', action: 'Ir para MovimentaÃ§Ãµes', path: '/movements' },
         { key: 'Ctrl + N', action: 'Novo Produto', path: '/registers' },
         { key: '?', action: 'Mostrar atalhos', path: null },
         { key: 'Esc', action: 'Fechar modais', path: null }
