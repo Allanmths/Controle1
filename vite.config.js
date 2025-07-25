@@ -38,6 +38,9 @@ export default defineConfig({
       }
     })
   ],
+  server: {
+    historyApiFallback: true,
+  },
   base: '/Controle1/', // Nome do seu repositório GitHub
   publicDir: 'public',
   build: {
