@@ -1,32 +1,32 @@
-﻿// UtilitÃ¡rio para acessar e gerenciar o histÃ³rico de notificaÃ§Ãµes
+﻿// Utilitário para acessar e gerenciar o histórico de notificações
 
 export const NotificationStorage = {
   // Chave do localStorage
   STORAGE_KEY: 'notifications',
 
-  // Obter todas as notificaÃ§Ãµes
+  // Obter todas as notificações
   getAll() {
     try {
       const data = localStorage.getItem(this.STORAGE_KEY);
       return data ? JSON.parse(data) : [];
     } catch (error) {
-      console.error('Erro ao ler notificaÃ§Ãµes do localStorage:', error);
+      console.error('Erro ao ler notificações do localStorage:', error);
       return [];
     }
   },
 
-  // Salvar notificaÃ§Ãµes
+  // Salvar notificações
   save(notifications) {
     try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(notifications));
       return true;
     } catch (error) {
-      console.error('Erro ao salvar notificaÃ§Ãµes no localStorage:', error);
+      console.error('Erro ao salvar notificações no localStorage:', error);
       return false;
     }
   },
 
-  // Limpar todas as notificaÃ§Ãµes
+  // Limpar todas as notificações
   clear() {
     try {
       localStorage.removeItem(this.STORAGE_KEY);
