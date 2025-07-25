@@ -24,7 +24,12 @@ const IMPORTANT_PAGES = [
   '/Controle1/stock',
   '/Controle1/counting',
   '/Controle1/counting/new',
-  '/Controle1/dashboard'
+  '/Controle1/dashboard',
+  '/Controle1/movements',
+  '/Controle1/replenishment',
+  '/Controle1/reports',
+  '/Controle1/settings',
+  '/Controle1/audit'
 ];
 
 self.addEventListener('install', (event) => {

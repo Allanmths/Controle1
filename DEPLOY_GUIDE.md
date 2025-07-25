@@ -3,10 +3,12 @@
 ## ✅ Status do Deploy
 
 - **Site ao vivo**: https://allanmths.github.io/Controle1/
-- **Último deploy**: 19 de julho de 2025 - 18:00
-- **Método atual**: Deploy manual com gh-pages
+- **Método atual**: Deploy automático com GitHub Actions
 - **Status**: ✅ FUNCIONANDO
-- **Última correção**: Fix exibição de produtos e movimentações no Dashboard
+- **Última atualização**: Corrigido método de deploy para evitar duplicação
+
+> **IMPORTANTE:** O sistema agora usa GitHub Actions para deploy automático.
+> Evite usar o comando `npm run deploy` manualmente.
 
 ## � Correções Recentes (19/07/2025 - 18:00)
 

@@ -1,5 +1,10 @@
 ﻿name: Deploy to GitHub Pages
 
+# Garantir que apenas um deploy seja acionado por vez
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
 on:
   push:
     branches: [ main ]
@@ -44,6 +49,12 @@ jobs:
       run: npm run build
       env:
         CI: false
+        
+    - name: Configurar SPA para GitHub Pages
+      run: |
+        # Copiar arquivo 404.html para a pasta dist
+        cp public/404.html dist/
+        echo "Arquivo 404.html copiado para dist/"
         
     - name: Setup Pages
       uses: actions/configure-pages@v5
