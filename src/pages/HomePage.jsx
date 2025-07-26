@@ -1,5 +1,33 @@
 ﻿import React, { useState, useMemo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from   const productName    } else {
+      date = format(moveDate, "dd 'de' MMM 'às' HH:mm", { locale: ptBR });
+    }
+  }
+
+  let icon, color, description;
+  const quantityChanged = Math.abs(movement.quantityChanged || 0);
+  
+  if (movement.type === 'Entrada Inicial') {
+    icon = FaArrowDown;
+    color = 'text-green-600 bg-green-100';
+    description = `Adicionado ${quantityChanged} ${product?.unit || 'un'} de ${productName}`;
+  } else if (movement.type === 'Ajuste Manual' && movement.quantityChanged > 0) {
+    icon = FaArrowUp;
+    color = 'text-blue-600 bg-blue-100';
+    description = `Entrada de ${quantityChanged} ${product?.unit || 'un'} de ${productName}`;
+  } else if (movement.type === 'Ajuste Manual' && movement.quantityChanged < 0) {
+    icon = FaArrowDown;
+    color = 'text-red-600 bg-red-100';
+    description = `Saída de ${quantityChanged} ${product?.unit || 'un'} de ${productName}`;.name : 'Produto não encontrado';
+  const locationName = location ? location.name : movement.locationName || 'Local não especificado';
+  
+  let date = 'Data inválida';
+  if (movement.timestamp?.toDate) {
+    const moveDate = movement.timestamp.toDate();
+    if (isToday(moveDate)) {
+      date = `Hoje às ${format(moveDate, 'HH:mm')}`;
+    } else if (isYesterday(moveDate)) {
+      date = `Ontem às ${format(moveDate, 'HH:mm')}`;ter-dom';
 import { 
   FaBox, FaBoxes, FaTags, FaExclamationTriangle, 
   FaArrowUp, FaArrowDown, FaExchangeAlt, FaCalendarAlt,
@@ -121,7 +149,7 @@ const ActivityItem = ({ movement, products, locations }) => {
   } else {
     icon = FaExchangeAlt;
     color = 'text-gray-600 bg-gray-100';
-    description = `MovimentaÃ§Ã£o de ${productName}`;
+    description = `Movimentação de ${productName}`;
   }
 
   return (
@@ -133,7 +161,7 @@ const ActivityItem = ({ movement, products, locations }) => {
         <p className="text-sm font-medium text-gray-900 truncate">{description}</p>
         <div className="flex items-center space-x-2 text-xs text-gray-500">
           <span>{locationName}</span>
-          <span>â€¢</span>
+          <span>•</span>
           <span>{date}</span>
         </div>
       </div>
@@ -185,7 +213,7 @@ const LowStockItem = ({ product, locations }) => {
         </div>
         <div className="text-right">
           <p className="text-lg font-bold text-gray-900">{totalQuantity}</p>
-          <p className="text-xs text-gray-500">MÃ­n: {product.minStock || 0}</p>
+          <p className="text-xs text-gray-500">Mín: {product.minStock || 0}</p>
         </div>
       </div>
     </div>
@@ -275,7 +303,7 @@ export default function HomePage() {
     };
   }, [products, categories, movements, selectedTimeRange]);
 
-  // Dados para grÃ¡ficos de movimentaÃ§Ã£o
+  // Dados para gráficos de movimentação
   const movementsChartData = useMemo(() => {
     if (!movements || !startDate || !endDate) return { labels: [], datasets: [] };
 
@@ -296,7 +324,7 @@ export default function HomePage() {
       ).reduce((sum, m) => sum + Math.abs(m.quantityChanged || 0), 0);
       
       return {
-        labels: ['Entradas', 'SaÃ­das'],
+        labels: ['Entradas', 'Saídas'],
         datasets: [{
           data: [entries, exits],
           backgroundColor: ['#16a34a', '#dc2626'],
@@ -337,7 +365,7 @@ export default function HomePage() {
           borderWidth: 2
         },
         { 
-          label: 'SaÃ­das', 
+          label: 'Saídas', 
           data: labels.map(day => groupedByDay[day]?.saida || 0), 
           backgroundColor: '#dc2626',
           borderColor: '#b91c1c',
@@ -365,7 +393,7 @@ export default function HomePage() {
     return Bar;
   }, [chartType]);
 
-  // FunÃ§Ã£o para gerar relatÃ³rio
+  // Função para gerar relatório
   const handleGenerateReport = () => {
     const augmentedProducts = (products || []).map(p => ({
       ...p,
@@ -399,10 +427,10 @@ export default function HomePage() {
     const doc = new jsPDF();
     
     doc.setFontSize(18);
-    doc.text('RelatÃ³rio de Estoque', 14, 22);
+    doc.text('Relatório de Estoque', 14, 22);
     doc.setFontSize(11);
     doc.setTextColor(100);
-    doc.text(`Data de EmissÃ£o: ${format(new Date(), 'dd/MM/yyyy')}`, 14, 30);
+    doc.text(`Data de Emissão: ${format(new Date(), 'dd/MM/yyyy')}`, 14, 30);
 
     const tableColumn = ["Nome", "Categoria", "Quantidade", "Custo Unit.", "Valor Total"];
     const tableRows = [];
@@ -428,7 +456,7 @@ export default function HomePage() {
     for(let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFontSize(9);
-      doc.text(`PÃ¡gina ${i} de ${pageCount}`, doc.internal.pageSize.width - 20, doc.internal.pageSize.height - 10);
+      doc.text(`Página ${i} de ${pageCount}`, doc.internal.pageSize.width - 20, doc.internal.pageSize.height - 10);
     }
 
     doc.save(`relatorio_estoque_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
@@ -455,7 +483,7 @@ export default function HomePage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-1">VisÃ£o geral completa do seu sistema de controle de estoque</p>
+          <p className="text-gray-600 mt-1">Visão geral completa do seu sistema de controle de estoque</p>
         </div>
         <div className="flex items-center space-x-3">
           <FaCalendarAlt className="text-gray-400" />
@@ -464,9 +492,9 @@ export default function HomePage() {
             onChange={(e) => setSelectedTimeRange(e.target.value)}
             className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
-            <option value="7">Ãšltimos 7 dias</option>
-            <option value="30">Ãšltimos 30 dias</option>
-            <option value="90">Ãšltimos 90 dias</option>
+            <option value="7">Últimos 7 dias</option>
+            <option value="30">Últimos 30 dias</option>
+            <option value="90">Últimos 90 dias</option>
           </select>
         </div>
       </div>
@@ -504,14 +532,14 @@ export default function HomePage() {
           color="border-l-red-400" 
           description="Produtos com baixo estoque"
           trend={stats.criticalStockCount > 0 ? 'down' : null}
-          trendValue={stats.criticalStockCount > 0 ? `${stats.criticalStockCount} crÃ­ticos` : null}
+          trendValue={stats.criticalStockCount > 0 ? `${stats.criticalStockCount} críticos` : null}
           loading={loading}
         />
       </div>
 
       {/* Quick Actions */}
       <div className="bg-white rounded-xl shadow-sm p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">AÃ§Ãµes RÃ¡pidas</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Ações Rápidas</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <QuickActionCard
             title="Adicionar Produto"
@@ -574,10 +602,10 @@ export default function HomePage() {
               onChange={(e) => setPeriodOption(e.target.value)}
               className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
             >
-              <option value="last7days">Ãšltimos 7 dias</option>
-              <option value="last30days">Ãšltimos 30 dias</option>
-              <option value="thisMonth">Este MÃªs</option>
-              <option value="lastMonth">MÃªs Passado</option>
+              <option value="last7days">Últimos 7 dias</option>
+              <option value="last30days">Últimos 30 dias</option>
+              <option value="thisMonth">Este Mês</option>
+              <option value="lastMonth">Mês Passado</option>
               <option value="custom">Personalizado</option>
             </select>
           </div>
@@ -593,7 +621,7 @@ export default function HomePage() {
               isClearable={true}
               className="w-full md:w-64 p-2 border border-gray-300 rounded-md"
               dateFormat="dd/MM/yyyy"
-              placeholderText="Selecione o perÃ­odo"
+              placeholderText="Selecione o período"
             />
           </div>
         )}
@@ -614,7 +642,7 @@ export default function HomePage() {
         <div className="bg-white rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-gray-900">Atividade Recente</h2>
-            <span className="text-sm text-gray-500">{stats.recentMovements?.length || 0} movimentaÃ§Ãµes</span>
+            <span className="text-sm text-gray-500">{stats.recentMovements?.length || 0} movimentações</span>
           </div>
           <div className="space-y-1 max-h-96 overflow-y-auto">
             {stats.recentMovements?.length > 0 ? (
