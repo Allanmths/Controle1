@@ -50,7 +50,7 @@ const ReplenishmentPage = () => {
   const [lowStockAnalysis, setLowStockAnalysis] = useState(null);
   const [activeTab, setActiveTab] = useState('requests');
 
-  // Verificar permissÃµes do usuÃ¡rio
+  // Verificar permissões do usuário
   const canRequestReplenishment = hasPermission(userData?.role, PERMISSIONS.REQUEST_REPLENISHMENT);
   const canViewAllRequests = hasPermission(userData?.role, PERMISSIONS.VIEW_ALL_REQUESTS);
   const canApproveRequests = hasPermission(userData?.role, PERMISSIONS.APPROVE_REPLENISHMENT);
@@ -75,7 +75,7 @@ const ReplenishmentPage = () => {
     }
   };
 
-  // Filtrar solicitaÃ§Ãµes
+  // Filtrar solicitações
   const filteredRequests = requests.filter(request => {
     let matchesFilter = true;
 
@@ -99,7 +99,7 @@ const ReplenishmentPage = () => {
       );
     }
 
-    // Se o usuÃ¡rio nÃ£o pode ver todas as solicitaÃ§Ãµes, mostrar apenas as prÃ³prias
+    // Se o usuário não pode ver todas as solicitações, mostrar apenas as próprias
     if (!canViewAllRequests) {
       matchesFilter = matchesFilter && request.requestedBy === userData?.uid;
     }
@@ -247,7 +247,7 @@ const ReplenishmentPage = () => {
         </nav>
       </div>
 
-      {/* Tab Content - SolicitaÃ§Ãµes */}
+      {/* Tab Content - Solicitações */}
       {activeTab === 'requests' && (
         <>
           {/* Stats Cards */}
@@ -356,14 +356,14 @@ const ReplenishmentPage = () => {
             </div>
           </div>
 
-          {/* Lista de SolicitaÃ§Ãµes */}
+          {/* Lista de Solicitações */}
           <div className="bg-white rounded-lg shadow-sm border">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      SolicitaÃ§Ã£o
+                      Solicitação
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Status
@@ -381,7 +381,7 @@ const ReplenishmentPage = () => {
                       Itens
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      AÃ§Ãµes
+                      Ações
                     </th>
                   </tr>
                 </thead>
@@ -644,7 +644,7 @@ const ReplenishmentPage = () => {
         </div>
       )}
 
-      {/* Modal de SolicitaÃ§Ã£o */}
+      {/* Modal de Solicitação */}
       <ReplenishmentRequestModal
         isOpen={showRequestModal}
         onClose={() => setShowRequestModal(false)}

@@ -32,7 +32,7 @@ export const NotificationStorage = {
       localStorage.removeItem(this.STORAGE_KEY);
       return true;
     } catch (error) {
-      console.error('Erro ao limpar notificaÃ§Ãµes:', error);
+      console.error('Erro ao limpar notificações:', error);
       return false;
     }
   },
@@ -86,7 +86,7 @@ export const NotificationStorage = {
     };
   },
 
-  // Exportar histÃ³rico
+  // Exportar histórico
   export() {
     const notifications = this.getAll();
     const stats = this.getStats();
@@ -111,20 +111,20 @@ export const NotificationStorage = {
     return exportData;
   },
 
-  // Importar histÃ³rico
+  // Importar histórico
   import(data) {
     try {
       if (data.notifications && Array.isArray(data.notifications)) {
         this.save(data.notifications);
         return { success: true, imported: data.notifications.length };
       }
-      return { success: false, error: 'Formato de dados invÃ¡lido' };
+      return { success: false, error: 'Formato de dados inválido' };
     } catch (error) {
       return { success: false, error: error.message };
     }
   },
 
-  // Buscar notificaÃ§Ãµes
+  // Buscar notificações
   search(query, filters = {}) {
     const notifications = this.getAll();
     const queryLower = query.toLowerCase();
@@ -162,7 +162,7 @@ export const NotificationStorage = {
     });
   },
 
-  // Limpar notificaÃ§Ãµes antigas (mais de X dias)
+  // Limpar notificações antigas (mais de X dias)
   cleanOldNotifications(daysToKeep = 30) {
     const notifications = this.getAll();
     const cutoffDate = new Date();
@@ -179,7 +179,7 @@ export const NotificationStorage = {
   }
 };
 
-// Hook para usar o storage de notificaÃ§Ãµes
+// Hook para usar o storage de notificações
 export const useNotificationStorage = () => {
   return NotificationStorage;
 };

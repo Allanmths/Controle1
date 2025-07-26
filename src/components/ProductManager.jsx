@@ -15,7 +15,7 @@ const ProductManager = () => {
         handleCloseModal,
     } = useStockManagement();
     
-    // Ativar notificaã§ãµes automã¡ticas
+    // Ativar notificações automáticas
     useAutoNotifications();
 
     return (

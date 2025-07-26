@@ -1,5 +1,19 @@
 ﻿import React, { useState, useEffect } from 'react';
-import toast from 'react-hot-toast';
+import toast fro                // 2. Registrar movimento de SAÍDA no Kardex
+                const kardexRef = doc(collection(db, 'kardex'));
+                transaction.set(kardexRef, {
+                    productId: selectedProduct.id,
+                    productName: productData.name,
+                    locationId: fromLocationId,
+                    type: 'saida',
+                    quantity: exitQuantity,
+                    previousStock: currentStock,
+                    newStock: newStock,
+                    timestamp: serverTimestamp(),
+                    userId: user.uid,
+                    userEmail: userData?.email,
+                    details: reason || 'Saída manual'
+                });ast';
 import { db } from '../services/firebase';
 import { runTransaction, doc, collection, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
@@ -35,12 +49,12 @@ const StockExitForm = () => {
             return;
         }
         if (Number(quantity) > availableStock) {
-            toast.error(`Estoque insuficiente. DisponÃ­vel: ${availableStock}`);
+            toast.error(`Estoque insuficiente. Disponível: ${availableStock}`);
             return;
         }
         
         const exitQuantity = Number(quantity);
-        const toastId = toast.loading('Processando saÃ­da de estoque...');
+        const toastId = toast.loading('Processando saída de estoque...');
 
         try {
             await runTransaction(db, async (transaction) => {
@@ -55,7 +69,7 @@ const StockExitForm = () => {
                 const currentStock = productData.locations?.[fromLocationId] || 0;
 
                 if (currentStock < exitQuantity) {
-                    throw new Error(`Estoque insuficiente. DisponÃ­vel: ${currentStock}`);
+                    throw new Error(`Estoque insuficiente. Disponível: ${currentStock}`);
                 }
 
                 const newStock = currentStock - exitQuantity;
@@ -138,7 +152,7 @@ const StockExitForm = () => {
                         <div className="flex justify-end pt-2">
                             <button type="submit" disabled={!selectedProduct || !fromLocationId || !quantity} className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 disabled:bg-red-300">
                                 <FaArrowCircleDown />
-                                Confirmar SaÃ­da
+                                Confirmar Saída
                             </button>
                         </div>
                     </>

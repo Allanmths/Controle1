@@ -14,9 +14,9 @@ const AuditLogRow = ({ log }) => {
         switch (type) {
             case 'entrada_inicial': return { label: 'Entrada Inicial', color: 'bg-green-100 text-green-800' };
             case 'ajuste_manual': return { label: 'Ajuste Manual', color: 'bg-yellow-100 text-yellow-800' };
-            case 'transfer_in': return { label: 'TransferÃªncia (Entrada)', color: 'bg-blue-100 text-blue-800' };
-            case 'transfer_out': return { label: 'TransferÃªncia (SaÃ­da)', color: 'bg-purple-100 text-purple-800' };
-            case 'saida': return { label: 'SaÃ­da Manual', color: 'bg-red-100 text-red-800' };
+            case 'transfer_in': return { label: 'Transferência (Entrada)', color: 'bg-blue-100 text-blue-800' };
+            case 'transfer_out': return { label: 'Transferência (Saída)', color: 'bg-purple-100 text-purple-800' };
+            case 'saida': return { label: 'Saída Manual', color: 'bg-red-100 text-red-800' };
             default: return { label: type, color: 'bg-gray-100 text-gray-800' };
         }
     };
@@ -50,9 +50,9 @@ const AuditPage = () => {
     const movementTypes = {
         'entrada_inicial': 'Entrada Inicial',
         'ajuste_manual': 'Ajuste Manual',
-        'transfer_in': 'TransferÃªncia (Entrada)',
-        'transfer_out': 'TransferÃªncia (SaÃ­da)',
-        'saida': 'SaÃ­da Manual'
+        'transfer_in': 'Transferência (Entrada)',
+        'transfer_out': 'Transferência (Saída)',
+        'saida': 'Saída Manual'
     };
 
     const filteredLogs = useMemo(() => {
@@ -153,7 +153,7 @@ const AuditPage = () => {
                             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produto</th>
                             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
                             <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Qtd</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">UsuÃ¡rio</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuário</th>
                             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Detalhes</th>
                         </tr>
                     </thead>
