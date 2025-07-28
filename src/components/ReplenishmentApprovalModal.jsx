@@ -9,7 +9,7 @@ import {
   FaBoxes,
   FaClock
 } from 'react-icons/fa';
-import { useReplenishmentManagement } from '../hooks/useReplenishmentManagement';
+import { useReplenishmentManagement } from '../hooks/useReposicaoManagement';
 import { 
   REPLENISHMENT_STATUS, 
   REPLENISHMENT_PRIORITY,
@@ -93,7 +93,7 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
           <div className="flex items-center space-x-3">
             <FaBoxes className="text-blue-600" />
             <div>
-              <h2 className="text-xl font-semibold">AnÃ¡lise de SolicitaÃ§Ã£o</h2>
+              <h2 className="text-xl font-semibold">Análise de Solicitação</h2>
               <p className="text-sm text-gray-600">#{request.id}</p>
             </div>
           </div>
@@ -201,7 +201,7 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
                       <td className="px-4 py-3 text-sm text-gray-900">
                         <div className="flex flex-col">
                           <span className="font-medium">{item.currentStock}</span>
-                          <span className="text-xs text-gray-500">MÃ­n: {item.minStock}</span>
+                          <span className="text-xs text-gray-500">Mín: {item.minStock}</span>
                         </div>
                       </td>
                       <td className="px-4 py-3 text-sm font-medium text-gray-900">
@@ -222,10 +222,10 @@ const ReplenishmentApprovalModal = ({ isOpen, onClose, request, onSuccess }) => 
             </div>
           </div>
 
-          {/* FormulÃ¡rio de AprovaÃ§Ã£o/RejeiÃ§Ã£o */}
+          {/* Formulário de Aprovação/Rejeição */}
           {!showConfirmation && (
             <div className="space-y-4">
-              <h4 className="text-lg font-medium text-gray-900">AnÃ¡lise da SolicitaÃ§Ã£o</h4>
+              <h4 className="text-lg font-medium text-gray-900">Análise da Solicitação</h4>
               
               {action === 'reject' && (
                 <div>

@@ -5,8 +5,8 @@ const TourSteps = {
     dashboard: [
         {
             target: '[data-tour="dashboard-charts"]',
-            title: 'GrÃ¡ficos Interativos',
-            content: 'Visualize suas movimentaÃ§Ãµes de estoque em diferentes formatos de grÃ¡fico.',
+            title: 'Gráficos Interativos',
+            content: 'Visualize suas movimentações de estoque em diferentes formatos de gráfico.',
             position: 'bottom'
         },
         {

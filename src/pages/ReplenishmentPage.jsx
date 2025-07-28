@@ -12,7 +12,7 @@ import {
   FaFileAlt,
   FaEdit
 } from 'react-icons/fa';
-import { useReplenishmentManagement } from '../hooks/useReplenishmentManagement';
+import { useReplenishmentManagement } from '../hooks/useReposicaoManagement';
 import { usePurchaseListManagement } from '../hooks/usePurchaseListManagement';
 import { useAuth } from '../context/AuthContext';
 import { hasPermission } from '../utils/permissions';
@@ -285,7 +285,7 @@ const ReplenishmentPage = () => {
             <div className="bg-white p-4 rounded-lg shadow-sm border">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">ConcluÃ­das</p>
+                  <p className="text-sm text-gray-600">Concluídas</p>
                   <p className="text-2xl font-bold text-gray-600">{stats.completed}</p>
                 </div>
                 <FaBoxes className="text-gray-500" size={20} />
@@ -306,7 +306,7 @@ const ReplenishmentPage = () => {
                   value={filters.search}
                   onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="TÃ­tulo, solicitante..."
+                  placeholder="Título, solicitante..."
                 />
               </div>
               
@@ -338,9 +338,9 @@ const ReplenishmentPage = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Todas as prioridades</option>
-                  <option value={REPLENISHMENT_PRIORITY.CRITICAL}>CrÃ­tica</option>
+                  <option value={REPLENISHMENT_PRIORITY.CRITICAL}>Crítica</option>
                   <option value={REPLENISHMENT_PRIORITY.HIGH}>Alta</option>
-                  <option value={REPLENISHMENT_PRIORITY.MEDIUM}>MÃ©dia</option>
+                  <option value={REPLENISHMENT_PRIORITY.MEDIUM}>Média</option>
                   <option value={REPLENISHMENT_PRIORITY.LOW}>Baixa</option>
                 </select>
               </div>
@@ -509,7 +509,7 @@ const ReplenishmentPage = () => {
                 <div className="bg-white p-4 rounded-lg shadow-sm border">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600">Itens CrÃ­ticos</p>
+                      <p className="text-sm text-gray-600">Itens Críticos</p>
                       <p className="text-2xl font-bold text-red-600">
                         {lowStockAnalysis.summary.criticalItems}
                       </p>

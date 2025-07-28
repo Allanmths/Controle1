@@ -48,7 +48,7 @@ export default function CountReportPage() {
 
     const handleApplyAdjustment = async () => {
         if (!count || count.status === 'aplicado') return;
-        if (!window.confirm('Tem certeza que deseja aplicar este ajuste? Esta aÃ§Ã£o atualizarÃ¡ o estoque de todos os produtos listados e nÃ£o pode ser desfeita.')) return;
+        if (!window.confirm('Tem certeza que deseja aplicar este ajuste? Esta ação atualizará o estoque de todos os produtos listados e não pode ser desfeita.')) return;
 
         setApplying(true);
         
@@ -95,12 +95,12 @@ export default function CountReportPage() {
         });
     };
 
-    if (loading) return <p className="text-center p-4">Carregando relatÃ³rio...</p>;
-    if (!count) return <p className="text-center p-4">RelatÃ³rio de contagem nÃ£o encontrado.</p>;
+    if (loading) return <p className="text-center p-4">Carregando relatório...</p>;
+    if (!count) return <p className="text-center p-4">Relatório de contagem não encontrado.</p>;
 
     return (
         <div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">RelatÃ³rio da Contagem</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">Relatório da Contagem</h2>
             <p className="text-gray-600 mb-6">Realizada em {count.createdAt?.toDate().toLocaleString('pt-BR')} por {count.userEmail}</p>
 
             <div className="bg-white p-6 rounded-lg shadow-sm">

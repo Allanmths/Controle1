@@ -10,7 +10,7 @@ import {
 } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import useFirestore from '../hooks/useFirestore';
-import { useReplenishmentManagement } from '../hooks/useReplenishmentManagement';
+import { useReplenishmentManagement } from '../hooks/useReposicaoManagement';
 import { REPLENISHMENT_STATUS } from '../utils/replenishmentPermissions';
 
 const ReplenishmentExecutionModal = ({ isOpen, onClose, request }) => {
@@ -30,7 +30,7 @@ const ReplenishmentExecutionModal = ({ isOpen, onClose, request }) => {
 
   useEffect(() => {
     if (isOpen && request) {
-      // Inicializar itens com dados da solicitaÃ§Ã£o
+      // Inicializar itens com dados da solicitação
       const initialItems = request.items.map(item => ({
         ...item,
         selectedQuantity: item.quantity,
@@ -127,8 +127,8 @@ const ReplenishmentExecutionModal = ({ isOpen, onClose, request }) => {
       await updateReplenishmentRequest(request.id, updateData);
       onClose();
     } catch (error) {
-      console.error('Erro ao executar reposiÃ§Ã£o:', error);
-      setErrors({ general: 'Erro ao executar reposiÃ§Ã£o. Tente novamente.' });
+      console.error('Erro ao executar reposição:', error);
+      setErrors({ general: 'Erro ao executar reposição. Tente novamente.' });
     } finally {
       setLoading(false);
     }
@@ -300,10 +300,10 @@ const ReplenishmentExecutionModal = ({ isOpen, onClose, request }) => {
             ))}
           </div>
 
-          {/* ObservaÃ§Ãµes */}
+          {/* Observações */}
           <div className="mt-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              ObservaÃ§Ãµes da ExecuÃ§Ã£o
+              Observações da Execução
             </label>
             <textarea
               value={executionData.notes}
@@ -330,7 +330,7 @@ const ReplenishmentExecutionModal = ({ isOpen, onClose, request }) => {
             <div className="text-sm text-gray-600">
               {executedItemsCount > 0 && executedItemsCount < totalItems && (
                 <span className="text-yellow-600 font-medium">
-                  âš ï¸ ExecuÃ§Ã£o parcial: {executedItemsCount} de {totalItems} itens
+                  ⚠️ Execução parcial: {executedItemsCount} de {totalItems} itens
                 </span>
               )}
             </div>
@@ -346,7 +346,7 @@ const ReplenishmentExecutionModal = ({ isOpen, onClose, request }) => {
                 disabled={loading}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
               >
-                {loading ? 'Executando...' : 'Executar ReposiÃ§Ã£o'}
+                {loading ? 'Executando...' : 'Executar Reposição'}
               </button>
             </div>
           </div>

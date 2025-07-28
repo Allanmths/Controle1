@@ -1,5 +1,19 @@
 ﻿import React, { useState, useEffect } from 'react';
-import toast from 'react-hot-toast';
+import toast fro                // 2. Registrar movimento de SAÍDA no Kardex
+                const kardexRef = doc(collection(db, 'kardex'));
+                transaction.set(kardexRef, {
+                    productId: selectedProduct.id,
+                    productName: productData.name,
+                    locationId: fromLocationId,
+                    type: 'saida',
+                    quantity: exitQuantity,
+                    previousStock: currentStock,
+                    newStock: newStock,
+                    timestamp: serverTimestamp(),
+                    userId: user.uid,
+                    userEmail: userData?.email,
+                    details: reason || 'Saída manual'
+                });ast';
 import { db } from '../services/firebase';
 import { runTransaction, doc, collection, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
@@ -14,17 +28,6 @@ const StockExitForm = () => {
     const [fromLocationId, setFromLocationId] = useState('');
     const [quantity, setQuantity] = useState('');
     const [reason, setReason] = useState('');
-    const [customReason, setCustomReason] = useState('');
-    
-    // Lista de motivos predefinidos
-    const exitReasons = [
-        { value: 'consumo', label: 'Consumo' },
-        { value: 'venda', label: 'Venda' },
-        { value: 'perda', label: 'Perda/Quebra' },
-        { value: 'vencimento', label: 'Vencimento' },
-        { value: 'devolucao', label: 'Devolução ao Fornecedor' },
-        { value: 'outro', label: 'Outro' }
-    ];
 
     const availableStock = selectedProduct && fromLocationId ? selectedProduct.locations?.[fromLocationId] || 0 : 0;
 
@@ -33,13 +36,12 @@ const StockExitForm = () => {
         setFromLocationId('');
         setQuantity('');
         setReason('');
-        setCustomReason('');
     }, [selectedProduct]);
 
-    const handleSubmit = async (e) => {
+        const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!selectedProduct || !fromLocationId || !quantity || !reason || (reason === 'outro' && !customReason)) {
-            toast.error("Por favor, preencha todos os campos obrigatórios.");
+        if (!selectedProduct || !fromLocationId || !quantity) {
+            toast.error("Por favor, preencha todos os campos obrigatÃ³rios.");
             return;
         }
         if (Number(quantity) <= 0) {
@@ -79,9 +81,7 @@ const StockExitForm = () => {
                     totalStock: newTotalStock,
                 });
 
-                const reasonText = reason === 'outro' ? customReason : exitReasons.find(r => r.value === reason)?.label || 'Saída manual';
-                
-                // 2. Registrar movimento de SAÍDA no Kardex
+                // 2. Registrar movimento de SAÃDA no Kardex
                 const kardexRef = doc(collection(db, 'kardex'));
                 transaction.set(kardexRef, {
                     productId: selectedProduct.id,
@@ -94,7 +94,7 @@ const StockExitForm = () => {
                     timestamp: serverTimestamp(),
                     userId: user.uid,
                     userEmail: userData?.email,
-                    details: `Saída: ${reasonText}`
+                    details: reason || 'Saída manual'
                 });
             });
 
@@ -104,7 +104,6 @@ const StockExitForm = () => {
             setFromLocationId('');
             setQuantity('');
             setReason('');
-            setCustomReason('');
 
         } catch (error) {
             console.error("Erro na saída de estoque: ", error);
@@ -147,39 +146,11 @@ const StockExitForm = () => {
 
                         <div>
                             <label htmlFor="reason-exit" className="block text-sm font-medium text-gray-700 mb-1">Motivo da Saída</label>
-                            <select 
-                                id="reason-exit" 
-                                value={reason} 
-                                onChange={e => setReason(e.target.value)} 
-                                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-                            >
-                                <option value="">Selecione o motivo</option>
-                                {exitReasons.map(reasonOption => (
-                                    <option key={reasonOption.value} value={reasonOption.value}>
-                                        {reasonOption.label}
-                                    </option>
-                                ))}
-                            </select>
-                            
-                            {reason === 'outro' && (
-                                <div className="mt-2">
-                                    <input 
-                                        type="text" 
-                                        placeholder="Especifique o motivo" 
-                                        value={customReason} 
-                                        onChange={e => setCustomReason(e.target.value)} 
-                                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" 
-                                    />
-                                </div>
-                            )}
+                            <input type="text" id="reason-exit" value={reason} onChange={e => setReason(e.target.value)} placeholder="Ex: Venda, Perda, Uso interno" className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
                         </div>
 
                         <div className="flex justify-end pt-2">
-                            <button 
-                                type="submit" 
-                                disabled={!selectedProduct || !fromLocationId || !quantity || !reason || (reason === 'outro' && !customReason)} 
-                                className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 disabled:bg-red-300"
-                            >
+                            <button type="submit" disabled={!selectedProduct || !fromLocationId || !quantity} className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 disabled:bg-red-300">
                                 <FaArrowCircleDown />
                                 Confirmar Saída
                             </button>

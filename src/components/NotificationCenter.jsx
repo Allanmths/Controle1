@@ -57,13 +57,13 @@ const NotificationCenter = () => {
         navigate(notification.action.href);
       }
     } else if (notification.category === 'stock' && notification.productId) {
-      // NotificaÃ§Ãµes de estoque - ir para pÃ¡gina de estoque com busca do produto
+      // Notificações de estoque - ir para página de estoque com busca do produto
       navigate(`/stock?search=${encodeURIComponent(notification.title.replace('Produto ', '').replace(' estÃ¡', ''))}`);
     } else if (notification.category === 'movement' && notification.productId) {
-      // NotificaÃ§Ãµes de movimento - ir para pÃ¡gina de movimentaÃ§Ãµes
+      // Notificações de movimento - ir para página de movimentações
       navigate('/movements');
     } else if (notification.category === 'system') {
-      // NotificaÃ§Ãµes de sistema - ir para configuraÃ§Ãµes
+      // Notificações de sistema - ir para configurações
       navigate('/settings');
     } else {
       // Default - ir para dashboard
@@ -73,7 +73,7 @@ const NotificationCenter = () => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* BotÃ£o de NotificaÃ§Ãµes */}
+      {/* Botão de Notificações */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -86,13 +86,13 @@ const NotificationCenter = () => {
         )}
       </button>
 
-      {/* Dropdown de NotificaÃ§Ãµes */}
+      {/* Dropdown de Notificações */}
       {isOpen && (
         <div className="absolute right-0 mt-2 w-96 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 max-h-96 overflow-hidden">
           {/* Header */}
           <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              NotificaÃ§Ãµes
+              Notificações
             </h3>
             <div className="flex items-center gap-2">
               {unreadCount > 0 && (
@@ -112,12 +112,12 @@ const NotificationCenter = () => {
             </div>
           </div>
 
-          {/* Lista de NotificaÃ§Ãµes */}
+          {/* Lista de Notificações */}
           <div className="max-h-80 overflow-y-auto">
             {notifications.length === 0 ? (
               <div className="p-8 text-center text-gray-500 dark:text-gray-400">
                 <FaBell className="mx-auto mb-3 text-3xl opacity-50" />
-                <p>Nenhuma notificaÃ§Ã£o</p>
+                <p>Nenhuma notificação</p>
                 <p className="text-sm">VocÃª estÃ¡ em dia!</p>
               </div>
             ) : (

@@ -18,7 +18,7 @@ const NotificationDebugger = () => {
 
     const interval = setInterval(() => {
       analyzeNotifications();
-    }, 5000); // AnÃ¡lise a cada 5 segundos
+    }, 5000); // Análise a cada 5 segundos
 
     return () => clearInterval(interval);
   }, [isMonitoring, notifications, filters]);
@@ -217,7 +217,7 @@ const NotificationDebugger = () => {
           </span>
           {stats.timestamp && (
             <span className="text-xs text-gray-500 dark:text-gray-400">
-              Ãšltima anÃ¡lise: {new Date(stats.timestamp).toLocaleTimeString()}
+              Última análise: {new Date(stats.timestamp).toLocaleTimeString()}
             </span>
           )}
         </div>

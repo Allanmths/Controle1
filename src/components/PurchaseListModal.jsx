@@ -134,7 +134,7 @@ const PurchaseListModal = ({ isOpen, onClose, list, onExport, canExport }) => {
               <div className="flex items-center">
                 <FaExclamationTriangle className="w-6 h-6 text-red-600 mr-3" />
                 <div>
-                  <p className="text-sm text-gray-600">Itens CrÃ­ticos</p>
+                  <p className="text-sm text-gray-600">Itens Críticos</p>
                   <p className="text-2xl font-bold text-red-600">
                     {list.summary?.criticalItems || 0}
                   </p>
@@ -210,7 +210,7 @@ const PurchaseListModal = ({ isOpen, onClose, list, onExport, canExport }) => {
                             Qtd. Sugerida
                           </th>
                           <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">
-                            PreÃ§o Unit.
+                            Preco Unit.
                           </th>
                           <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">
                             Total
@@ -258,9 +258,9 @@ const PurchaseListModal = ({ isOpen, onClose, list, onExport, canExport }) => {
                             
                             <td className="px-4 py-3 text-center">
                               <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityColor(item.priority)}`}>
-                                {item.priority === 'critical' ? 'CrÃ­tico' :
+                                {item.priority === 'critical' ? 'Crítico' :
                                  item.priority === 'high' ? 'Alto' :
-                                 item.priority === 'medium' ? 'MÃ©dio' : 'Baixo'}
+                                 item.priority === 'medium' ? 'Médio' : 'Baixo'}
                               </span>
                             </td>
                           </tr>
@@ -280,7 +280,7 @@ const PurchaseListModal = ({ isOpen, onClose, list, onExport, canExport }) => {
                 Lista vazia
               </h4>
               <p className="text-gray-600">
-                Esta lista nÃ£o contÃ©m itens.
+                Esta lista não contém nenhum itens.
               </p>
             </div>
           )}

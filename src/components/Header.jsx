@@ -31,7 +31,7 @@ export default function Header({ onMenuClick }) {
                         <h1 className="text-2xl lg:text-3xl font-bold text-slate-800 dark:text-slate-200">Estoque HCM</h1>
                     </div>
                     <p className="text-xs lg:text-sm text-slate-500 dark:text-slate-400 mt-1">
-                        Bem-vindo! VocÃª estÃ¡ logado como {userRole}.
+                        Bem-vindo! Você está logado como {userRole}.
                     </p>
                 </div>
 

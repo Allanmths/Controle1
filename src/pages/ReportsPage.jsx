@@ -7,7 +7,7 @@ import SkeletonLoader from '../components/SkeletonLoader';
 // Componentes de Analytics
 import AnalyticsDashboard from '../components/AnalyticsDashboard';
 
-// Componentes de RelatÃ³rios
+// Componentes de Relatórios
 import StockValuationReport from '../components/reports/StockValuationReport';
 import DeadStockReport from '../components/reports/DeadStockReport';
 import StockReport from '../components/StockReport';
@@ -24,7 +24,7 @@ const ReportsPage = () => {
     const isLoading = productsLoading || categoriesLoading || movementsLoading;
     const hasError = productsError || categoriesError || movementsError;
 
-    // ConfiguraÃ§Ã£o das abas
+    // Configuração das abas
     const tabs = {
         analytics: {
             name: 'Analytics Dashboard',
@@ -38,12 +38,12 @@ const ReportsPage = () => {
             )
         },
         stock: {
-            name: 'RelatÃ³rio de Estoque',
+            name: 'Relatório de Estoque',
             icon: FaFileAlt,
             component: <StockReport />
         },
         valuation: {
-            name: 'ValorizaÃ§Ã£o de Estoque',
+            name: 'Valorização de Estoque',
             icon: FaFileAlt,
             component: <StockValuationReport />
         },
@@ -86,14 +86,14 @@ const ReportsPage = () => {
             {/* Header */}
             <div className="mb-6">
                 <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
-                    Analytics & RelatÃ³rios
+                    Analytics & Relatórios
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400">
-                    AnÃ¡lises avanÃ§adas e relatÃ³rios completos do seu estoque
+                    Análises avançadas e relatórios completos do seu estoque
                 </p>
             </div>
 
-            {/* NavegaÃ§Ã£o por Abas */}
+            {/* Navegação por Abas */}
             <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
                 <nav className="-mb-px flex space-x-6 overflow-x-auto" aria-label="Tabs">
                     {Object.entries(tabs).map(([key, tab]) => {
@@ -116,7 +116,7 @@ const ReportsPage = () => {
                 </nav>
             </div>
 
-            {/* ConteÃºdo da Aba Ativa */}
+            {/* Conteúdo da Aba Ativa */}
             <div className="min-h-[500px]">
                 {tabs[activeTab].component}
             </div>

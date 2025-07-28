@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import useFirestore from '../hooks/useFirestore';
 import { useOfflineMode } from '../hooks/useOfflineMode';
-import { FaWifi, FaBan, FaPlus, FaHistory } from 'react-icons/fa';
+import { FaWifi, FaBan, FaPlus, FaHistory, FaBarcode } from 'react-icons/fa';
 
 const CountStatusBadge = ({ status }) => {
     let label, color;
     switch (status) {
         case 'concluido':
-            label = 'ConcluÃ­do';
+            label = 'Concluído';
             color = 'bg-green-100 text-green-800';
             break;
         case 'aplicado':
@@ -60,20 +60,29 @@ export default function CountingPage() {
                     </div>
                 </div>
                 {canEdit && (
-                    <button 
-                        onClick={() => navigate('/counting/new')}
-                        className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg flex items-center transition-colors"
-                    >
-                        <FaPlus className="mr-2" />
-                        Iniciar Nova Contagem
-                    </button>
+                    <div className="flex space-x-3">
+                        <button 
+                            onClick={() => navigate('/counting/quick')}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center transition-colors"
+                        >
+                            <FaPlus className="mr-2" />
+                            Contagem Rápida
+                        </button>
+                        <button 
+                            onClick={() => navigate('/counting/new')}
+                            className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg flex items-center transition-colors"
+                        >
+                            <FaPlus className="mr-2" />
+                            Contagem Completa
+                        </button>
+                    </div>
                 )}
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">HistÃ³rico de Contagens</h3>
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">Histórico de Contagens</h3>
                 {loading ? (
-                    <p className="text-center text-gray-500 py-4">Carregando histÃ³rico...</p>
+                    <p className="text-center text-gray-500 py-4">Carregando histórico...</p>
                 ) : allCounts.length === 0 ? (
                     <p className="text-center text-gray-500 py-4">Nenhuma contagem realizada ainda.</p>
                 ) : (
@@ -102,7 +111,7 @@ export default function CountingPage() {
                                         </p>
                                         {isOfflineCount && !count.synced && (
                                             <p className="text-xs text-orange-600 mt-1">
-                                                Aguardando sincronizaÃ§Ã£o
+                                                Aguardando sincronização
                                             </p>
                                         )}
                                     </div>
@@ -113,7 +122,7 @@ export default function CountingPage() {
                                                 onClick={() => navigate(`/counting/${count.id}`)} 
                                                 className="text-indigo-600 hover:text-indigo-900 transition-colors"
                                             >
-                                                Ver RelatÃ³rio
+                                                Ver Relatório
                                             </button>
                                         )}
                                     </div>

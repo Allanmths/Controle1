@@ -17,11 +17,11 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
   const [selectedPeriod, setSelectedPeriod] = useState('30');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // AnÃ¡lise de dados em tempo real
+  // Análise de dados em tempo real
   const analytics = useMemo(() => {
     if (!products.length) return null;
 
-    // 1. AnÃ¡lise ABC - ClassificaÃ§Ã£o de produtos por valor
+    // 1. Análise ABC - Classificação de produtos por valor
     const productsWithValue = products.map(product => {
       const totalValue = Object.values(product.locations || {})
         .reduce((sum, quantity) => sum + (quantity * (product.price || 0)), 0);
@@ -48,7 +48,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
       return { ...product, classification, cumulativePercent };
     });
 
-    // 2. Produtos em baixo estoque (crÃ­ticos)
+    // 2. Produtos em baixo estoque (críticos)
     const lowStockProducts = products.filter(product => {
       const totalQuantity = Object.values(product.locations || {})
         .reduce((sum, quantity) => sum + quantity, 0);
@@ -65,7 +65,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
     // 4. Top 10 produtos por valor
     const top10Products = abcAnalysis.slice(0, 10);
 
-    // 5. AnÃ¡lise por categoria
+    // 5. Análise por categoria
     const categoryAnalysis = categories.map(category => {
       const categoryProducts = products.filter(p => p.categoryId === category.id);
       const totalValue = categoryProducts.reduce((sum, product) => {
@@ -113,7 +113,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
       <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
         <div className="text-center text-gray-500 dark:text-gray-400">
           <FaChartLine className="mx-auto mb-4 text-4xl" />
-          <p>Carregando dados analÃ­ticos...</p>
+          <p>Carregando dados analíticos...</p>
         </div>
       </div>
     );
@@ -130,7 +130,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
             <FaChartLine className="text-blue-600" />
             Analytics Dashboard
           </h2>
-          <p className="text-gray-600 dark:text-gray-400">AnÃ¡lise avanÃ§ada do seu estoque</p>
+          <p className="text-gray-600 dark:text-gray-400">Análise avançada do seu estoque</p>
         </div>
         
         <div className="flex gap-3">
@@ -150,10 +150,10 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
             onChange={(e) => setSelectedPeriod(e.target.value)}
             className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
-            <option value="7">Ãšltimos 7 dias</option>
-            <option value="30">Ãšltimos 30 dias</option>
-            <option value="90">Ãšltimos 90 dias</option>
-            <option value="365">Ãšltimo ano</option>
+            <option value="7">Últimos 7 dias</option>
+            <option value="30">Últimos 30 dias</option>
+            <option value="90">Últimos 90 dias</option>
+            <option value="365">Último ano</option>
           </select>
         </div>
       </div>
@@ -183,7 +183,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
         <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-4 rounded-lg shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-purple-100 text-sm">Valor MÃ©dio</p>
+              <p className="text-purple-100 text-sm">Valor Médio</p>
               <p className="text-2xl font-bold">R$ {kpis.avgProductValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
             </div>
             <FaChartPie className="text-3xl text-purple-200" />
@@ -221,13 +221,13 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
         </div>
       </div>
 
-      {/* AnÃ¡lise ABC e Top 10 */}
+      {/* Análise ABC e Top 10 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* AnÃ¡lise ABC */}
+        {/* Análise ABC */}
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <FaChartPie className="text-blue-600" />
-            AnÃ¡lise ABC (Top 10)
+            Análise ABC (Top 10)
           </h3>
           <div className="space-y-3">
             {abcAnalysis.slice(0, 10).map((product, index) => (
@@ -256,7 +256,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
           </div>
         </div>
 
-        {/* AnÃ¡lise por Categoria */}
+        {/* Análise por Categoria */}
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <FaChartBar className="text-green-600" />
@@ -304,7 +304,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
                       <div>
                         <p className="font-medium text-gray-900 dark:text-white">{product.name}</p>
                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                          MÃ­n: {product.minStock || 5} unid.
+                          Mín: {product.minStock || 5} unid.
                         </p>
                       </div>
                       <div className="text-right">
@@ -333,7 +333,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">{product.name}</p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        ReposiÃ§Ã£o urgente
+                        Reposição Urgente
                       </p>
                     </div>
                     <div className="text-right">
@@ -354,16 +354,16 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
       <div className="mt-8">
         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
           <FaBell className="text-yellow-600" />
-          Alertas Inteligentes & PrevisÃµes
+          Alertas Inteligentes & Previsões
         </h3>
         <PredictiveAlerts products={products} movements={movements} />
       </div>
 
-      {/* GrÃ¡ficos AvanÃ§ados */}
+      {/* Gráficos Avançados */}
       <div className="mt-8">
         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
           <FaChartLine className="text-blue-600" />
-          AnÃ¡lise Visual AvanÃ§ada
+          Análise Visual Avançada
         </h3>
         <AdvancedCharts products={products} categories={categories} />
       </div>

@@ -11,18 +11,18 @@ import {
 } from 'react-icons/fa';
 
 const PredictiveAlerts = ({ products = [], movements = [] }) => {
-  // Algoritmos de previsÃ£o e alertas
+  // Algoritmos de previsão e alertas
   const predictions = useMemo(() => {
     const alerts = [];
     const trends = [];
     const predictions = [];
     
-    // 1. AnÃ¡lise de TendÃªncia de Consumo
+    // 1. Análise de Tendência de Consumo
     products.forEach(product => {
       const totalQuantity = Object.values(product.locations || {})
         .reduce((sum, quantity) => sum + quantity, 0);
       
-      // Produtos com estoque crÃ­tico
+      // Produtos com estoque crítico
       if (totalQuantity <= (product.minStock || 5) && totalQuantity > 0) {
         alerts.push({
           type: 'warning',
@@ -42,7 +42,7 @@ const PredictiveAlerts = ({ products = [], movements = [] }) => {
           priority: 'high',
           product: product.name,
           message: 'Produto sem estoque',
-          action: 'ReposiÃ§Ã£o urgente necessÃ¡ria',
+          action: 'Reposição urgente necessária',
           icon: FaExclamationTriangle,
           color: 'red'
         });
@@ -55,27 +55,27 @@ const PredictiveAlerts = ({ products = [], movements = [] }) => {
           priority: 'low',
           product: product.name,
           message: `Estoque alto: ${totalQuantity} unidades`,
-          action: 'Considerar promoÃ§Ã£o ou redistribuiÃ§Ã£o',
+          action: 'Considerar promoção ou redistribuição',
           icon: FaInfoCircle,
           color: 'blue'
         });
       }
       
-      // AnÃ¡lise de valor parado (produtos com alto valor e sem movimento)
+      // Análise de valor parado (produtos com alto valor e sem movimento)
       const productValue = totalQuantity * (product.price || 0);
       if (productValue > 1000 && totalQuantity > 50) {
         trends.push({
           type: 'insight',
           product: product.name,
           message: `Alto valor em estoque: R$ ${productValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
-          suggestion: 'Analisar rotatividade e considerar estratÃ©gias de venda',
+          suggestion: 'Analisar rotatividade e considerar estratégias de venda',
           icon: FaChartLine,
           color: 'purple'
         });
       }
     });
     
-    // 2. PrevisÃµes Simples baseadas em padrÃµes
+    // 2. Previsões Simples baseadas em padrões
     const lowRotationProducts = products.filter(product => {
       const totalQuantity = Object.values(product.locations || {})
         .reduce((sum, quantity) => sum + quantity, 0);
@@ -86,15 +86,15 @@ const PredictiveAlerts = ({ products = [], movements = [] }) => {
       const totalQuantity = Object.values(product.locations || {})
         .reduce((sum, quantity) => sum + quantity, 0);
       
-      // SimulaÃ§Ã£o de previsÃ£o de consumo (baseada em estoque atual)
+      // Simulação de previsão de consumo (baseada em estoque atual)
       const estimatedDaysToFinish = Math.round(totalQuantity / 2); // Consumo estimado de 2 unidades por dia
       
       if (estimatedDaysToFinish <= 15) {
         predictions.push({
           type: 'prediction',
           product: product.name,
-          message: `PrevisÃ£o de esgotamento em ${estimatedDaysToFinish} dias`,
-          suggestion: 'Programar reposiÃ§Ã£o',
+          message: `Previsão de esgotamento em ${estimatedDaysToFinish} dias`,
+          suggestion: 'Programar reposição',
           icon: FaClock,
           color: 'yellow',
           daysLeft: estimatedDaysToFinish
@@ -179,7 +179,7 @@ const PredictiveAlerts = ({ products = [], movements = [] }) => {
 
   return (
     <div className="space-y-6">
-      {/* Alertas CrÃ­ticos */}
+      {/* Alertas Críticos */}
       {alerts.length > 0 && (
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">

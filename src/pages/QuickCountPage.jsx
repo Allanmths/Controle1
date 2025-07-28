@@ -1,0 +1,383 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { db } from '../services/firebase';
+import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
+import useFirestore from '../hooks/useFirestore';
+import { useAuth } from '../context/AuthContext';
+import { useOfflineMode } from '../hooks/useOfflineMode';
+import toast from 'react-hot-toast';
+import { FaWifi, FaBan, FaSearch, FaSave, FaBarcode, FaHistory } from 'react-icons/fa';
+
+export default function QuickCountPage() {
+    const { docs: products, loading: loadingProducts } = useFirestore('products');
+    const { currentUser } = useAuth();
+    const { isOnline, saveOfflineCount, cacheDataForOffline } = useOfflineMode();
+    const navigate = useNavigate();
+    
+    const [countedQuantities, setCountedQuantities] = useState({});
+    const [searchTerm, setSearchTerm] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [barcode, setBarcode] = useState('');
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [recentProducts, setRecentProducts] = useState([]);
+    const [countMode, setCountMode] = useState('barcode'); // 'barcode' ou 'manual'
+
+    useEffect(() => {
+        if (products && products.length > 0) {
+            const initialQuantities = products.reduce((acc, product) => {
+                acc[product.id] = ''; // Use empty string for placeholder
+                return acc;
+            }, {});
+            setCountedQuantities(initialQuantities);
+            
+            // Cache produtos para uso offline
+            cacheDataForOffline('products', products);
+        }
+    }, [products, cacheDataForOffline]);
+
+    const handleQuantityChange = (productId, value) => {
+        setCountedQuantities(prev => ({
+            ...prev,
+            [productId]: value === '' ? '' : Number(value)
+        }));
+
+        // Se o produto não estiver nos recentes, adicione-o
+        const product = products.find(p => p.id === productId);
+        if (product && !recentProducts.some(p => p.id === productId)) {
+            setRecentProducts(prev => {
+                const updated = [product, ...prev].slice(0, 5); // Mantém apenas os 5 mais recentes
+                return updated;
+            });
+        }
+    };
+
+    const handleBarcodeSearch = () => {
+        if (!barcode.trim()) {
+            toast.error('Digite um código de barras');
+            return;
+        }
+
+        const product = products.find(p => 
+            p.barcode === barcode || 
+            p.sku === barcode || 
+            p.id === barcode
+        );
+
+        if (product) {
+            setSelectedProduct(product);
+            // Foca automaticamente no campo de quantidade
+            setTimeout(() => {
+                const qtyInput = document.getElementById('quantity-input');
+                if (qtyInput) qtyInput.focus();
+            }, 100);
+        } else {
+            toast.error('Produto não encontrado');
+            setSelectedProduct(null);
+        }
+
+        // Limpa o campo de código de barras para a próxima leitura
+        setBarcode('');
+    };
+
+    const handleProductSelect = (product) => {
+        setSelectedProduct(product);
+        // Foca automaticamente no campo de quantidade
+        setTimeout(() => {
+            const qtyInput = document.getElementById('quantity-input');
+            if (qtyInput) qtyInput.focus();
+        }, 100);
+    };
+
+    const filteredProducts = products.filter(p => 
+        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.barcode?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const handleFinalizeCount = async () => {
+        if (Object.keys(countedQuantities).length === 0 || 
+            Object.values(countedQuantities).every(qty => qty === '')) {
+            toast.error('Nenhum produto foi contado');
+            return;
+        }
+        
+        setLoading(true);
+        
+        // Filtra apenas os produtos que foram contados
+        const countDetails = Object.entries(countedQuantities)
+            .filter(([_, qty]) => qty !== '')
+            .map(([productId, qty]) => {
+                const product = products.find(p => p.id === productId) || {};
+                return {
+                    productId,
+                    productName: product.name || 'Produto Desconhecido',
+                    expectedQuantity: product.totalQuantity || 0,
+                    countedQuantity: qty,
+                };
+            });
+
+        const countData = {
+            createdAt: isOnline ? serverTimestamp() : new Date(),
+            userEmail: currentUser?.email || 'N/A',
+            userName: currentUser?.displayName || currentUser?.email || 'N/A',
+            status: isOnline ? 'concluido' : 'offline',
+            details: countDetails,
+            totalProducts: countDetails.length,
+            timestamp: new Date().toISOString(),
+            countType: 'quick' // Indica que é uma contagem rápida
+        };
+
+        try {
+            if (isOnline) {
+                // Salvar online no Firebase
+                await addDoc(collection(db, 'counts'), countData);
+                toast.success('Contagem rápida finalizada e salva com sucesso!');
+            } else {
+                // Salvar offline no IndexedDB
+                const success = await saveOfflineCount(countData);
+                if (!success) {
+                    throw new Error('Falha ao salvar offline');
+                }
+                toast.success('Contagem rápida salva offline!');
+            }
+            
+            navigate('/counting');
+        } catch (error) {
+            console.error('Error finalizing count:', error);
+            const errorMessage = isOnline 
+                ? 'Falha ao finalizar a contagem. Tente novamente.'
+                : 'Falha ao salvar contagem offline. Verifique o armazenamento do dispositivo.';
+            toast.error(errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loadingProducts) {
+        return <p className="text-center p-4">Carregando produtos...</p>;
+    }
+
+    return (
+        <div>
+            <div className="flex justify-between items-center mb-4">
+                <div>
+                    <h2 className="text-3xl font-bold text-gray-800">Contagem Rápida</h2>
+                    <div className="flex items-center mt-2 space-x-4">
+                        <div className={`flex items-center space-x-2 text-sm ${isOnline ? 'text-green-600' : 'text-orange-600'}`}>
+                            {isOnline ? <FaWifi /> : <FaBan />}
+                            <span>{isOnline ? 'Online' : 'Modo Offline'}</span>
+                        </div>
+                        {!isOnline && (
+                            <div className="text-sm text-orange-600 bg-orange-50 px-3 py-1 rounded-full">
+                                Dados serão salvos localmente
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+            
+            <p className="mb-4 text-gray-600">
+                Escaneie códigos de barras ou pesquise produtos para uma contagem rápida.
+                {!isOnline && ' A contagem será sincronizada quando a conexão for restaurada.'}
+            </p>
+            
+            <div className="flex space-x-2 mb-4">
+                <button 
+                    onClick={() => setCountMode('barcode')} 
+                    className={`px-4 py-2 rounded-md flex items-center space-x-2 ${
+                        countMode === 'barcode' 
+                            ? 'bg-blue-600 text-white' 
+                            : 'bg-gray-200 text-gray-800'
+                    }`}
+                >
+                    <FaBarcode />
+                    <span>Código de Barras</span>
+                </button>
+                <button 
+                    onClick={() => setCountMode('manual')} 
+                    className={`px-4 py-2 rounded-md flex items-center space-x-2 ${
+                        countMode === 'manual' 
+                            ? 'bg-blue-600 text-white' 
+                            : 'bg-gray-200 text-gray-800'
+                    }`}
+                >
+                    <FaSearch />
+                    <span>Pesquisa Manual</span>
+                </button>
+            </div>
+
+            {countMode === 'barcode' ? (
+                <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
+                    <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                        <div className="flex-grow">
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <FaBarcode className="text-gray-400" />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Código de barras ou SKU..."
+                                    value={barcode}
+                                    onChange={(e) => setBarcode(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleBarcodeSearch()}
+                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    autoFocus
+                                />
+                            </div>
+                        </div>
+                        <button
+                            onClick={handleBarcodeSearch}
+                            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                        >
+                            Buscar
+                        </button>
+                    </div>
+
+                    {/* Produtos recentes */}
+                    {recentProducts.length > 0 && (
+                        <div className="mt-6">
+                            <h3 className="text-sm font-medium text-gray-700 flex items-center">
+                                <FaHistory className="mr-2" /> Produtos recentes
+                            </h3>
+                            <div className="mt-2 flex flex-wrap gap-2">
+                                {recentProducts.map(product => (
+                                    <button
+                                        key={product.id}
+                                        onClick={() => handleProductSelect(product)}
+                                        className="bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-full transition-colors"
+                                    >
+                                        {product.name}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
+                    <div className="mb-4 relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <FaSearch className="text-gray-400" />
+                        </div>
+                        <input
+                            type="text"
+                            placeholder="Buscar produto pelo nome ou código..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            autoFocus
+                        />
+                    </div>
+
+                    {searchTerm && (
+                        <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-md">
+                            {filteredProducts.length > 0 ? (
+                                filteredProducts.slice(0, 10).map(product => (
+                                    <div 
+                                        key={product.id}
+                                        onClick={() => handleProductSelect(product)}
+                                        className="p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-200 last:border-b-0"
+                                    >
+                                        <div className="font-medium">{product.name}</div>
+                                        <div className="text-sm text-gray-500">
+                                            {product.sku && <span className="mr-3">SKU: {product.sku}</span>}
+                                            {product.barcode && <span>Cód: {product.barcode}</span>}
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="p-3 text-center text-gray-500">
+                                    Nenhum produto encontrado
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {selectedProduct && (
+                <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
+                    <h3 className="text-xl font-medium mb-4">Produto Selecionado</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="col-span-2">
+                            <h4 className="text-lg font-medium">{selectedProduct.name}</h4>
+                            <div className="text-sm text-gray-500 mt-1">
+                                {selectedProduct.sku && <span className="mr-3">SKU: {selectedProduct.sku}</span>}
+                                {selectedProduct.barcode && <span className="mr-3">Código: {selectedProduct.barcode}</span>}
+                                <span>Estoque atual: {selectedProduct.totalQuantity || 0}</span>
+                            </div>
+                            {selectedProduct.category && (
+                                <div className="mt-2">
+                                    <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                                        {selectedProduct.category}
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <label htmlFor="quantity-input" className="block text-sm font-medium text-gray-700 mb-1">
+                                Quantidade Contada:
+                            </label>
+                            <div className="flex items-center">
+                                <input
+                                    id="quantity-input"
+                                    type="number"
+                                    min="0"
+                                    value={countedQuantities[selectedProduct.id] || ''}
+                                    onChange={(e) => handleQuantityChange(selectedProduct.id, e.target.value)}
+                                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Quantidade"
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            setSelectedProduct(null);
+                                            if (countMode === 'barcode') {
+                                                // Foca de volta no input de código de barras
+                                                const barcodeInput = document.querySelector('input[placeholder="Código de barras ou SKU..."]');
+                                                if (barcodeInput) barcodeInput.focus();
+                                            }
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <div className="mt-6 flex justify-between">
+                <div>
+                    <span className="text-gray-700 font-medium">
+                        {Object.values(countedQuantities).filter(qty => qty !== '').length} produtos contados
+                    </span>
+                </div>
+                <div className="flex space-x-4">
+                    <button 
+                        onClick={() => navigate('/counting')}
+                        className="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors"
+                    >
+                        Cancelar
+                    </button>
+                    <button 
+                        onClick={handleFinalizeCount}
+                        disabled={loading || Object.values(countedQuantities).every(qty => qty === '')}
+                        className={`px-6 py-2 text-white rounded-md font-medium flex items-center space-x-2 transition-colors ${
+                            isOnline 
+                                ? 'bg-green-600 hover:bg-green-700 disabled:bg-green-300' 
+                                : 'bg-orange-600 hover:bg-orange-700 disabled:bg-orange-300'
+                        }`}
+                    >
+                        <FaSave />
+                        <span>
+                            {loading 
+                                ? 'Salvando...' 
+                                : isOnline 
+                                    ? 'Finalizar Contagem' 
+                                    : 'Salvar Offline'
+                            }
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}

@@ -36,7 +36,7 @@ const DeadStockReport = () => {
                     totalStock,
                     cost,
                     deadValue,
-                    lastMovementDate: lastMovementDate ? format(lastMovementDate, 'dd/MM/yyyy') : 'Nunca teve saÃ­da'
+                    lastMovementDate: lastMovementDate ? format(lastMovementDate, 'dd/MM/yyyy') : 'Nunca teve saída'
                 };
             }
             return null;
@@ -54,11 +54,11 @@ const DeadStockReport = () => {
         <div className="bg-white p-6 rounded-lg shadow-md">
             <div className="flex justify-between items-start mb-4">
                 <div>
-                    <h3 className="text-xl font-bold text-gray-800">RelatÃ³rio de Estoque Obsoleto</h3>
-                    <p className="text-gray-600 mt-1">Identifica produtos sem movimentaÃ§Ã£o de saÃ­da no perÃ­odo selecionado.</p>
+                    <h3 className="text-xl font-bold text-gray-800">Relatório de Estoque Obsoleto</h3>
+                    <p className="text-gray-600 mt-1">Identifica produtos sem movimentação de saída no período selecionado.</p>
                 </div>
                 <div>
-                    <label htmlFor="period" className="block text-sm font-medium text-gray-700">Sem SaÃ­da nos Ãšltimos</label>
+                    <label htmlFor="period" className="block text-sm font-medium text-gray-700">Sem Saída nos Últimos</label>
                     <select id="period" value={periodDays} onChange={e => setPeriodDays(Number(e.target.value))} className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                         <option value="90">90 dias</option>
                         <option value="180">180 dias (6 meses)</option>
@@ -74,7 +74,7 @@ const DeadStockReport = () => {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produto</th>
                             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Estoque Parado</th>
                             <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Valor Parado</th>
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Ãšltima SaÃ­da</th>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Última Saída</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -90,7 +90,7 @@ const DeadStockReport = () => {
                                 </tr>
                             ))
                         ) : (
-                            <tr><td colSpan="4" className="text-center py-10">Nenhum produto obsoleto encontrado para o perÃ­odo selecionado.</td></tr>
+                            <tr><td colSpan="4" className="text-center py-10">Nenhum produto obsoleto encontrado para o período selecionado.</td></tr>
                         )}
                     </tbody>
                      <tfoot className="bg-gray-100">

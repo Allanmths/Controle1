@@ -89,7 +89,7 @@ const AuditPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end">
                     {/* Date Start */}
                     <div className="relative">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Data InÃ­cio</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Data Início</label>
                         <FaCalendarAlt className="absolute top-9 left-3 text-gray-400 z-10" />
                         <DatePicker 
                             selected={startDate}

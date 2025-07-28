@@ -26,7 +26,7 @@ export default function StockReport() {
     return (
         <div className="bg-white p-6 rounded-lg shadow-sm">
             <div className="flex justify-between items-center mb-4 print:hidden">
-                <h3 className="text-xl font-semibold text-gray-800">RelatÃ³rio de PosiÃ§Ã£o de Estoque</h3>
+                <h3 className="text-xl font-semibold text-gray-800">Relatório de Posição de Estoque</h3>
                 <button onClick={handlePrint} className="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-lg flex items-center">
                     <i className="fas fa-print mr-2"></i>
                     Imprimir
@@ -34,11 +34,11 @@ export default function StockReport() {
             </div>
 
             <div className="print:block">
-                <h2 className="text-2xl font-bold text-center mb-2 hidden print:block">RelatÃ³rio de Estoque</h2>
+                <h2 className="text-2xl font-bold text-center mb-2 hidden print:block">Relatório de Estoque</h2>
                 <p className="text-center text-sm text-gray-500 mb-6 hidden print:block">Gerado em: {new Date().toLocaleString('pt-BR')}</p>
 
                 {loading ? (
-                    <p className="text-center text-gray-500 py-4">Carregando dados do relatÃ³rio...</p>
+                    <p className="text-center text-gray-500 py-4">Carregando dados do relatório...</p>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
@@ -47,7 +47,7 @@ export default function StockReport() {
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produto</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoria</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Qtd. em Estoque</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PreÃ§o Unit.</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Preço Unit.</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valor Total</th>
                                 </tr>
                             </thead>

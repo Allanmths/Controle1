@@ -52,7 +52,7 @@ export const exportToExcel = (data, filename = 'lista_compras') => {
     ]);
     
     worksheetData.push([
-      'Itens CrÃ­ticos:',
+      'Itens Críticos:',
       data.summary?.criticalItems || 0,
       '',
       'Fornecedores:',
@@ -68,7 +68,7 @@ export const exportToExcel = (data, filename = 'lista_compras') => {
       'Fornecedor',
       'Estoque Atual',
       'Qtd. Sugerida',
-      'PreÃ§o Unit.',
+      'Preço Unit.',
       'Total',
       'Prioridade'
     ]);
@@ -83,9 +83,9 @@ export const exportToExcel = (data, filename = 'lista_compras') => {
           item.suggestedQuantity,
           `R$ ${(item.unitCost || 0).toFixed(2)}`,
           `R$ ${(item.totalCost || 0).toFixed(2)}`,
-          item.priority === 'critical' ? 'CrÃ­tico' :
+          item.priority === 'critical' ? 'Crítico' :
           item.priority === 'high' ? 'Alto' :
-          item.priority === 'medium' ? 'MÃ©dio' : 'Baixo'
+          item.priority === 'medium' ? 'Médio' : 'Baixo'
         ]);
       });
     }
@@ -93,7 +93,7 @@ export const exportToExcel = (data, filename = 'lista_compras') => {
     // Criar worksheet
     const ws = XLSX.utils.aoa_to_sheet(worksheetData);
     
-    // EstilizaÃ§Ã£o
+    // Estilização
     const range = XLSX.utils.decode_range(ws['!ref']);
     
     // Largura das colunas
@@ -102,7 +102,7 @@ export const exportToExcel = (data, filename = 'lista_compras') => {
       { width: 20 }, // Fornecedor
       { width: 15 }, // Estoque Atual
       { width: 15 }, // Qtd. Sugerida
-      { width: 15 }, // PreÃ§o Unit.
+      { width: 15 }, // Preço Unit.
       { width: 15 }, // Total
       { width: 15 }  // Prioridade
     ];
@@ -142,7 +142,7 @@ export const exportToPDF = (data, filename = 'lista_compras') => {
     
     doc.setFontSize(10);
     doc.text(`Total de Itens: ${data.summary?.totalItems || 0}`, 20, 90);
-    doc.text(`Itens CrÃ­ticos: ${data.summary?.criticalItems || 0}`, 20, 100);
+    doc.text(`Itens Críticos: ${data.summary?.criticalItems || 0}`, 20, 100);
     doc.text(`Custo Total: R$ ${(data.summary?.totalCost || 0).toFixed(2)}`, 20, 110);
     doc.text(`Fornecedores: ${data.summary?.suppliers || 0}`, 20, 120);
     
@@ -155,13 +155,13 @@ export const exportToPDF = (data, filename = 'lista_compras') => {
         item.suggestedQuantity.toString(),
         `R$ ${(item.unitCost || 0).toFixed(2)}`,
         `R$ ${(item.totalCost || 0).toFixed(2)}`,
-        item.priority === 'critical' ? 'CrÃ­tico' :
+        item.priority === 'critical' ? 'Crítico' :
         item.priority === 'high' ? 'Alto' :
-        item.priority === 'medium' ? 'MÃ©dio' : 'Baixo'
+        item.priority === 'medium' ? 'Médio' : 'Baixo'
       ]);
       
       doc.autoTable({
-        head: [['Produto', 'Fornecedor', 'Estoque', 'Qtd.', 'PreÃ§o', 'Total', 'Prioridade']],
+        head: [['Produto', 'Fornecedor', 'Estoque', 'Qtd.', 'Preço', 'Total', 'Prioridade']],
         body: tableData,
         startY: 135,
         styles: {
@@ -180,14 +180,14 @@ export const exportToPDF = (data, filename = 'lista_compras') => {
           1: { cellWidth: 30 }, // Fornecedor
           2: { cellWidth: 20 }, // Estoque
           3: { cellWidth: 20 }, // Quantidade
-          4: { cellWidth: 25 }, // PreÃ§o
+          4: { cellWidth: 25 }, // Preço
           5: { cellWidth: 25 }, // Total
           6: { cellWidth: 25 }  // Prioridade
         }
       });
     }
     
-    // RodapÃ©
+    // Rodapé
     const pageCount = doc.internal.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
@@ -220,7 +220,7 @@ export const exportToCSV = (data, filename = 'lista_compras') => {
       'Fornecedor',
       'Estoque Atual',
       'Quantidade Sugerida',
-      'PreÃ§o UnitÃ¡rio',
+      'Preço Unitário',
       'Total',
       'Prioridade'
     ]);
@@ -235,9 +235,9 @@ export const exportToCSV = (data, filename = 'lista_compras') => {
           item.suggestedQuantity,
           (item.unitCost || 0).toFixed(2),
           (item.totalCost || 0).toFixed(2),
-          item.priority === 'critical' ? 'CrÃ­tico' :
+          item.priority === 'critical' ? 'Crítico' :
           item.priority === 'high' ? 'Alto' :
-          item.priority === 'medium' ? 'MÃ©dio' : 'Baixo'
+          item.priority === 'medium' ? 'Médio' : 'Baixo'
         ]);
       });
     }

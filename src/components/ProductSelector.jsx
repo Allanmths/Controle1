@@ -51,7 +51,7 @@ const ProductSelector = ({ onProductSelect, selectedProductId, placeholder = "Se
             // Filtro por nome
             const matchesName = product.name.toLowerCase().includes(searchTerm.toLowerCase());
             
-            // Filtro por cÃ³digo (se existir)
+            // Filtro por código (se existir)
             const matchesCode = product.code ? 
                 product.code.toLowerCase().includes(searchTerm.toLowerCase()) : false;
             
@@ -139,13 +139,13 @@ const ProductSelector = ({ onProductSelect, selectedProductId, placeholder = "Se
                     <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-96 overflow-hidden">
                         {/* Header com filtros */}
                         <div className="p-3 border-b border-gray-200 dark:border-gray-600 space-y-3">
-                            {/* Busca por nome/cÃ³digo */}
+                            {/* Busca por nome/código */}
                             <div className="relative">
                                 <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 <input
                                     ref={searchInputRef}
                                     type="text"
-                                    placeholder="Buscar por nome ou cÃ³digo..."
+                                    placeholder="Buscar por nome ou código..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
@@ -198,7 +198,7 @@ const ProductSelector = ({ onProductSelect, selectedProductId, placeholder = "Se
                                                     </h4>
                                                     <div className="flex items-center gap-3 mt-1 text-sm text-gray-500 dark:text-gray-400">
                                                         {product.code && (
-                                                            <span>CÃ³digo: {product.code}</span>
+                                                            <span>Código: {product.code}</span>
                                                         )}
                                                         {category && (
                                                             <span>Categoria: {category.name}</span>
@@ -248,7 +248,7 @@ const ProductSelector = ({ onProductSelect, selectedProductId, placeholder = "Se
                             </h4>
                             <div className="flex items-center gap-3 mt-1 text-sm text-blue-700 dark:text-blue-300">
                                 {selectedProduct.code && (
-                                    <span>CÃ³digo: {selectedProduct.code}</span>
+                                    <span>Código: {selectedProduct.code}</span>
                                 )}
                                 <span>
                                     Estoque: {Object.values(selectedProduct.locations || {})

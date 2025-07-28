@@ -29,7 +29,7 @@ ChartJS.register(
 );
 
 const AdvancedCharts = ({ products = [], categories = [] }) => {
-  // ConfiguraÃ§Ãµes de tema para os grÃ¡ficos
+  // Configurações de tema para os gráficos
   const isDark = document.documentElement.classList.contains('dark');
   
   const chartColors = {
@@ -152,7 +152,7 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
     };
   }, [products, chartColors]);
 
-  // AnÃ¡lise ABC para grÃ¡fico de rosca
+  // Análise ABC para gráfico de rosca
   const abcAnalysisData = useMemo(() => {
     if (!products.length) return null;
 
@@ -189,7 +189,7 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
     };
   }, [products, chartColors]);
 
-  // OpÃ§Ãµes padrÃ£o para os grÃ¡ficos
+  // Opções padrão para os gráficos
   const defaultOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -283,10 +283,10 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
         </div>
       </div>
 
-      {/* AnÃ¡lise ABC */}
+      {/* Análise ABC */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          AnÃ¡lise ABC - DistribuiÃ§Ã£o de Produtos
+          Análise ABC - Distribuição de Produtos
         </h3>
         <div className="h-80">
           {abcAnalysisData && <Doughnut data={abcAnalysisData} options={doughnutOptions} />}

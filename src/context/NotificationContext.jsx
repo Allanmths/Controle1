@@ -16,7 +16,7 @@ export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  // Carregar notificaÃ§Ãµes do localStorage
+  // Carregar notificações do localStorage
   useEffect(() => {
     try {
       const savedNotifications = localStorage.getItem('notifications');
@@ -26,23 +26,23 @@ export const NotificationProvider = ({ children }) => {
         setUnreadCount(parsed.filter(n => !n.read).length);
       }
     } catch (error) {
-      console.error('Erro ao carregar notificaÃ§Ãµes:', error);
+      console.error('Erro ao carregar notificações:', error);
     }
   }, []);
 
-  // Salvar notificaÃ§Ãµes no localStorage
+  // Salvar notificações no localStorage
   useEffect(() => {
     try {
       localStorage.setItem('notifications', JSON.stringify(notifications));
       setUnreadCount(notifications.filter(n => !n.read).length);
     } catch (error) {
-      console.error('Erro ao salvar notificaÃ§Ãµes:', error);
+      console.error('Erro ao salvar notificações:', error);
     }
   }, [notifications]);
 
-  // Adicionar nova notificaÃ§Ã£o
+  // Adicionar nova notificação
   const addNotification = (notification) => {
-    // Verificar duplicatas recentes (Ãºltima hora) para notificaÃ§Ãµes de estoque
+    // Verificar duplicatas recentes (última hora) para notificações de estoque
     const now = Date.now();
     const oneHourAgo = now - 3600000; // 1 hora em milliseconds
     
@@ -58,8 +58,8 @@ export const NotificationProvider = ({ children }) => {
       });
       
       if (isDuplicate) {
-        console.log('NotificaÃ§Ã£o duplicada ignorada:', notification);
-        return null; // NÃ£o adicionar duplicata
+        console.log('Notificação duplicada ignorada:', notification);
+        return null; // Não adicionar duplicata
       }
     }
 
@@ -70,7 +70,7 @@ export const NotificationProvider = ({ children }) => {
       ...notification
     };
 
-    setNotifications(prev => [newNotification, ...prev.slice(0, 49)]); // MÃ¡ximo 50 notificaÃ§Ãµes
+    setNotifications(prev => [newNotification, ...prev.slice(0, 49)]); // Máximo 50 notificações
 
     // Mostrar toast se especificado
     if (notification.showToast !== false) {
@@ -97,7 +97,7 @@ export const NotificationProvider = ({ children }) => {
     return newNotification.id;
   };
 
-  // Marcar notificaÃ§Ã£o como lida
+  // Marcar notificação como lida
   const markAsRead = (id) => {
     setNotifications(prev => 
       prev.map(notification => 
@@ -115,22 +115,22 @@ export const NotificationProvider = ({ children }) => {
     );
   };
 
-  // Remover notificaÃ§Ã£o
+  // Remover notificação
   const removeNotification = (id) => {
     setNotifications(prev => prev.filter(notification => notification.id !== id));
   };
 
-  // Limpar todas as notificaÃ§Ãµes
+  // Limpar todas as notificações
   const clearAll = () => {
     setNotifications([]);
   };
 
-  // NotificaÃ§Ãµes especÃ­ficas do sistema
+  // Notificações específicas do sistema
   const notifyLowStock = (product, currentStock) => {
     return addNotification({
       type: 'warning',
       title: `Estoque Baixo - ${product.name}`,
-      message: `${product.name} estÃ¡ com estoque baixo: ${currentStock} unidades`,
+      message: `${product.name} está com estoque baixo: ${currentStock} unidades`,
       action: {
         label: 'Ver Produto',
         href: `/stock?search=${encodeURIComponent(product.name)}`
@@ -145,7 +145,7 @@ export const NotificationProvider = ({ children }) => {
     return addNotification({
       type: 'error',
       title: `Produto Sem Estoque - ${product.name}`,
-      message: `${product.name} estÃ¡ sem estoque!`,
+      message: `${product.name} está sem estoque!`,
       action: {
         label: 'Repor Estoque',
         href: `/stock?search=${encodeURIComponent(product.name)}`
@@ -159,8 +159,8 @@ export const NotificationProvider = ({ children }) => {
   const notifyStockMovement = (type, product, quantity, location) => {
     const typeLabels = {
       entrada: 'Entrada',
-      saida: 'SaÃ­da',
-      transfer: 'TransferÃªncia'
+      saida: 'Saída',
+      transfer: 'Transferência'
     };
 
     return addNotification({
@@ -168,10 +168,10 @@ export const NotificationProvider = ({ children }) => {
       title: `${typeLabels[type]} de Estoque - ${product.name}`,
       message: `${quantity} unidades de ${product.name} - ${location}`,
       action: {
-        label: 'Ver MovimentaÃ§Ãµes',
+        label: 'Ver Movimentações',
         href: '/movements'
       },
-      showToast: false, // NÃ£o mostrar toast para movimentaÃ§Ãµes
+      showToast: false, // Não mostrar toast para movimentações
       category: 'movement',
       productId: product.id,
       productName: product.name
@@ -181,10 +181,10 @@ export const NotificationProvider = ({ children }) => {
   const notifyBackupCompleted = (itemCount) => {
     return addNotification({
       type: 'success',
-      title: 'Backup ConcluÃ­do',
+      title: 'Backup Concluído',
       message: `Backup realizado com sucesso! ${itemCount} itens salvos.`,
       action: {
-        label: 'Ver ConfiguraÃ§Ãµes',
+        label: 'Ver Configurações',
         href: '/settings'
       },
       category: 'system'
@@ -194,7 +194,7 @@ export const NotificationProvider = ({ children }) => {
   const notifyUserAction = (action, target, user) => {
     return addNotification({
       type: 'info',
-      title: 'AÃ§Ã£o do UsuÃ¡rio',
+      title: 'Ação do Usuário',
       message: `${user} ${action} ${target}`,
       showToast: false,
       category: 'audit'
@@ -224,7 +224,7 @@ export const NotificationProvider = ({ children }) => {
   );
 };
 
-// Helper para Ã­cones
+// Helper para ícones
 const getNotificationIcon = (type) => {
   const icons = {
     success: <FaCheckCircle className="text-green-500" />,

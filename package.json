@@ -16,7 +16,7 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist -b gh-pages --spa",
+    "deploy": "gh-pages -d dist -b gh-pages",
     "clean": "rm -rf dist node_modules package-lock.json",
     "reinstall": "npm run clean && npm install",
     "analyze": "npm run build && npx vite-bundle-analyzer dist"

@@ -1,0 +1,380 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { collection, query, orderBy, limit, getDocs, where } from 'firebase/firestore';
+import { db } from '../services/firebase';
+import { useAuth } from '../context/AuthContext';
+import useFirestore from '../hooks/useFirestore';
+import { 
+  FaBox, FaBoxes, FaTags, FaExclamationTriangle, 
+  FaArrowUp, FaArrowDown, FaExchangeAlt, FaCalendarAlt,
+  FaChartLine, FaUsers, FaCog, FaPlus, FaEye,
+  FaArrowRight, FaChevronUp, FaChevronDown
+} from 'react-icons/fa';
+import { format, isToday, isYesterday } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { Link } from 'react-router-dom';
+
+const ActivityItem = ({ movement, products, locations }) => {
+  const product = products?.find(p => p.id === movement.productId);
+  const location = locations?.find(l => l.id === movement.locationId);
+  const productName = product ? product.name : 'Produto não encontrado';
+  const locationName = location ? location.name : movement.locationName || 'Local não especificado';
+  
+  let date = 'Data inválida';
+  if (movement.timestamp?.toDate) {
+    const moveDate = movement.timestamp.toDate();
+    if (isToday(moveDate)) {
+      date = `Hoje às ${format(moveDate, 'HH:mm')}`;
+    } else if (isYesterday(moveDate)) {
+      date = `Ontem às ${format(moveDate, 'HH:mm')}`;
+    } else {
+      date = format(moveDate, "dd 'de' MMM 'às' HH:mm", { locale: ptBR });
+    }
+  }
+
+  let icon, color, description;
+  const quantityChanged = Math.abs(movement.quantityChanged || movement.quantity || 0);
+  
+  if (movement.type === 'entrada' || movement.type === 'Entrada Inicial') {
+    icon = <FaArrowUp className="text-green-600" />;
+    color = 'bg-green-100';
+    description = `Entrada de ${quantityChanged} ${product?.unit || 'un'} de ${productName}`;
+  } else if (movement.type === 'saida' || (movement.type === 'Ajuste Manual' && movement.quantityChanged < 0)) {
+    icon = <FaArrowDown className="text-red-600" />;
+    color = 'bg-red-100';
+    description = `Saída de ${quantityChanged} ${product?.unit || 'un'} de ${productName}`;
+  } else if (movement.type === 'transferencia') {
+    icon = <FaExchangeAlt className="text-blue-600" />;
+    color = 'bg-blue-100';
+    description = `Transferência de ${quantityChanged} ${product?.unit || 'un'} de ${productName}`;
+  } else {
+    icon = <FaExchangeAlt className="text-gray-600" />;
+    color = 'bg-gray-100';
+    description = `Movimentação de ${productName}`;
+  }
+
+  return (
+    <div className={`${color} p-3 rounded-lg flex items-center justify-between mb-2`}>
+      <div className="flex items-center">
+        <div className="p-2 rounded-full bg-white mr-3">
+          {icon}
+        </div>
+        <div>
+          <p className="font-medium">{description}</p>
+          <p className="text-sm text-gray-600">{locationName}</p>
+        </div>
+      </div>
+      <div className="text-sm text-gray-500">{date}</div>
+    </div>
+  );
+};
+
+const QuickAccessCard = ({ icon: Icon, title, description, to, color }) => {
+  const navigate = useNavigate();
+  return (
+    <div 
+      onClick={() => navigate(to)}
+      className={`${color} p-4 rounded-lg cursor-pointer transition-transform transform hover:scale-105 flex items-center`}
+    >
+      <div className="p-3 rounded-full bg-white mr-3">
+        <Icon className={title === 'Produtos' ? 'text-blue-600' : 
+                          title === 'Estoque' ? 'text-green-600' : 
+                          title === 'Categorias' ? 'text-purple-600' : 
+                          'text-orange-600'} size={20} />
+      </div>
+      <div>
+        <h3 className="font-bold text-gray-800">{title}</h3>
+        <p className="text-sm text-gray-600">{description}</p>
+      </div>
+    </div>
+  );
+};
+
+const StatsCard = ({ title, value, icon: Icon, color }) => (
+  <div className="bg-white p-5 rounded-lg shadow-md">
+    <div className="flex justify-between items-center">
+      <div>
+        <p className="text-sm text-gray-500">{title}</p>
+        <p className="text-2xl font-bold">{value}</p>
+      </div>
+      <div className={`p-3 rounded-full ${color}`}>
+        <Icon className="text-white" size={20} />
+      </div>
+    </div>
+  </div>
+);
+
+const AlertItem = ({ product }) => (
+  <div className="bg-white p-3 border-l-4 border-red-500 rounded shadow-sm flex items-center justify-between mb-2">
+    <div>
+      <h4 className="font-medium">{product.name}</h4>
+      <p className="text-sm text-gray-500">Estoque atual: <span className="text-red-500 font-medium">{product.totalStock}</span></p>
+    </div>
+    <Link to={`/product/${product.id}`} className="text-blue-500 hover:text-blue-700">
+      <FaEye />
+    </Link>
+  </div>
+);
+
+const HomePage = () => {
+  const { userData } = useAuth();
+  const navigate = useNavigate();
+  
+  // Get recent products using useFirestore hook
+  const { docs: products, loading: loadingProducts } = useFirestore(
+    'products',
+    { field: 'createdAt', direction: 'desc' },
+    limit(10)
+  );
+  
+  // Get locations for reference
+  const { docs: locations } = useFirestore('locations');
+  
+  // States for data
+  const [recentMovements, setRecentMovements] = useState([]);
+  const [loadingMovements, setLoadingMovements] = useState(true);
+  const [lowStockProducts, setLowStockProducts] = useState([]);
+  const [loadingLowStock, setLoadingLowStock] = useState(true);
+  const [stats, setStats] = useState({
+    totalProducts: 0,
+    totalStock: 0,
+    categories: 0,
+    locations: 0,
+  });
+
+  // Fetch recent movements
+  useEffect(() => {
+    const fetchRecentMovements = async () => {
+      try {
+        const q = query(
+          collection(db, 'kardex'),
+          orderBy('timestamp', 'desc'),
+          limit(5)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        const movements = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        
+        setRecentMovements(movements);
+        setLoadingMovements(false);
+      } catch (error) {
+        console.error("Erro ao buscar movimentações recentes:", error);
+        setLoadingMovements(false);
+      }
+    };
+    
+    fetchRecentMovements();
+  }, []);
+  
+  // Fetch low stock products
+  useEffect(() => {
+    const fetchLowStockProducts = async () => {
+      try {
+        const q = query(
+          collection(db, 'products'),
+          where('totalStock', '<', 10),
+          orderBy('totalStock', 'asc'),
+          limit(5)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        const lowStock = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        
+        setLowStockProducts(lowStock);
+        setLoadingLowStock(false);
+      } catch (error) {
+        console.error("Erro ao buscar produtos com estoque baixo:", error);
+        setLoadingLowStock(false);
+      }
+    };
+    
+    fetchLowStockProducts();
+  }, []);
+  
+  // Calculate stats
+  useEffect(() => {
+    const calculateStats = async () => {
+      try {
+        // Total products count
+        const productsQuery = query(collection(db, 'products'));
+        const productsSnapshot = await getDocs(productsQuery);
+        const totalProducts = productsSnapshot.size;
+        
+        // Total stock quantity
+        let totalStock = 0;
+        productsSnapshot.docs.forEach(doc => {
+          const product = doc.data();
+          totalStock += product.totalStock || 0;
+        });
+        
+        // Categories count
+        const categoriesQuery = query(collection(db, 'categories'));
+        const categoriesSnapshot = await getDocs(categoriesQuery);
+        const categoriesCount = categoriesSnapshot.size;
+        
+        // Locations count
+        const locationsQuery = query(collection(db, 'locations'));
+        const locationsSnapshot = await getDocs(locationsQuery);
+        const locationsCount = locationsSnapshot.size;
+        
+        setStats({
+          totalProducts,
+          totalStock,
+          categories: categoriesCount,
+          locations: locationsCount
+        });
+      } catch (error) {
+        console.error("Erro ao calcular estatísticas:", error);
+      }
+    };
+    
+    calculateStats();
+  }, []);
+
+  return (
+    <div className="p-6">
+      {/* Boas-vindas */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">Bem-vindo, {userData?.displayName || userData?.email || 'Usuário'}!</h1>
+        <p className="text-gray-600">
+          Este é seu sistema de controle de estoque. Monitore, gerencie e tome decisões baseadas nos dados atualizados.
+        </p>
+      </div>
+      
+      {/* Acesso Rápido */}
+      <div className="mb-8">
+        <h2 className="text-lg font-medium text-gray-700 mb-4">Acesso Rápido</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <QuickAccessCard
+            icon={FaBoxes}
+            title="Produtos"
+            description="Gerencie seu catálogo"
+            to="/registers/products"
+            color="bg-blue-100"
+          />
+          <QuickAccessCard
+            icon={FaBox}
+            title="Estoque"
+            description="Consulte disponibilidade"
+            to="/stock"
+            color="bg-green-100"
+          />
+          <QuickAccessCard
+            icon={FaTags}
+            title="Categorias"
+            description="Organize seus itens"
+            to="/registers/categories"
+            color="bg-purple-100"
+          />
+          <QuickAccessCard
+            icon={FaExchangeAlt}
+            title="Movimentações"
+            description="Entradas e saídas"
+            to="/movements"
+            color="bg-orange-100"
+          />
+        </div>
+      </div>
+      
+      {/* Indicadores */}
+      <div className="mb-8">
+        <h2 className="text-lg font-medium text-gray-700 mb-4">Indicadores</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatsCard 
+            title="Total de Produtos"
+            value={stats.totalProducts}
+            icon={FaBoxes}
+            color="bg-blue-500"
+          />
+          <StatsCard 
+            title="Itens em Estoque"
+            value={stats.totalStock}
+            icon={FaBox}
+            color="bg-green-500"
+          />
+          <StatsCard 
+            title="Categorias"
+            value={stats.categories}
+            icon={FaTags}
+            color="bg-purple-500"
+          />
+          <StatsCard 
+            title="Locais de Armazenamento"
+            value={stats.locations}
+            icon={FaCog}
+            color="bg-gray-500"
+          />
+        </div>
+      </div>
+      
+      {/* Conteúdo Principal em 2 colunas */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Atividade Recente */}
+        <div className="bg-white p-5 rounded-lg shadow-md">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-medium text-gray-700">Atividade Recente</h2>
+            <Link to="/movements" className="text-blue-500 flex items-center hover:underline">
+              Ver todas <FaArrowRight className="ml-1" size={12} />
+            </Link>
+          </div>
+          {loadingMovements ? (
+            <div className="animate-pulse">
+              {[1, 2, 3].map((item) => (
+                <div key={item} className="bg-gray-200 p-4 rounded-lg mb-2 h-16"></div>
+              ))}
+            </div>
+          ) : recentMovements.length > 0 ? (
+            <div>
+              {recentMovements.map((movement) => (
+                <ActivityItem 
+                  key={movement.id} 
+                  movement={movement}
+                  products={products}
+                  locations={locations}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 text-center py-4">Nenhuma atividade recente encontrada</p>
+          )}
+        </div>
+        
+        {/* Alertas de Estoque Baixo */}
+        <div className="bg-white p-5 rounded-lg shadow-md">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-medium text-gray-700">Alertas de Estoque Baixo</h2>
+            <Link to="/stock" className="text-blue-500 flex items-center hover:underline">
+              Ver todos <FaArrowRight className="ml-1" size={12} />
+            </Link>
+          </div>
+          {loadingLowStock ? (
+            <div className="animate-pulse">
+              {[1, 2, 3].map((item) => (
+                <div key={item} className="bg-gray-200 p-4 rounded-lg mb-2 h-16"></div>
+              ))}
+            </div>
+          ) : lowStockProducts.length > 0 ? (
+            <div>
+              {lowStockProducts.map((product) => (
+                <AlertItem key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-4">
+              <FaExclamationTriangle className="text-green-500 text-4xl mx-auto mb-2" />
+              <p className="text-gray-500">Nenhum produto com estoque baixo!</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default HomePage;

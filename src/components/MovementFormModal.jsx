@@ -51,7 +51,7 @@ export default function MovementFormModal({ isOpen, onClose }) {
             await runTransaction(db, async (transaction) => {
                 const productDoc = await transaction.get(productRef);
                 if (!productDoc.exists()) {
-                    throw new Error('Produto nÃ£o encontrado!');
+                    throw new Error('Produto não encontrado!');
                 }
 
                 const currentQuantity = productDoc.data().totalQuantity || 0;
@@ -61,7 +61,7 @@ export default function MovementFormModal({ isOpen, onClose }) {
                     newQuantity = currentQuantity + numQuantity;
                 } else { // saida
                     if (currentQuantity < numQuantity) {
-                        throw new Error('Estoque insuficiente para realizar a saÃ­da.');
+                        throw new Error('Estoque insuficiente para realizar a saída.');
                     }
                     newQuantity = currentQuantity - numQuantity;
                 }
@@ -80,27 +80,27 @@ export default function MovementFormModal({ isOpen, onClose }) {
             onClose();
         } catch (err) {
             console.error('Transaction failed: ', err);
-            setError(err.message || 'Falha ao registrar a movimentaÃ§Ã£o.');
+            setError(err.message || 'Falha ao registrar a movimentação.');
         }
         setLoading(false);
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Registrar Nova MovimentaÃ§Ã£o">
+        <Modal isOpen={isOpen} onClose={onClose} title="Registrar Nova Movimentação">
             <form onSubmit={handleSubmit} className="space-y-4">
                 {error && <p className="bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400 p-3 rounded-lg">{error}</p>}
                 
                 <ProductSelector 
                     onProductSelect={(product) => setFormData(prev => ({ ...prev, selectedProduct: product }))}
                     selectedProductId={formData.selectedProduct?.id}
-                    placeholder="Buscar produto para movimentaÃ§Ã£o..."
+                    placeholder="Buscar produto para movimentação..."
                 />
 
                 <div>
-                    <label htmlFor="type" className="block text-sm font-medium text-gray-700">Tipo de MovimentaÃ§Ã£o</label>
+                    <label htmlFor="type" className="block text-sm font-medium text-gray-700">Tipo de Movimentação</label>
                     <select name="type" id="type" value={formData.type} onChange={handleChange} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-white">
                         <option value="entrada">Entrada</option>
-                        <option value="saida">SaÃ­da</option>
+                        <option value="saida">Saída</option>
                     </select>
                 </div>
 

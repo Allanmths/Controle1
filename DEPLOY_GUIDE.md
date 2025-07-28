@@ -10,7 +10,7 @@
 > **IMPORTANTE:** O sistema agora usa GitHub Actions para deploy automático.
 > Evite usar o comando `npm run deploy` manualmente.
 
-## � Correções Recentes (19/07/2025 - 18:00)
+## 🛠 Correções Recentes (19/07/2025 - 18:00)
 
 ### Problemas Identificados e Corrigidos:
 

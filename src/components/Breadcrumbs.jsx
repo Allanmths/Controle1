@@ -10,11 +10,12 @@ const Breadcrumbs = () => {
         'dashboard': 'Dashboard',
         'stock': 'Estoque',
         'registers': 'Cadastros',
-        'movements': 'MovimentaÃ§Ãµes',
-        'reports': 'RelatÃ³rios',
-        'settings': 'ConfiguraÃ§Ãµes',
+        'movements': 'Movimentações',
+        'reports': 'Relatórios',
+        'settings': 'Configurações',
         'counting': 'Contagem',
-        'audit': 'Auditoria'
+        'audit': 'Auditoria',
+        'replenishment': 'Reposição'
     };
 
     if (pathnames.length === 0) return null;

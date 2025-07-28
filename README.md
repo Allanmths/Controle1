@@ -8,9 +8,10 @@ Sistema web completo para controle de estoque desenvolvido em React com Firebase
 - **Gestão de Produtos**: CRUD completo com categorias e fornecedores
 - **Controle de Estoque**: Entrada, saída e transferência de produtos
 - **Relatórios**: Análises ABC, estoque morto, valorização e movimentações
-- **Contagens**: Sistema de inventário e auditoria
+- **Contagens**: Sistema completo de inventário com modo rápido e completo
 - **Dashboard**: Visão geral com gráficos e métricas
 - **Multi-usuário**: Diferentes níveis de permissão
+- **Modo Offline**: Operação mesmo sem conexão com internet
 
 ## 🛠️ Tecnologias Utilizadas
 

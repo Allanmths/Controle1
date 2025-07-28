@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { FaTimes, FaBoxes, FaExclamationTriangle, FaPlus, FaTrash, FaSearch } from 'react-icons/fa';
-import { useReplenishmentManagement } from '../hooks/useReposicaoManagement';
+import { FaTimes, FaBoxes, FaExclamationTriangle, FaPlus, FaTrash, FaSearch } from 'react-ico      newErrors.items = 'Adicione pelo menos um item à solicitação';s/fa';
+import { useReplenishmentManagement } from '../hooks/useReplenishmentManagement';
 import { 
   collection, 
   getDocs, 
@@ -23,7 +23,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
   });
   const [errors, setErrors] = useState({});
 
-  // Buscar produtos disponíveis
+  // Buscar produtos disponÃ­veis
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -50,7 +50,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
           stockByProduct[stock.productId] += stock.quantity || 0;
         });
 
-        // Adicionar informações de estoque aos produtos
+        // Adicionar informaÃ§Ãµes de estoque aos produtos
         const productsWithStock = productsData
           .filter(product => product.isActive !== false)
           .map(product => ({
@@ -89,7 +89,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
     const existingItem = formData.items.find(item => item.productId === product.id);
     
     if (existingItem) {
-      // Se já existe, aumenta a quantidade
+      // Se jÃ¡ existe, aumenta a quantidade
       setFormData(prev => ({
         ...prev,
         items: prev.items.map(item =>
@@ -144,7 +144,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
     }
 
     if (formData.items.length === 0) {
-      newErrors.items = 'Adicione pelo menos um item à solicitação';
+      newErrors.items = 'Adicione pelo menos um item Ã  solicitaÃ§Ã£o';
     }
 
     formData.items.forEach((item, index) => {
@@ -167,7 +167,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
     try {
       await createReplenishmentRequest(formData);
       
-      // Limpar formulário
+      // Limpar formulÃ¡rio
       setFormData({
         title: '',
         description: '',
@@ -296,7 +296,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
                             
                             <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 mb-2">
                               <span>Estoque atual: {item.currentStock}</span>
-                              <span>Estoque mínimo: {item.minStock}</span>
+                              <span>Estoque mÃ­nimo: {item.minStock}</span>
                             </div>
 
                             <div className="grid grid-cols-2 gap-2">
@@ -408,7 +408,7 @@ const ReplenishmentRequestModal = ({ isOpen, onClose, onSuccess }) => {
                             
                             <div className="flex items-center space-x-4 text-xs text-gray-600">
                               <span>Estoque: {product.currentStock}</span>
-                              <span>Mínimo: {product.minStock || 'N/A'}</span>
+                              <span>MÃ­nimo: {product.minStock || 'N/A'}</span>
                               {product.category && <span>Categoria: {product.category}</span>}
                             </div>
                           </div>

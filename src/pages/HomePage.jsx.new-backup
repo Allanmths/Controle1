@@ -1,0 +1,316 @@
+import React, { useState, useEffect } from 'react';
+import { collection, query, orderBy, limit, getDocs, where } from 'firebase/firestore';
+import { db } from '../services/firebase';
+import { useAuth } from '../context/AuthContext';
+import useFirestore from '../hooks/useFirestore';
+import { FaBoxOpen, FaExchangeAlt, FaChartLine, FaClipboardList } from 'react-icons/fa';
+import { formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import SkeletonLoader from '../components/SkeletonLoader';
+import { Link } from 'react-router-dom';
+
+const HomePage = () => {
+    const { userData } = useAuth();
+    const { docs: lowStockProducts, loading: loadingLowStock } = useFirestore(
+        'products', 
+        { field: 'totalStock', direction: 'asc' },
+        limit(5),
+        where('totalStock', '<', 10)
+    );
+    
+    const [recentMovements, setRecentMovements] = useState([]);
+    const [loadingMovements, setLoadingMovements] = useState(true);
+    const [stats, setStats] = useState({
+        totalProducts: 0,
+        totalMovements: 0,
+        lowStockCount: 0,
+        pendingRequests: 0
+    });
+    const [loadingStats, setLoadingStats] = useState(true);
+
+    // Fetch recent movements from kardex
+    useEffect(() => {
+        const fetchRecentMovements = async () => {
+            try {
+                const q = query(
+                    collection(db, 'kardex'),
+                    orderBy('timestamp', 'desc'),
+                    limit(5)
+                );
+                
+                const querySnapshot = await getDocs(q);
+                const movements = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                
+                setRecentMovements(movements);
+                setLoadingMovements(false);
+            } catch (error) {
+                console.error("Error fetching recent movements:", error);
+                setLoadingMovements(false);
+            }
+        };
+        
+        fetchRecentMovements();
+    }, []);
+    
+    // Fetch dashboard stats
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                // Get total products
+                const productsQuery = query(collection(db, 'products'));
+                const productsSnapshot = await getDocs(productsQuery);
+                const totalProducts = productsSnapshot.size;
+                
+                // Get low stock count
+                const lowStockQuery = query(collection(db, 'products'), where('totalStock', '<', 10));
+                const lowStockSnapshot = await getDocs(lowStockQuery);
+                const lowStockCount = lowStockSnapshot.size;
+                
+                // Get total movements
+                const movementsQuery = query(collection(db, 'kardex'));
+                const movementsSnapshot = await getDocs(movementsQuery);
+                const totalMovements = movementsSnapshot.size;
+                
+                // Get pending requests
+                const requestsQuery = query(collection(db, 'replenishmentRequests'), where('status', '==', 'pendente'));
+                const requestsSnapshot = await getDocs(requestsQuery);
+                const pendingRequests = requestsSnapshot.size;
+                
+                setStats({
+                    totalProducts,
+                    totalMovements,
+                    lowStockCount,
+                    pendingRequests
+                });
+                setLoadingStats(false);
+            } catch (error) {
+                console.error("Error fetching stats:", error);
+                setLoadingStats(false);
+            }
+        };
+        
+        fetchStats();
+    }, []);
+
+    const getMovementTypeIcon = (type) => {
+        switch(type) {
+            case 'entrada':
+                return <span className="text-green-500">↑</span>;
+            case 'saida':
+                return <span className="text-red-500">↓</span>;
+            case 'transferencia':
+                return <span className="text-blue-500">↔</span>;
+            default:
+                return <span>•</span>;
+        }
+    };
+    
+    const getMovementTypeClass = (type) => {
+        switch(type) {
+            case 'entrada':
+                return 'bg-green-100 text-green-800';
+            case 'saida':
+                return 'bg-red-100 text-red-800';
+            case 'transferencia':
+                return 'bg-blue-100 text-blue-800';
+            default:
+                return 'bg-gray-100 text-gray-800';
+        }
+    };
+    
+    const formatMovementType = (type) => {
+        switch(type) {
+            case 'entrada':
+                return 'Entrada';
+            case 'saida':
+                return 'Saída';
+            case 'transferencia':
+                return 'Transferência';
+            default:
+                return type;
+        }
+    };
+
+    const formatTimeAgo = (timestamp) => {
+        if (!timestamp) return 'Data desconhecida';
+        
+        const date = timestamp.toDate();
+        return formatDistanceToNow(date, { addSuffix: true, locale: ptBR });
+    };
+
+    return (
+        <div className="p-6">
+            <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard</h1>
+            
+            {/* Welcome message */}
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
+                    Bem-vindo, {userData?.displayName || userData?.email || 'Usuário'}!
+                </h2>
+                <p className="text-gray-600 dark:text-gray-300">
+                    Este é o seu painel de controle de estoque. Aqui você pode monitorar os produtos, 
+                    movimentações e solicitar reposições quando necessário.
+                </p>
+            </div>
+            
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                {/* Total Products */}
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex items-center">
+                    <div className="p-3 rounded-full bg-blue-100 text-blue-500 mr-4">
+                        <FaBoxOpen size={24} />
+                    </div>
+                    <div>
+                        <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium">Total de Produtos</h3>
+                        {loadingStats ? (
+                            <SkeletonLoader className="h-7 w-16 mt-1" />
+                        ) : (
+                            <p className="text-2xl font-semibold text-gray-700 dark:text-white">{stats.totalProducts}</p>
+                        )}
+                    </div>
+                </div>
+                
+                {/* Total Movements */}
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex items-center">
+                    <div className="p-3 rounded-full bg-green-100 text-green-500 mr-4">
+                        <FaExchangeAlt size={24} />
+                    </div>
+                    <div>
+                        <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium">Total de Movimentações</h3>
+                        {loadingStats ? (
+                            <SkeletonLoader className="h-7 w-16 mt-1" />
+                        ) : (
+                            <p className="text-2xl font-semibold text-gray-700 dark:text-white">{stats.totalMovements}</p>
+                        )}
+                    </div>
+                </div>
+                
+                {/* Low Stock Count */}
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex items-center">
+                    <div className="p-3 rounded-full bg-red-100 text-red-500 mr-4">
+                        <FaChartLine size={24} />
+                    </div>
+                    <div>
+                        <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium">Produtos com Estoque Baixo</h3>
+                        {loadingStats ? (
+                            <SkeletonLoader className="h-7 w-16 mt-1" />
+                        ) : (
+                            <p className="text-2xl font-semibold text-gray-700 dark:text-white">{stats.lowStockCount}</p>
+                        )}
+                    </div>
+                </div>
+                
+                {/* Pending Requests */}
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex items-center">
+                    <div className="p-3 rounded-full bg-yellow-100 text-yellow-500 mr-4">
+                        <FaClipboardList size={24} />
+                    </div>
+                    <div>
+                        <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium">Solicitações Pendentes</h3>
+                        {loadingStats ? (
+                            <SkeletonLoader className="h-7 w-16 mt-1" />
+                        ) : (
+                            <p className="text-2xl font-semibold text-gray-700 dark:text-white">{stats.pendingRequests}</p>
+                        )}
+                    </div>
+                </div>
+            </div>
+            
+            {/* Recent Activity and Low Stock */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Recent Activity */}
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Atividade Recente</h2>
+                        <Link to="/movements" className="text-sm text-blue-500 hover:text-blue-700 dark:hover:text-blue-300">
+                            Ver todas
+                        </Link>
+                    </div>
+                    {loadingMovements ? (
+                        <div className="space-y-3">
+                            {[...Array(5)].map((_, i) => (
+                                <SkeletonLoader key={i} className="h-14 w-full rounded-md" />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="space-y-3">
+                            {recentMovements.length > 0 ? (
+                                recentMovements.map(movement => (
+                                    <div key={movement.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                        <div className="flex items-center">
+                                            <div className="mr-3">
+                                                {getMovementTypeIcon(movement.type)}
+                                            </div>
+                                            <div>
+                                                <div className="font-medium text-gray-800 dark:text-white">{movement.productName}</div>
+                                                <div className="text-sm text-gray-500 dark:text-gray-400">
+                                                    <span className={`inline-block px-2 py-0.5 text-xs rounded-full ${getMovementTypeClass(movement.type)}`}>
+                                                        {formatMovementType(movement.type)}
+                                                    </span>
+                                                    <span className="ml-2">{movement.quantity} unid.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                                            {movement.timestamp ? formatTimeAgo(movement.timestamp) : 'N/A'}
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="text-center py-4 text-gray-500 dark:text-gray-400">
+                                    Nenhuma movimentação recente encontrada
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+                
+                {/* Low Stock Products */}
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Estoque Baixo</h2>
+                        <Link to="/stock" className="text-sm text-blue-500 hover:text-blue-700 dark:hover:text-blue-300">
+                            Ver todos
+                        </Link>
+                    </div>
+                    {loadingLowStock ? (
+                        <div className="space-y-3">
+                            {[...Array(5)].map((_, i) => (
+                                <SkeletonLoader key={i} className="h-14 w-full rounded-md" />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="space-y-3">
+                            {lowStockProducts && lowStockProducts.length > 0 ? (
+                                lowStockProducts.map(product => (
+                                    <div key={product.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                        <div>
+                                            <div className="font-medium text-gray-800 dark:text-white">{product.name}</div>
+                                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                                                <span className="inline-block px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-800">
+                                                    Estoque baixo
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="text-lg font-semibold text-red-500">
+                                            {product.totalStock} unid.
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="text-center py-4 text-gray-500 dark:text-gray-400">
+                                    Nenhum produto com estoque baixo
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default HomePage;

@@ -8,7 +8,7 @@ import {
 
 // Links de navegaÃ§Ã£o principais
 const mainNavLinks = [
-    { to: '/', text: 'InÃ­cio', icon: FaHome },
+    { to: '/', text: 'I­nício', icon: FaHome },
     { to: '/stock', text: 'Estoque', icon: FaBoxOpen },
     { to: '/registers', text: 'Cadastros', icon: FaPlusCircle },
     { to: '/movements', text: 'Movimentações', icon: FaExchangeAlt },

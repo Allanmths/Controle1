@@ -59,10 +59,10 @@ const NotificationDemo = () => {
       title: 'MovimentaÃ§Ã£o de Estoque',
       action: () => addNotification({
         type: 'info',
-        title: 'TransferÃªncia de Estoque - Whisky',
+        title: 'Transferência de Estoque - Whisky',
         message: '15 unidades de Whisky Johnnie Walker transferidas',
         action: {
-          label: 'Ver MovimentaÃ§Ãµes',
+          label: 'Ver Movimentações',
           href: '/movements'
         },
         category: 'movement',
@@ -84,13 +84,13 @@ const NotificationDemo = () => {
       })
     },
     {
-      title: 'Novo RelatÃ³rio',
+      title: 'Novo Relatório',
       action: () => addNotification({
         type: 'info',
-        title: 'RelatÃ³rio DisponÃ­vel',
-        message: 'Novo relatÃ³rio mensal de vendas estÃ¡ pronto para visualizaÃ§Ã£o',
+        title: 'Relatório Disponível',
+        message: 'Novo relatório mensal de vendas está pronto para visualização',
         action: {
-          label: 'Ver RelatÃ³rios',
+          label: 'Ver Relatórios',
           href: '/reports'
         },
         category: 'reports'

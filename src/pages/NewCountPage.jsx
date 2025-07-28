@@ -6,7 +6,7 @@ import useFirestore from '../hooks/useFirestore';
 import { useAuth } from '../context/AuthContext';
 import { useOfflineMode } from '../hooks/useOfflineMode';
 import toast from 'react-hot-toast';
-import { FaWifi, FaBan, FaPlus, FaEdit, FaTrash, FaCheck, FaTimes } from 'react-icons/fa';
+import { FaWifi, FaBan, FaPlus, FaEdit, FaTrash, FaCheck, FaTimes, FaSearch, FaSave } from 'react-icons/fa';
 
 export default function NewCountPage() {
     const { docs: products, loading: loadingProducts } = useFirestore('products');
@@ -44,7 +44,7 @@ export default function NewCountPage() {
 
     const handleFinalizeCount = async () => {
         if (Object.values(countedQuantities).some(qty => qty === '')) {
-            if (!window.confirm('Existem produtos com quantidade nÃ£o preenchida (serÃ£o contados como 0). Deseja continuar?')) {
+            if (!window.confirm('Existem produtos com quantidade não preenchida (serão contados como 0). Deseja continuar?')) {
                 return;
             }
         }
@@ -109,7 +109,7 @@ export default function NewCountPage() {
                         </div>
                         {!isOnline && (
                             <div className="text-sm text-orange-600 bg-orange-50 px-3 py-1 rounded-full">
-                                Dados serÃ£o salvos localmente
+                                Dados serão salvos localmente
                             </div>
                         )}
                     </div>
@@ -117,8 +117,8 @@ export default function NewCountPage() {
             </div>
             
             <p className="mb-6 text-gray-600">
-                Insira a quantidade contada para cada produto. Itens nÃ£o preenchidos serÃ£o considerados como 0.
-                {!isOnline && ' A contagem serÃ¡ sincronizada quando a conexÃ£o for restaurada.'}
+                Insira a quantidade contada para cada produto. Itens não preenchidos serão considerados como 0.
+                {!isOnline && ' A contagem será sincronizada quando a conexão for restaurada.'}
             </p>
             
             <div className="mb-4 relative">

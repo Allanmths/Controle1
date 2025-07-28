@@ -109,7 +109,7 @@ const SmartPurchaseListDashboard = () => {
       };
 
       await generatePurchaseList(listData);
-      await loadLowStockAnalysis(); // Recarregar anÃ¡lise
+      await loadLowStockAnalysis(); // Recarregar análise
     } catch (error) {
       console.error('Erro ao gerar lista de compras:', error);
     } finally {
@@ -213,7 +213,7 @@ const SmartPurchaseListDashboard = () => {
               <div className="flex items-center">
                 <FaExclamationTriangle className="w-6 h-6 text-red-600 mr-3" />
                 <div>
-                  <p className="text-sm text-red-600">Itens CrÃ­ticos</p>
+                  <p className="text-sm text-red-600">Itens Críticos</p>
                   <p className="text-2xl font-bold text-red-600">
                     {lowStockAnalysis.summary.criticalItems}
                   </p>
@@ -262,16 +262,16 @@ const SmartPurchaseListDashboard = () => {
             <div className="text-center py-8">
               <FaCheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
               <h4 className="text-lg font-medium text-gray-900 mb-2">
-                Estoque em nÃ­veis adequados
+                Estoque em níveis adequados
               </h4>
               <p className="text-gray-600">
-                Nenhum produto estÃ¡ com estoque abaixo do mÃ­nimo configurado.
+                Nenhum produto está com estoque abaixo do mínimo configurado.
               </p>
             </div>
           ) : (
             <div className="mt-4">
               <p className="text-sm text-gray-600 mb-2">
-                <strong>PrÃ³ximos itens crÃ­ticos:</strong>
+                <strong>Próximos itens críticos:</strong>
               </p>
               <div className="flex flex-wrap gap-2">
                 {(lowStockAnalysis.items || []).slice(0, 5).map(item => (
@@ -301,7 +301,7 @@ const SmartPurchaseListDashboard = () => {
               <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
-                placeholder="Buscar listas por tÃ­tulo ou criador..."
+                placeholder="Buscar listas por título ou criador..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -320,7 +320,7 @@ const SmartPurchaseListDashboard = () => {
               <option value={PURCHASE_LIST_STATUS.REVIEWED}>Revisada</option>
               <option value={PURCHASE_LIST_STATUS.SENT_TO_SUPPLIER}>Enviada</option>
               <option value={PURCHASE_LIST_STATUS.RECEIVED}>Recebida</option>
-              <option value={PURCHASE_LIST_STATUS.COMPLETED}>ConcluÃ­da</option>
+              <option value={PURCHASE_LIST_STATUS.COMPLETED}>Concluída</option>
             </select>
           </div>
         </div>
@@ -362,7 +362,7 @@ const SmartPurchaseListDashboard = () => {
                     Data
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    AÃ§Ãµes
+                    Ações
                   </th>
                 </tr>
               </thead>
@@ -385,7 +385,7 @@ const SmartPurchaseListDashboard = () => {
                         {list.summary?.totalItems || list.items?.length || 0} itens
                       </div>
                       <div className="text-sm text-gray-500">
-                        {list.summary?.criticalItems || 0} crÃ­ticos
+                        {list.summary?.criticalItems || 0} críticos
                       </div>
                     </td>
                     

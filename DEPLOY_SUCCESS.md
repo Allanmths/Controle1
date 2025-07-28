@@ -7,11 +7,11 @@
 
 ---
 
-## 📋 Resumo do Deploy
+## 📋 Resumo do Deploy - Atualizado em: `$(date "+%d/%m/%Y %H:%M")`
 
 ### **✅ O que foi deployado:**
 
-#### **🔔 Sistema de Notificações Completo**
+#### **🔔 Sistema de Notificações Completo com correções de codificação**
 - Centro de notificações com redirecionamento inteligente
 - Histórico completo de notificações
 - Admin panel para gerenciamento
