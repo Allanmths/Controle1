@@ -1,38 +1,14 @@
-﻿import React, { useState } from 'react';
+﻿import React from 'react';
 import UserRoleManager from '../components/UserRoleManager';
-import NotificationDemo from '../components/NotificationDemo';
-import NotificationHistory from '../components/NotificationHistory';
-import NotificationAdmin from '../components/NotificationAdmin';
-import NotificationDebugger from '../components/NotificationDebugger';
 import { useSettings } from '../context/SettingsContext';
-import { FaListOl, FaUserPlus, FaDatabase, FaPalette, FaMoon, FaSun } from 'react-icons/fa';
-import { createDemoUsers } from '../utils/demoData';
+import { FaListOl, FaPalette, FaMoon, FaSun } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
 const SettingsPage = () => {
     const { itemsPerPage, setItemsPerPage, theme, toggleTheme } = useSettings();
-    const [creatingDemo, setCreatingDemo] = useState(false);
 
     const handleItemsPerPageChange = (e) => {
         setItemsPerPage(Number(e.target.value));
-    };
-
-    const handleCreateDemoUsers = async () => {
-        setCreatingDemo(true);
-        const toastId = toast.loading('Criando usuários de demonstração...');
-        
-        try {
-            const success = await createDemoUsers();
-            if (success) {
-                toast.success('Usuários demo criados com sucesso!', { id: toastId });
-            } else {
-                toast.error('Erro ao criar usuários demo', { id: toastId });
-            }
-        } catch (error) {
-            toast.error('Erro ao criar usuários demo', { id: toastId });
-        }
-        
-        setCreatingDemo(false);
     };
 
     return (
@@ -104,52 +80,8 @@ const SettingsPage = () => {
                         </select>
                     </div>
                 </div>
-
-                {/* Card de Dados Demo */}
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                    <div className="flex items-center mb-4">
-                        <FaDatabase className="text-2xl text-green-500 mr-3" />
-                        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">Dados de Demonstração</h3>
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        Crie usuários de demonstração para testar o sistema de gerenciamento de roles e permissões.
-                    </p>
-                    
-                    <button
-                        onClick={handleCreateDemoUsers}
-                        disabled={creatingDemo}
-                        className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 dark:bg-green-700 dark:hover:bg-green-600"
-                    >
-                        <FaUserPlus className="mr-2" />
-                        {creatingDemo ? 'Criando...' : 'Criar Usuários Demo'}
-                    </button>
-                    
-                    <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
-                        <p><strong>Usuários que serão criados:</strong></p>
-                        <ul className="mt-1 space-y-1">
-                            <li>• admin@demo.com (Administrador)</li>
-                            <li>• manager@demo.com (Gerente)</li>
-                            <li>• editor@demo.com (Editor)</li>
-                            <li>• usuario@demo.com (Usuário)</li>
-                            <li>• viewer@demo.com (Visualizador)</li>
-                            <li>• inativo@demo.com (Usuário Inativo)</li>
-                        </ul>
-                    </div>
-                </div>
-
-                {/* Demonstração de Notificações */}
-                <NotificationDemo />
-
-                {/* Debugger de Notificações */}
-                <NotificationDebugger />
-
-                {/* Administração de Notificações */}
-                <NotificationAdmin />
-
-                {/* Histórico de Notificações */}
-                <NotificationHistory />
-
-                {/* Card de Usuários (existente) */}
+                
+                {/* Card de Usuários */}
                 <UserRoleManager />
             </div>
         </div>
