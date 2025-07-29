@@ -90,7 +90,9 @@ export default function NewCountPage() {
                     locationId: selectedLocation,
                     locationName: locations.find(loc => loc.id === selectedLocation)?.name || 'Desconhecida',
                     expectedQuantity: locationStock,
-                    countedQuantity: countedQty,
+                    countedQuantity: parseInt(countedQty, 10), // Garantir que é um número
+                    productCode: product.code || null,
+                    category: product.categoryId ? categories.find(c => c.id === product.categoryId)?.name : null,
                 });
             }
             
@@ -108,7 +110,8 @@ export default function NewCountPage() {
             timestamp: new Date().toISOString(),
             locationId: selectedLocation,
             locationName: locations.find(loc => loc.id === selectedLocation)?.name || 'Desconhecida',
-            countType: 'location'  // Indica que é uma contagem por localidade
+            countType: 'location',  // Indica que é uma contagem por localidade
+            fileId: `inv_${Date.now()}_${Math.random().toString(36).substring(2, 8)}` // ID único para referência futura
         };
 
         try {

@@ -59,7 +59,19 @@ export default function CountReportPage() {
                     const difference = item.countedQuantity - item.expectedQuantity;
                     if (difference !== 0) {
                         const productRef = doc(db, 'products', item.productId);
-                        batch.update(productRef, { totalQuantity: item.countedQuantity });
+                        
+                        // Atualizar o estoque total
+                        // Também atualizar o estoque na localidade específica
+                        if (count.countType === 'location' && count.locationId) {
+                            // Atualizar estoque na localidade específica
+                            batch.update(productRef, { 
+                                totalQuantity: item.countedQuantity,
+                                [`locations.${count.locationId}`]: item.countedQuantity 
+                            });
+                        } else {
+                            // Atualização normal apenas do estoque total
+                            batch.update(productRef, { totalQuantity: item.countedQuantity });
+                        }
 
                         const movementRef = doc(collection(db, 'movements'));
                         batch.set(movementRef, {
@@ -67,6 +79,8 @@ export default function CountReportPage() {
                             type: 'ajuste',
                             quantity: Math.abs(difference),
                             motive: `Ajuste de inventário (${difference > 0 ? 'sobra' : 'perda'})`,
+                            locationId: count.locationId || null,
+                            locationName: count.locationName || 'Geral',
                             date: new Date(),
                             userEmail: currentUser?.email || 'N/A',
                         });
@@ -101,7 +115,13 @@ export default function CountReportPage() {
     return (
         <div>
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Relatório da Contagem</h2>
-            <p className="text-gray-600 mb-6">Realizada em {count.createdAt?.toDate().toLocaleString('pt-BR')} por {count.userEmail}</p>
+            <p className="text-gray-600">Realizada em {count.createdAt?.toDate().toLocaleString('pt-BR')} por {count.userEmail}</p>
+            <div className="flex items-center space-x-2 mb-6">
+                <p className="text-gray-600">
+                    {count.locationName && <span>Localidade: <strong>{count.locationName}</strong> • </span>}
+                    {count.fileId && <span>ID do arquivo: <strong>{count.fileId}</strong></span>}
+                </p>
+            </div>
 
             <div className="bg-white p-6 rounded-lg shadow-sm">
                 <div className="overflow-x-auto">
@@ -111,7 +131,8 @@ export default function CountReportPage() {
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produto</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Qtd. Sistema</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Qtd. Contada</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DiferenÃ§a</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Diferença</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Localidade</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -123,6 +144,9 @@ export default function CountReportPage() {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.expectedQuantity}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.countedQuantity}</td>
                                         <DifferenceCell difference={difference} />
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {item.locationName || count.locationName || 'Desconhecida'}
+                                        </td>
                                     </tr>
                                 );
                             })}

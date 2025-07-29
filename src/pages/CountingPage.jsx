@@ -111,12 +111,19 @@ export default function CountingPage() {
                                     <div className="flex items-center space-x-4">
                                         <CountStatusBadge status={count.status} />
                                         {!isOfflineCount && (
-                                            <button 
-                                                onClick={() => navigate(`/counting/${count.id}`)} 
-                                                className="text-indigo-600 hover:text-indigo-900 transition-colors"
-                                            >
-                                                Ver Relatório
-                                            </button>
+                                            <div className="flex items-center space-x-2">
+                                                <button 
+                                                    onClick={() => navigate(`/counting/${count.id}`)} 
+                                                    className="text-indigo-600 hover:text-indigo-900 transition-colors px-3 py-1 border border-indigo-200 rounded-md"
+                                                >
+                                                    Ver Relatório
+                                                </button>
+                                                {count.status !== 'aplicado' && count.fileId && (
+                                                    <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                                                        ID: {count.fileId || count.id.substring(0, 8)}
+                                                    </span>
+                                                )}
+                                            </div>
                                         )}
                                     </div>
                                 </li>
