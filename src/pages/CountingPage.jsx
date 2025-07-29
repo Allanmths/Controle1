@@ -62,18 +62,11 @@ export default function CountingPage() {
                 {canEdit && (
                     <div className="flex space-x-3">
                         <button 
-                            onClick={() => navigate('/counting/quick')}
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center transition-colors"
-                        >
-                            <FaPlus className="mr-2" />
-                            Contagem Rápida
-                        </button>
-                        <button 
                             onClick={() => navigate('/counting/new')}
                             className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg flex items-center transition-colors"
                         >
                             <FaPlus className="mr-2" />
-                            Contagem Completa
+                            Contagem por Localidade
                         </button>
                     </div>
                 )}

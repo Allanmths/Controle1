@@ -11,7 +11,6 @@ import RegistersPage from './pages/RegistersPage';
 import MovementsPage from './pages/MovementsPage';
 import CountingPage from './pages/CountingPage';
 import NewCountPage from './pages/NewCountPage';
-import QuickCountPage from './pages/QuickCountPage';
 import CountReportPage from './pages/CountReportPage';
 import ReportsPage from './pages/ReportsPage';
 import SettingsPage from './pages/SettingsPage';
@@ -75,7 +74,6 @@ function App() {
               <Route path="movements" element={<MovementsPage />} />
               <Route path="counting" element={<CountingPage />} />
               <Route path="counting/new" element={<NewCountPage />} />
-              <Route path="counting/quick" element={<QuickCountPage />} />
               <Route path="counting/:id" element={<CountReportPage />} />
               <Route path="replenishment" element={<ReplenishmentPage />} />
               <Route path="reports" element={<ReportsPage />} />

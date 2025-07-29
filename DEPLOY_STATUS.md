@@ -3,17 +3,17 @@
 ## Status Atual: CONCLUÍDO (ATUALIZAÇÃO NOVA)
 
 Todas as correções e novas funcionalidades foram implementadas e a aplicação foi deployada com sucesso.
-Última atualização realizada com correções de codificação e adição da funcionalidade de contagem rápida.
+Última atualização realizada com melhorias na funcionalidade de contagem por localidade.
 
 ### Detalhes:
 - Data: 28/07/2025
 - Branch: gh-pages
-- Tipo: Correção de problemas e nova funcionalidade
+- Tipo: Melhoria na contagem de estoque
 - Resultado: ✅ SUCESSO
 - Atualizações realizadas:
-  1. Correções no componente NewCountPage.jsx (FaSearch e FaSave)
-  2. Nova funcionalidade: Contagem Rápida (QuickCountPage.jsx)
-  3. Atualização da interface de contagem com dois modos (completo e rápido)
+  1. Nova funcionalidade: Contagem por Localidade
+  2. Correções no componente NewCountPage.jsx (FaSearch e FaSave)
+  3. Interface melhorada para seleção de localidades na contagem
 
 Para mais informações, consulte:
 - ENCODING_FIX_REPORT.md - Detalhes das correções de codificação
