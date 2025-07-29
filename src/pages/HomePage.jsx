@@ -80,7 +80,7 @@ const HomePage = () => {
         let totalStock = 0;
         productsSnapshot.docs.forEach(doc => {
           const product = doc.data();
-          totalStock += product.totalStock || 0;
+          totalStock += product.totalQuantity || 0;
         });
         
         // Categorias ativas
@@ -91,7 +91,7 @@ const HomePage = () => {
         // Produtos com estoque baixo
         const lowStockQuery = query(
           collection(db, 'products'),
-          where('totalStock', '<', 10)
+          where('totalQuantity', '<', 10)
         );
         const lowStockSnapshot = await getDocs(lowStockQuery);
         const lowStockCount = lowStockSnapshot.size;
@@ -181,7 +181,7 @@ const HomePage = () => {
             icon={FaPlus}
             title="Adicionar Produto"
             description="Cadastrar novo item no estoque"
-            to="/registers/products/new"
+            to="/registers"
           />
           
           <QuickActionCard
