@@ -13,7 +13,10 @@ export default function QuickCountPage() {
     const { docs: products, loading: loadingProducts } = useFirestore('products');
     // Fallback seguro para categories
     const { docs: _categories, loading: loadingCategories } = useFirestore('categories');
+    // Fallback seguro para categories em todo o componente
     const categories = Array.isArray(_categories) ? _categories : [];
+    // Função utilitária para garantir array
+    const getCategoriesSafe = () => Array.isArray(categories) ? categories : [];
     const { currentUser } = useAuth();
     const { isOnline, saveOfflineCount, cacheDataForOffline, offlineData } = useOfflineMode();
     const navigate = useNavigate();
@@ -51,8 +54,9 @@ export default function QuickCountPage() {
     
     // Cache categorias para uso offline
     useEffect(() => {
-        if (categories && categories.length > 0) {
-            cacheDataForOffline('categories', categories);
+        const safeCategories = getCategoriesSafe();
+        if (safeCategories.length > 0) {
+            cacheDataForOffline('categories', safeCategories);
         }
     }, [categories, cacheDataForOffline]);
 
