@@ -66,7 +66,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
     const top10Products = abcAnalysis.slice(0, 10);
 
     // 5. Análise por categoria
-    const categoryAnalysis = categories.map(category => {
+    const categoryAnalysis = (Array.isArray(categories) ? categories : []).map(category => {
       const categoryProducts = products.filter(p => p.categoryId === category.id);
       const totalValue = categoryProducts.reduce((sum, product) => {
         const productValue = Object.values(product.locations || {})
@@ -140,7 +140,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
             className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
             <option value="all">Todas as Categorias</option>
-            {categories.map(category => (
+            {(Array.isArray(categories) ? categories : []).map(category => (
               <option key={category.id} value={category.id}>{category.name}</option>
             ))}
           </select>

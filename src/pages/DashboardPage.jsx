@@ -319,11 +319,11 @@ export default function DashboardPage() {
                 <label htmlFor="report-category" className="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
                 <select id="report-category" value={reportCategory} onChange={(e) => setReportCategory(e.target.value)} className="w-full p-2 border border-gray-300 rounded-md shadow-sm">
                     <option value="all">Todas</option>
-                    {categories && categories.length > 0 ? (
-                        categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)
-                    ) : (
-                        <option value="" disabled>Carregando categorias...</option>
-                    )}
+        {(Array.isArray(categories) && categories.length > 0) ? (
+            categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)
+        ) : (
+            <option value="" disabled>Carregando categorias...</option>
+        )}
                 </select>
             </div>
             <div>

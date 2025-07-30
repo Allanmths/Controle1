@@ -59,8 +59,8 @@ export default function CategoriesManager() {
                         <SkeletonLoader count={3} />
                     ) : (
                         <ul className="space-y-3">
-                            {categories && categories.length > 0 ? (
-                                categories.map((cat) => (
+            {(Array.isArray(categories) && categories.length > 0) ? (
+                categories.map((cat) => (
                                     <li key={cat.id} className="flex items-center justify-between p-3 even:bg-gray-50 rounded-md">
                                         <span className="text-gray-800 font-medium">{cat.name}</span>
                                         {canEdit && (

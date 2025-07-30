@@ -90,11 +90,11 @@ export default function ProductFormModal({ isOpen, onClose, productToEdit }) {
                     <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700">Categoria</label>
                     <select name="categoryId" id="categoryId" value={formData.categoryId || ''} onChange={handleChange} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-white">
                         <option value="" disabled>Selecione uma categoria</option>
-                        {categories && categories.length > 0 ? (
-                            categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)
-                        ) : (
-                            <option value="" disabled>Carregando categorias...</option>
-                        )}
+        {(Array.isArray(categories) && categories.length > 0) ? (
+            categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)
+        ) : (
+            <option value="" disabled>Carregando categorias...</option>
+        )}
                     </select>
                 </div>
 

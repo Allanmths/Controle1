@@ -45,7 +45,7 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
 
   // Dados para grÃ¡fico de valor por categoria
   const categoryValueData = useMemo(() => {
-    const categoryValues = categories.map(category => {
+    const categoryValues = (Array.isArray(categories) ? categories : []).map(category => {
       const categoryProducts = products.filter(p => p.categoryId === category.id);
       const totalValue = categoryProducts.reduce((sum, product) => {
         const productValue = Object.values(product.locations || {})
@@ -86,7 +86,7 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
 
   // Dados para grÃ¡fico de quantidade por categoria
   const categoryQuantityData = useMemo(() => {
-    const categoryQuantities = categories.map(category => {
+    const categoryQuantities = (Array.isArray(categories) ? categories : []).map(category => {
       const categoryProducts = products.filter(p => p.categoryId === category.id);
       const totalQuantity = categoryProducts.reduce((sum, product) => {
         const productQuantity = Object.values(product.locations || {})
