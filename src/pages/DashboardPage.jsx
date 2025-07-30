@@ -320,7 +320,7 @@ export default function DashboardPage() {
                 <select id="report-category" value={reportCategory} onChange={(e) => setReportCategory(e.target.value)} className="w-full p-2 border border-gray-300 rounded-md shadow-sm">
                     <option value="all">Todas</option>
         {(Array.isArray(categories) && categories.length > 0) ? (
-            categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)
+            (Array.isArray(categories) ? categories : []).map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)
         ) : (
             <option value="" disabled>Carregando categorias...</option>
         )}
