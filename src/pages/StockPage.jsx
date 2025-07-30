@@ -90,12 +90,24 @@ const StockPage = () => {
 
     if (confirmDelete) {
       try {
-        for (const productId of selectedProducts) {
-          await handleDeleteProduct(productId);
-        }
+        // Guardar quantidade antes da exclusão para mensagem de sucesso
+        const deletedCount = selectedProducts.length;
+        
+        // Usar a função de deletar documento do firestore diretamente
+        const { deleteDoc, doc } = await import('firebase/firestore');
+        const { db } = await import('../services/firebase');
+        
+        // Deletar cada produto selecionado
+        const deletePromises = selectedProducts.map(productId => 
+          deleteDoc(doc(db, 'products', productId))
+        );
+        
+        // Aguardar todas as exclusões
+        await Promise.all(deletePromises);
+        
         setSelectedProducts([]);
         setIsSelectMode(false);
-        toast.success(`${selectedProducts.length} produto(s) excluído(s) com sucesso!`);
+        toast.success(`${deletedCount} produto(s) excluído(s) com sucesso!`);
       } catch (error) {
         console.error('Erro ao excluir produtos:', error);
         toast.error('Erro ao excluir produtos');

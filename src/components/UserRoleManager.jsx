@@ -43,11 +43,11 @@ const UserRoleManager = () => {
   const [userToDelete, setUserToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Verificar se o usuÃ¡rio atual pode gerenciar usuÃ¡rios
+  // Verificar se o usuário atual pode gerenciar usuários
   const canManageUsers = hasPermission(userData?.role, PERMISSIONS.MANAGE_USERS);
   const canDeleteUsers = hasPermission(userData?.role, PERMISSIONS.DELETE_USERS);
 
-  // Filtrar usuÃ¡rios baseado na busca e role
+  // Filtrar usuários baseado na busca e role
   React.useEffect(() => {
     let filtered = users;
     
@@ -93,9 +93,9 @@ const UserRoleManager = () => {
   };
 
   const handleDeleteUser = (user) => {
-    // Verificar se não Ã© o prÃ³prio usuÃ¡rio
+    // Verificar se não é o próprio usuário
     if (user.id === currentUser?.uid) {
-      toast.error('VocÃª não pode excluir sua própria conta');
+      toast.error('Você não pode excluir sua própria conta');
       return;
     }
     
@@ -148,7 +148,7 @@ const UserRoleManager = () => {
               Acesso Negado
             </h3>
             <p className="text-sm text-red-700 mt-1">
-              VocÃª não tem permissÃ£o para gerenciar usuÃ¡rios do sistema.
+              Você não tem permissão para gerenciar usuários do sistema.
             </p>
           </div>
         </div>
@@ -163,18 +163,18 @@ const UserRoleManager = () => {
         <div className="flex items-center space-x-3">
           <FaUsers className="text-2xl text-blue-600" />
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Gerenciamento de UsuÃ¡rios</h2>
-            <p className="text-gray-600">Gerencie roles e permissões dos usuÃ¡rios do sistema</p>
+            <h2 className="text-2xl font-bold text-gray-900">Gerenciamento de Usuários</h2>
+            <p className="text-gray-600">Gerencie roles e permissões dos usuários do sistema</p>
           </div>
         </div>
       </div>
 
-      {/* EstatÃ­sticas */}
+      {/* Estatísticas */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-lg shadow border-l-4 border-blue-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total de UsuÃ¡rios</p>
+              <p className="text-sm text-gray-600">Total de Usuários</p>
               <p className="text-2xl font-bold text-blue-600">{stats.total}</p>
             </div>
             <FaUsers className="text-3xl text-blue-500" />
@@ -184,7 +184,7 @@ const UserRoleManager = () => {
         <div className="bg-white p-4 rounded-lg shadow border-l-4 border-green-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">UsuÃ¡rios Ativos</p>
+              <p className="text-sm text-gray-600">Usuários Ativos</p>
               <p className="text-2xl font-bold text-green-600">{stats.active}</p>
             </div>
             <FaToggleOn className="text-3xl text-green-500" />
@@ -194,7 +194,7 @@ const UserRoleManager = () => {
         <div className="bg-white p-4 rounded-lg shadow border-l-4 border-red-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">UsuÃ¡rios Inativos</p>
+              <p className="text-sm text-gray-600">Usuários Inativos</p>
               <p className="text-2xl font-bold text-red-600">{stats.inactive}</p>
             </div>
             <FaToggleOff className="text-3xl text-red-500" />
@@ -241,7 +241,7 @@ const UserRoleManager = () => {
         </div>
       </div>
 
-      {/* Lista de UsuÃ¡rios */}
+      {/* Lista de Usuários */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         {loading ? (
           <div className="p-4">
@@ -253,7 +253,7 @@ const UserRoleManager = () => {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    UsuÃ¡rio
+                    Usuário
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Role
@@ -262,7 +262,7 @@ const UserRoleManager = () => {
                     Status
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Ãšltimo Login
+                    Último Login
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Criado em
@@ -323,7 +323,7 @@ const UserRoleManager = () => {
                         <button
                           onClick={() => handleEditUser(user)}
                           className="text-blue-600 hover:text-blue-900 p-2 rounded-full hover:bg-blue-100 transition-colors"
-                          title="Editar usuÃ¡rio"
+                          title="Editar usuário"
                         >
                           <FaEdit />
                         </button>
@@ -334,7 +334,7 @@ const UserRoleManager = () => {
                               ? 'text-red-600 hover:text-red-900 hover:bg-red-100'
                               : 'text-green-600 hover:text-green-900 hover:bg-green-100'
                           }`}
-                          title={user.isActive !== false ? 'Desativar usuÃ¡rio' : 'Ativar usuÃ¡rio'}
+                          title={user.isActive !== false ? 'Desativar usuário' : 'Ativar usuário'}
                         >
                           {user.isActive !== false ? <FaToggleOff /> : <FaToggleOn />}
                         </button>
@@ -342,7 +342,7 @@ const UserRoleManager = () => {
                           <button
                             onClick={() => handleDeleteUser(user)}
                             className="text-red-600 hover:text-red-900 p-2 rounded-full hover:bg-red-100 transition-colors"
-                            title="Excluir usuÃ¡rio"
+                            title="Excluir usuário"
                           >
                             <FaTrash />
                           </button>
@@ -358,12 +358,12 @@ const UserRoleManager = () => {
               <div className="text-center py-12">
                 <FaUsers className="text-6xl text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  Nenhum usuÃ¡rio encontrado
+                  Nenhum usuário encontrado
                 </h3>
                 <p className="text-gray-500">
                   {searchTerm || selectedRole 
                     ? 'Tente ajustar os filtros de busca' 
-                    : 'não hÃ¡ usuÃ¡rios cadastrados no sistema'
+                    : 'não há usuários cadastrados no sistema'
                   }
                 </p>
               </div>
@@ -372,7 +372,7 @@ const UserRoleManager = () => {
         )}
       </div>
 
-      {/* Modal de EdiÃ§Ã£o */}
+      {/* Modal de Edição */}
       <UserEditModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
@@ -381,7 +381,7 @@ const UserRoleManager = () => {
         onDelete={handleDeleteUserFromModal}
       />
 
-      {/* Modal de ExclusÃ£o */}
+      {/* Modal de Exclusão */}
       <DeleteUserModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}

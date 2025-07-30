@@ -8,14 +8,14 @@ const DiagnosticPanel = () => {
     const { currentUser, userData } = useAuth();
 
     const testFirestoreConnection = async () => {
-        const toastId = toast.loading('Testando conexÃ£o com Firestore...');
+        const toastId = toast.loading('Testando conexão com Firestore...');
         try {
             const testDoc = await addDoc(collection(db, 'test'), {
-                message: 'Teste de conexÃ£o',
+                message: 'Teste de conexão',
                 timestamp: new Date(),
                 user: currentUser?.uid || 'anonymous'
             });
-            toast.success(`ConexÃ£o OK! Doc ID: ${testDoc.id}`, { id: toastId });
+            toast.success(`Conexão OK! Doc ID: ${testDoc.id}`, { id: toastId });
             console.log('Teste bem-sucedido:', testDoc.id);
         } catch (error) {
             toast.error(`Erro: ${error.message}`, { id: toastId });

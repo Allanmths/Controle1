@@ -145,7 +145,7 @@ export const useStockManagement = () => {
     const toastId = toast.loading('Excluindo produto...');
     try {
       await deleteDoc(doc(db, 'products', productToDelete.id));
-      toast.success('Produto excluÃ­do com sucesso!', { id: toastId });
+      toast.success('Produto excluído com sucesso!', { id: toastId });
     } catch (error) {
       console.error('Erro ao excluir produto:', error);
       toast.error('Erro ao excluir produto.', { id: toastId });

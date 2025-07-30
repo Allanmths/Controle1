@@ -251,7 +251,7 @@ const ProductModal = ({ isOpen, onClose, productToEdit, locations, userData }) =
                             Cancelar
                         </button>
                         <button type="submit" className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition duration-300">
-                            {productToEdit ? 'Salvar AlteraÃ§Ãµes' : 'Adicionar Produto'}
+                            {productToEdit ? 'Salvar Alterações' : 'Adicionar Produto'}
                         </button>
                     </div>
                 </form>

@@ -165,7 +165,7 @@ const StockTransferForm = () => {
 
                         <div>
                             <label htmlFor="quantity-transfer" className="block text-sm font-medium text-gray-700 mb-1">Quantidade a Transferir</label>
-                            <input type="number" id="quantity-transfer" value={quantity} onChange={e => setQuantity(e.target.value)} min="1" max={availableStock > 0 ? availableStock : undefined} placeholder={`MÃ¡x: ${availableStock}`} className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
+                            <input type="number" id="quantity-transfer" value={quantity} onChange={e => setQuantity(e.target.value)} min="1" max={availableStock > 0 ? availableStock : undefined} placeholder={`Máx: ${availableStock}`} className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
                         </div>
 
                         <div className="flex justify-end pt-2">

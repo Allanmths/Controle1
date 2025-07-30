@@ -47,11 +47,11 @@ const ActionConfirmationModal = ({
     
     switch (action) {
       case 'edit':
-        return `VocÃª estÃ¡ prestes a editar o produto "${productName}". Deseja continuar?`;
+        return `Você está prestes a editar o produto "${productName}". Deseja continuar?`;
       case 'delete':
-        return `VocÃª estÃ¡ prestes a excluir o produto "${productName}". Esta aÃ§Ã£o nÃ£o pode ser desfeita.`;
+        return `Você está prestes a excluir o produto "${productName}". Esta ação não pode ser desfeita.`;
       default:
-        return `VocÃª estÃ¡ prestes a realizar uma aÃ§Ã£o no produto "${productName}". Deseja continuar?`;
+        return `Você está prestes a realizar uma ação no produto "${productName}". Deseja continuar?`;
     }
   };
 
@@ -92,7 +92,7 @@ const ActionConfirmationModal = ({
               <div className="flex items-center">
                 <FaExclamationTriangle className="w-4 h-4 text-red-500 mr-2" />
                 <span className="text-sm text-red-700 dark:text-red-400 font-medium">
-                  AtenÃ§Ã£o: Esta aÃ§Ã£o Ã© irreversÃ­vel!
+                  Atenção: Esta ação é irreversível!
                 </span>
               </div>
             </div>

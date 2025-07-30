@@ -38,7 +38,7 @@ const StockExitForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!selectedProduct || !fromLocationId || !quantity || !reason || (reason === 'outro' && !customReason)) {
+        if (!selectedProduct || !fromLocationId || !quantity) {
             toast.error("Por favor, preencha todos os campos obrigatórios.");
             return;
         }
@@ -79,8 +79,6 @@ const StockExitForm = () => {
                     totalStock: newTotalStock,
                 });
 
-                const reasonText = reason === 'outro' ? customReason : exitReasons.find(r => r.value === reason)?.label || 'Saída manual';
-                
                 // 2. Registrar movimento de SAÍDA no Kardex
                 const kardexRef = doc(collection(db, 'kardex'));
                 transaction.set(kardexRef, {
@@ -94,7 +92,7 @@ const StockExitForm = () => {
                     timestamp: serverTimestamp(),
                     userId: user.uid,
                     userEmail: userData?.email,
-                    details: `Saída: ${reasonText}`
+                    details: reason === 'outro' ? customReason : exitReasons.find(r => r.value === reason)?.label || 'Saída manual'
                 });
             });
 

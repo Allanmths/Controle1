@@ -18,9 +18,9 @@ const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, productName }) =>
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
-                <h2 className="text-2xl font-bold mb-4">Confirmar ExclusÃ£o</h2>
+                <h2 className="text-2xl font-bold mb-4">Confirmar Exclusão</h2>
                 <p className="text-gray-700 mb-6">
-                    Tem certeza que deseja excluir o produto <span className="font-bold">{productName}</span>? Esta aÃ§Ã£o nÃ£o pode ser desfeita.
+                    Tem certeza que deseja excluir o produto <span className="font-bold">{productName}</span>? Esta ação não pode ser desfeita.
                 </p>
                 <div className="flex justify-end space-x-4">
                     <button

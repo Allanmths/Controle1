@@ -8,7 +8,7 @@ const formatCurrency = (value) => {
 
 const getClassStyle = (classification) => {
     switch (classification) {
-        case 'A': return { label: 'Classe A', color: 'bg-red-500 text-white', description: 'Produtos de altÃ­ssimo impacto. Requerem atenÃ§Ã£o mÃ¡xima.' };
+        case 'A': return { label: 'Classe A', color: 'bg-red-500 text-white', description: 'Produtos de altíssimo impacto. Requerem atenção máxima.' };
         case 'B': return { label: 'Classe B', color: 'bg-yellow-400 text-gray-800', description: 'Produtos de impacto intermediÃ¡rio. Bom controle Ã© necessÃ¡rio.' };
         case 'C': return { label: 'Classe C', color: 'bg-green-500 text-white', description: 'Produtos de baixo impacto. GestÃ£o mais simples.' };
         default: return { label: '', color: 'bg-gray-200', description: '' };

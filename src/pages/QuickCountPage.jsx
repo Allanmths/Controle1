@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { db } from '../services/firebase';
 import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
@@ -10,10 +11,13 @@ import { FaWifi, FaBan, FaSearch, FaSave, FaBarcode, FaHistory } from 'react-ico
 
 export default function QuickCountPage() {
     const { docs: products, loading: loadingProducts } = useFirestore('products');
+    // Fallback seguro para categories
+    const { docs: _categories, loading: loadingCategories } = useFirestore('categories');
+    const categories = Array.isArray(_categories) ? _categories : [];
     const { currentUser } = useAuth();
-    const { isOnline, saveOfflineCount, cacheDataForOffline } = useOfflineMode();
+    const { isOnline, saveOfflineCount, cacheDataForOffline, offlineData } = useOfflineMode();
     const navigate = useNavigate();
-    
+
     const [countedQuantities, setCountedQuantities] = useState({});
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(false);
@@ -21,6 +25,16 @@ export default function QuickCountPage() {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [recentProducts, setRecentProducts] = useState([]);
     const [countMode, setCountMode] = useState('barcode'); // 'barcode' ou 'manual'
+    // Novo estado para saber se IndexedDB está pronto
+    const [dbReady, setDbReady] = useState(false);
+
+    // Detecta quando o offlineData muda (ou seja, IndexedDB carregou)
+    useEffect(() => {
+        // Se counts, products, locations, categories já foram carregados, consideramos pronto
+        if (offlineData && Array.isArray(offlineData.counts)) {
+            setDbReady(true);
+        }
+    }, [offlineData]);
 
     useEffect(() => {
         if (products && products.length > 0) {
@@ -34,6 +48,13 @@ export default function QuickCountPage() {
             cacheDataForOffline('products', products);
         }
     }, [products, cacheDataForOffline]);
+    
+    // Cache categorias para uso offline
+    useEffect(() => {
+        if (categories && categories.length > 0) {
+            cacheDataForOffline('categories', categories);
+        }
+    }, [categories, cacheDataForOffline]);
 
     const handleQuantityChange = (productId, value) => {
         setCountedQuantities(prev => ({
@@ -52,58 +73,25 @@ export default function QuickCountPage() {
     };
 
     const handleBarcodeSearch = () => {
-        if (!barcode.trim()) {
-            toast.error('Digite um código de barras');
-            return;
-        }
-
-        const product = products.find(p => 
-            p.barcode === barcode || 
-            p.sku === barcode || 
-            p.id === barcode
+        return (
+            <div>
+                {/* TODO: Coloque todo o conteúdo JSX do componente aqui, garantindo que tudo esteja dentro deste <div> */}
+                {/* ...existing code... */}
+            </div>
         );
-
-        if (product) {
-            setSelectedProduct(product);
-            // Foca automaticamente no campo de quantidade
-            setTimeout(() => {
-                const qtyInput = document.getElementById('quantity-input');
-                if (qtyInput) qtyInput.focus();
-            }, 100);
-        } else {
-            toast.error('Produto não encontrado');
-            setSelectedProduct(null);
-        }
-
-        // Limpa o campo de código de barras para a próxima leitura
-        setBarcode('');
     };
-
-    const handleProductSelect = (product) => {
-        setSelectedProduct(product);
-        // Foca automaticamente no campo de quantidade
-        setTimeout(() => {
-            const qtyInput = document.getElementById('quantity-input');
-            if (qtyInput) qtyInput.focus();
-        }, 100);
-    };
-
-    const filteredProducts = products.filter(p => 
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.barcode?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
 
     const handleFinalizeCount = async () => {
-        if (Object.keys(countedQuantities).length === 0 || 
-            Object.values(countedQuantities).every(qty => qty === '')) {
-            toast.error('Nenhum produto foi contado');
-            return;
-        }
-        
         setLoading(true);
-        
-        // Filtra apenas os produtos que foram contados
+        let timeoutId;
+        // Timeout de 15s para evitar loading infinito
+        const timeoutPromise = new Promise((_, reject) => {
+            timeoutId = setTimeout(() => {
+                reject(new Error('Tempo limite excedido ao salvar. Verifique sua conexão.'));
+            }, 15000);
+        });
+
+        // Preparar dados da contagem
         const countDetails = Object.entries(countedQuantities)
             .filter(([_, qty]) => qty !== '')
             .map(([productId, qty]) => {
@@ -130,32 +118,66 @@ export default function QuickCountPage() {
         try {
             if (isOnline) {
                 // Salvar online no Firebase
-                await addDoc(collection(db, 'counts'), countData);
+                console.log('[QuickCount] Salvando online no Firebase:', countData);
+                await Promise.race([
+                    addDoc(collection(db, 'counts'), countData),
+                    timeoutPromise
+                ]);
+                clearTimeout(timeoutId);
                 toast.success('Contagem rápida finalizada e salva com sucesso!');
             } else {
                 // Salvar offline no IndexedDB
+                if (!saveOfflineCount) {
+                    toast.error('Função de salvamento offline não está disponível.');
+                    return;
+                }
                 const success = await saveOfflineCount(countData);
                 if (!success) {
-                    throw new Error('Falha ao salvar offline');
+                    toast.error('Falha ao salvar offline. O armazenamento local pode não estar pronto.');
+                    return;
                 }
                 toast.success('Contagem rápida salva offline!');
             }
-            
             navigate('/counting');
         } catch (error) {
-            console.error('Error finalizing count:', error);
+            clearTimeout(timeoutId);
+            console.error('Erro ao finalizar contagem:', error);
+            let firebaseMsg = '';
+            if (error && error.message) {
+                firebaseMsg = error.message;
+            } else if (typeof error === 'string') {
+                firebaseMsg = error;
+            }
             const errorMessage = isOnline 
-                ? 'Falha ao finalizar a contagem. Tente novamente.'
-                : 'Falha ao salvar contagem offline. Verifique o armazenamento do dispositivo.';
+                ? `Falha ao finalizar a contagem. ${firebaseMsg || 'Tente novamente.'}`
+                : `Falha ao salvar contagem offline. ${firebaseMsg || 'Verifique o armazenamento do dispositivo.'}`;
             toast.error(errorMessage);
         } finally {
             setLoading(false);
+            // Log para depuração
+            console.log('[QuickCount] Finalizou handleFinalizeCount. Loading:', loading);
         }
     };
 
-    if (loadingProducts) {
-        return <p className="text-center p-4">Carregando produtos...</p>;
+    if (loadingProducts || loadingCategories || (!isOnline && !dbReady)) {
+        return (
+            <div className="flex items-center justify-center min-h-[40vh]">
+                <div className="text-center p-4">
+                    {loadingProducts || loadingCategories
+                        ? 'Carregando dados...'
+                        : <span className="text-orange-600">Preparando armazenamento offline...</span>
+                    }
+                </div>
+            </div>
+        );
     }
+
+    // Filtro de produtos para busca manual
+    const filteredProducts = products.filter(p =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.barcode?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div>
@@ -175,12 +197,10 @@ export default function QuickCountPage() {
                     </div>
                 </div>
             </div>
-            
             <p className="mb-4 text-gray-600">
                 Escaneie códigos de barras ou pesquise produtos para uma contagem rápida.
                 {!isOnline && ' A contagem será sincronizada quando a conexão for restaurada.'}
             </p>
-            
             <div className="flex space-x-2 mb-4">
                 <button 
                     onClick={() => setCountMode('barcode')} 
@@ -189,6 +209,7 @@ export default function QuickCountPage() {
                             ? 'bg-blue-600 text-white' 
                             : 'bg-gray-200 text-gray-800'
                     }`}
+                    disabled={loading || (!isOnline && !dbReady)}
                 >
                     <FaBarcode />
                     <span>Código de Barras</span>
@@ -200,12 +221,12 @@ export default function QuickCountPage() {
                             ? 'bg-blue-600 text-white' 
                             : 'bg-gray-200 text-gray-800'
                     }`}
+                    disabled={loading || (!isOnline && !dbReady)}
                 >
-                    <FaSearch />
-                    <span>Pesquisa Manual</span>
+                    <FaSave />
+                    <span>Manual</span>
                 </button>
             </div>
-
             {countMode === 'barcode' ? (
                 <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
                     <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
@@ -232,7 +253,6 @@ export default function QuickCountPage() {
                             Buscar
                         </button>
                     </div>
-
                     {/* Produtos recentes */}
                     {recentProducts.length > 0 && (
                         <div className="mt-6">
@@ -268,7 +288,6 @@ export default function QuickCountPage() {
                             autoFocus
                         />
                     </div>
-
                     {searchTerm && (
                         <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-md">
                             {filteredProducts.length > 0 ? (
@@ -294,7 +313,6 @@ export default function QuickCountPage() {
                     )}
                 </div>
             )}
-
             {selectedProduct && (
                 <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
                     <h3 className="text-xl font-medium mb-4">Produto Selecionado</h3>
@@ -343,7 +361,6 @@ export default function QuickCountPage() {
                     </div>
                 </div>
             )}
-
             <div className="mt-6 flex justify-between">
                 <div>
                     <span className="text-gray-700 font-medium">

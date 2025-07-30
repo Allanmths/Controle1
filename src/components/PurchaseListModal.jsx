@@ -280,7 +280,7 @@ const PurchaseListModal = ({ isOpen, onClose, list, onExport, canExport }) => {
                 Lista vazia
               </h4>
               <p className="text-gray-600">
-                Esta lista não contém nenhum itens.
+                Esta lista não contém nenhum item.
               </p>
             </div>
           )}

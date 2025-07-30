@@ -68,7 +68,7 @@ export const useUserManagement = () => {
     }
   };
 
-  // Atualizar permissÃµes customizadas do usuÃ¡rio
+  // Atualizar permissões customizadas do usuário
   const updateUserPermissions = async (userId, customPermissions) => {
     try {
       const userRef = doc(db, 'users', userId);
@@ -77,7 +77,7 @@ export const useUserManagement = () => {
         updatedAt: new Date()
       });
       
-      toast.success('PermissÃµes atualizadas com sucesso!');
+      toast.success('Permissões atualizadas com sucesso!');
       return true;
     } catch (error) {
       console.error('Erro ao atualizar permissÃµes:', error);
@@ -86,7 +86,7 @@ export const useUserManagement = () => {
     }
   };
 
-  // Ativar/desativar usuÃ¡rio
+  // Ativar/desativar usuário
   const toggleUserStatus = async (userId, isActive) => {
     try {
       const userRef = doc(db, 'users', userId);
@@ -95,7 +95,7 @@ export const useUserManagement = () => {
         updatedAt: new Date()
       });
       
-      toast.success(`UsuÃ¡rio ${isActive ? 'ativado' : 'desativado'} com sucesso!`);
+      toast.success(`Usuário ${isActive ? 'ativado' : 'desativado'} com sucesso!`);
       return true;
     } catch (error) {
       console.error('Erro ao alterar status do usuÃ¡rio:', error);
@@ -104,13 +104,13 @@ export const useUserManagement = () => {
     }
   };
 
-  // Excluir usuÃ¡rio
+  // Excluir usuário
   const deleteUser = async (userId) => {
     try {
       const userRef = doc(db, 'users', userId);
       await deleteDoc(userRef);
       
-      toast.success('UsuÃ¡rio excluÃ­do com sucesso!');
+      toast.success('Usuário excluído com sucesso!');
       return true;
     } catch (error) {
       console.error('Erro ao excluir usuÃ¡rio:', error);

@@ -2,20 +2,32 @@
 import { useNotifications } from '../context/NotificationContext';
 import useFirestore from './useFirestore';
 
-// Hook para monitorar notificaÃ§Ãµes automÃ¡ticas do sistema
+// Hook para monitorar notificações automáticas do sistema
 export const useAutoNotifications = () => {
   const { notifyLowStock, notifyOutOfStock, notifyStockMovement } = useNotifications();
   const { docs: products } = useFirestore('products');
-  const notifiedProducts = useRef(new Set()); // Cache para evitar notificaÃ§Ãµes duplicadas
-  const lastCheck = useRef(0); // Timestamp da Ãºltima verificaÃ§Ã£o
+  const notifiedProducts = useRef(new Set()); // Cache para evitar notificações duplicadas
+  const lastCheck = useRef(0); // Timestamp da última verificação
+  const notifiedSession = useRef(false); // Verifica se já notificou nesta sessão
 
   useEffect(() => {
     if (!products || products.length === 0) return;
-
-    // Limitar verificaÃ§Ãµes para evitar spam (mÃ¡ximo 1 por minuto)
-    const now = Date.now();
-    if (now - lastCheck.current < 60000) return; // 60 segundos
-    lastCheck.current = now;
+    
+    // Verifica se já notificou nesta sessão
+    if (notifiedSession.current) return;
+    
+    // Verificar se já notificou hoje (usando localStorage)
+    const lastNotificationDate = localStorage.getItem('lastLowStockNotificationDate');
+    const today = new Date().toDateString();
+    
+    if (lastNotificationDate === today) {
+      notifiedSession.current = true;
+      return;
+    }
+    
+    // Atualiza a data da última notificação
+    localStorage.setItem('lastLowStockNotificationDate', today);
+    notifiedSession.current = true;
 
     // Verificar produtos com estoque baixo ou zerado
     products.forEach(product => {
@@ -23,7 +35,7 @@ export const useAutoNotifications = () => {
       const minStock = product.minStock || 5;
       const productKey = `${product.id}_${currentStock}`;
 
-      // Evitar notificaÃ§Ãµes duplicadas para o mesmo produto com mesmo estoque
+      // Evitar notificações duplicadas para o mesmo produto com mesmo estoque
       if (notifiedProducts.current.has(productKey)) return;
 
       if (currentStock === 0) {
@@ -35,7 +47,7 @@ export const useAutoNotifications = () => {
       }
     });
 
-    // Limpar cache antigas (manter apenas as Ãºltimas 100 entradas)
+    // Limpar cache antigas (manter apenas as últimas 100 entradas)
     if (notifiedProducts.current.size > 100) {
       const entries = Array.from(notifiedProducts.current);
       notifiedProducts.current = new Set(entries.slice(-50)); // Manter apenas as 50 mais recentes
@@ -50,12 +62,12 @@ export const useAutoNotifications = () => {
   }, []);
 
   return {
-    // FunÃ§Ã£o para notificar movimento manual
+    // Função para notificar movimento manual
     notifyMovement: notifyStockMovement,
   };
 };
 
-// Hook para notificaÃ§Ãµes de aÃ§Ãµes do usuÃ¡rio
+// Hook para notificações de ações do usuário
 export const useUserActionNotifications = () => {
   const { notifyUserAction } = useNotifications();
 

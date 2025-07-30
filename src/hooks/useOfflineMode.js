@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import toast from 'react-hot-toast';
 
 // IndexedDB para armazenamento offline
@@ -26,22 +26,22 @@ export const useOfflineMode = () => {
     initializeDB();
   }, []);
 
-  // Monitorar status da conexÃ£o
+  // Monitorar status da conexão
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
-      toast.success('ConexÃ£o restaurada! Sincronizando dados...', {
+      toast.success('Conexão restaurada! Sincronizando dados...', {
         duration: 3000,
-        icon: 'ðŸŒ'
+        icon: '🌐'
       });
       syncOfflineData();
     };
 
     const handleOffline = () => {
       setIsOnline(false);
-      toast.error('VocÃª estÃ¡ offline. Dados serÃ£o salvos localmente.', {
+      toast.error('Você está offline. Dados serão salvos localmente.', {
         duration: 4000,
-        icon: 'ðŸ“±'
+        icon: '📱'
       });
     };
 
@@ -72,7 +72,7 @@ export const useOfflineMode = () => {
       case 'OFFLINE_MODE':
         toast.warning(message || 'Modo offline ativado', {
           duration: 3000,
-          icon: 'ðŸ“±'
+          icon: '📱'
         });
         break;
       
@@ -108,7 +108,7 @@ export const useOfflineMode = () => {
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
 
-        // Criar stores se nÃ£o existirem
+        // Criar stores se não existirem
         Object.values(STORES).forEach(storeName => {
           if (!db.objectStoreNames.contains(storeName)) {
             const store = db.createObjectStore(storeName, { 
@@ -116,7 +116,7 @@ export const useOfflineMode = () => {
               autoIncrement: true 
             });
             
-            // Adicionar Ã­ndices
+            // Adicionar índices
             if (storeName === STORES.COUNTS) {
               store.createIndex('timestamp', 'timestamp', { unique: false });
               store.createIndex('status', 'status', { unique: false });
@@ -202,11 +202,29 @@ export const useOfflineMode = () => {
       // Limpar cache anterior
       const transaction = db.transaction([storeName], 'readwrite');
       const store = transaction.objectStore(storeName);
-      await store.clear();
+      await new Promise((resolve, reject) => {
+        const clearRequest = store.clear();
+        clearRequest.onsuccess = () => resolve();
+        clearRequest.onerror = () => reject(clearRequest.error);
+      });
 
       // Adicionar novos dados
-      const addPromises = data.map(item => addToStore(storeName, item));
+      const addPromises = data.map(item => {
+        // Garantir que o item tenha um ID único
+        const itemToStore = { ...item };
+        if (!itemToStore.id) {
+          itemToStore.id = `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        }
+        return addToStore(storeName, itemToStore);
+      });
+      
       await Promise.all(addPromises);
+      
+      // Atualizar o estado local também
+      setOfflineData(prev => ({
+        ...prev,
+        [type]: data
+      }));
 
       console.log(`[Offline] Cached ${data.length} ${type} items`);
     } catch (error) {
@@ -217,17 +235,24 @@ export const useOfflineMode = () => {
   // Salvar contagem offline
   const saveOfflineCount = useCallback(async (countData) => {
     if (!db) {
-      toast.error('Armazenamento offline nÃ£o disponÃ­vel');
+      toast.error('Armazenamento offline não disponível');
       return false;
     }
 
     try {
+      // Incluir categorias no objeto de contagem para evitar erros de referência
+      const cachedCategories = offlineData.categories || [];
+      
       const offlineCount = {
         ...countData,
         id: `offline_${Date.now()}`,
         status: 'offline',
         timestamp: new Date(),
-        synced: false
+        synced: false,
+        // Incluir dados necessários para evitar referências indefinidas
+        _cachedData: {
+          categories: cachedCategories
+        }
       };
 
       await addToStore(STORES.COUNTS, offlineCount);
@@ -238,9 +263,9 @@ export const useOfflineMode = () => {
         counts: [...prev.counts, offlineCount]
       }));
 
-      toast.success('Contagem salva offline! SerÃ¡ sincronizada quando voltar online.', {
+      toast.success('Contagem salva offline! Será sincronizada quando voltar online.', {
         duration: 4000,
-        icon: 'ðŸ’¾'
+        icon: '💾'
       });
 
       return true;
@@ -249,7 +274,7 @@ export const useOfflineMode = () => {
       toast.error('Erro ao salvar contagem offline');
       return false;
     }
-  }, [db]);
+  }, [db, offlineData.categories]);
 
   // Sincronizar dados offline quando voltar online
   const syncOfflineData = useCallback(async () => {
@@ -265,10 +290,10 @@ export const useOfflineMode = () => {
 
       console.log(`[Offline] Sincronizando ${pendingCounts.length} contagens...`);
 
-      // Simular sincronizaÃ§Ã£o (aqui vocÃª implementaria a lÃ³gica real)
+      // Simular sincronização (aqui você implementaria a lógica real)
       const syncPromises = pendingCounts.map(async (count) => {
         try {
-          // Aqui vocÃª faria a requisiÃ§Ã£o real para o Firebase
+          // Aqui você faria a requisição real para o Firebase
           // const result = await syncCountToFirebase(count);
           
           // Marcar como sincronizado
@@ -288,7 +313,7 @@ export const useOfflineMode = () => {
       if (successCount > 0) {
         toast.success(`${successCount} contagem(ns) sincronizada(s) com sucesso!`, {
           duration: 3000,
-          icon: 'âœ…'
+          icon: '✅'
         });
         
         // Recarregar dados offline
@@ -296,7 +321,7 @@ export const useOfflineMode = () => {
       }
 
     } catch (error) {
-      console.error('Erro durante sincronizaÃ§Ã£o:', error);
+      console.error('Erro durante sincronização:', error);
       toast.error('Erro ao sincronizar dados offline');
     }
   }, [isOnline, db, offlineData.counts]);
@@ -307,7 +332,7 @@ export const useOfflineMode = () => {
 
     try {
       const transaction = db.transaction([STORES.COUNTS], 'readwrite');
-      const store = transaction.objectStore(storeName);
+      const store = transaction.objectStore(STORES.COUNTS);
       
       // Buscar apenas dados sincronizados
       const allCounts = await getAllFromStore(STORES.COUNTS);
