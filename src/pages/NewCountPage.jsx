@@ -12,7 +12,7 @@ export default function NewCountPage() {
     const { docs: products, loading: loadingProducts } = useFirestore('products');
     const { docs: locations, loading: loadingLocations } = useFirestore('locations');
     const { currentUser } = useAuth();
-    const { isOnline, saveOfflineCount, cacheDataForOffline } = useOfflineMode();
+    const { isOnline } = useOfflineMode();
     const navigate = useNavigate();
     
     const [countedQuantities, setCountedQuantities] = useState({});
@@ -31,16 +31,16 @@ export default function NewCountPage() {
             setCountedQuantities(initialQuantities);
             
             // Cache produtos para uso offline
-            cacheDataForOffline('products', products);
+            // ...
         }
-    }, [products, cacheDataForOffline]);
+    }, [products]);
 
     useEffect(() => {
         if (locations && locations.length > 0) {
             // Cache localidades para uso offline
-            cacheDataForOffline('locations', locations);
+            // ...
         }
-    }, [locations, cacheDataForOffline]);
+    }, [locations]);
 
     const handleQuantityChange = (productId, locationId, value) => {
         setCountedQuantities(prev => ({
@@ -121,7 +121,7 @@ export default function NewCountPage() {
                 toast.success('Contagem finalizada e salva com sucesso!');
             } else {
                 // Salvar offline no IndexedDB
-                const success = await saveOfflineCount(countData);
+                // ...
                 if (!success) {
                     throw new Error('Falha ao salvar offline');
                 }

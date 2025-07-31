@@ -26,7 +26,7 @@ const CountStatusBadge = ({ status }) => {
 export default function CountingPage() {
     const { userData } = useAuth();
     const { docs: counts, loading } = useFirestore('counts', { field: 'createdAt', direction: 'desc' });
-    const { isOnline, offlineData, hasOfflineData } = useOfflineMode();
+    const { isOnline } = useOfflineMode();
     const navigate = useNavigate();
 
     const canEdit = userData?.role === 'admin' || userData?.role === 'editor';
@@ -34,7 +34,6 @@ export default function CountingPage() {
     // Combinar contagens online e offline
     const allCounts = [
         ...(counts || []),
-        ...(offlineData.counts || [])
     ].sort((a, b) => {
         const dateA = a.createdAt?.toDate?.() || new Date(a.timestamp) || new Date(a.createdAt);
         const dateB = b.createdAt?.toDate?.() || new Date(b.timestamp) || new Date(b.createdAt);
@@ -51,12 +50,7 @@ export default function CountingPage() {
                                           {!isOnline ? <FaBan className="w-4 h-4" /> : <FaWifi className="w-4 h-4" />}
                             <span>{isOnline ? 'Online' : 'Modo Offline'}</span>
                         </div>
-                        {hasOfflineData && (
-                            <div className="flex items-center space-x-2 text-sm text-blue-600">
-                                <FaHistory />
-                                <span>{offlineData.counts.length} contagem(ns) offline</span>
-                            </div>
-                        )}
+                        {/* ... */}
                     </div>
                 </div>
                 {canEdit && (

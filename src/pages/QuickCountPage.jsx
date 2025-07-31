@@ -18,7 +18,7 @@ export default function QuickCountPage() {
     // Função utilitária para garantir array
     const getCategoriesSafe = () => Array.isArray(categories) ? categories : [];
     const { currentUser } = useAuth();
-    const { isOnline, saveOfflineCount, cacheDataForOffline, offlineData } = useOfflineMode();
+    const { isOnline } = useOfflineMode();
     const navigate = useNavigate();
 
     const [countedQuantities, setCountedQuantities] = useState({});
@@ -34,7 +34,7 @@ export default function QuickCountPage() {
     // Detecta quando o offlineData muda (ou seja, IndexedDB carregou)
     useEffect(() => {
         // Se counts, products, locations, categories já foram carregados, consideramos pronto
-        if (offlineData && Array.isArray(offlineData.counts)) {
+        // ...
             setDbReady(true);
         }
     }, [offlineData]);
@@ -48,17 +48,17 @@ export default function QuickCountPage() {
             setCountedQuantities(initialQuantities);
             
             // Cache produtos para uso offline
-            cacheDataForOffline('products', products);
+            // ...
         }
-    }, [products, cacheDataForOffline]);
+    }, [products]);
     
     // Cache categorias para uso offline
     useEffect(() => {
         const safeCategories = getCategoriesSafe();
         if (safeCategories.length > 0) {
-            cacheDataForOffline('categories', safeCategories);
+            // ...
         }
-    }, [categories, cacheDataForOffline]);
+    }, [categories]);
 
     const handleQuantityChange = (productId, value) => {
         setCountedQuantities(prev => ({
@@ -131,11 +131,11 @@ export default function QuickCountPage() {
                 toast.success('Contagem rápida finalizada e salva com sucesso!');
             } else {
                 // Salvar offline no IndexedDB
-                if (!saveOfflineCount) {
+                // ...
                     toast.error('Função de salvamento offline não está disponível.');
                     return;
                 }
-                const success = await saveOfflineCount(countData);
+                // ...
                 if (!success) {
                     toast.error('Falha ao salvar offline. O armazenamento local pode não estar pronto.');
                     return;
