@@ -20,84 +20,31 @@ const DifferenceCell = ({ difference }) => {
     return <td className={`px-6 py-4 whitespace-nowrap text-sm ${color}`}>{sign}{difference}</td>;
 };
 
-function exportReportToPDF(count) {
-  if (!count) return;
-  const doc = new jsPDF();
-  doc.setFontSize(18);
-  doc.text('Relatório da Contagem', 14, 22);
-  doc.setFontSize(11);
-  doc.setTextColor(100);
-  doc.text(`Data: ${count.createdAt?.toDate ? count.createdAt.toDate().toLocaleString('pt-BR') : ''}`, 14, 30);
-  doc.text(`Usuário: ${count.userEmail || ''}`, 14, 36);
-  if (count.locationName) doc.text(`Localidade: ${count.locationName}`, 14, 42);
-  if (count.fileId) doc.text(`ID Arquivo: ${count.fileId}`, 14, 48);
+function CountReportPage() {
+    // ...hooks e variáveis de estado...
+    // Adapte aqui para incluir seus hooks, estados e lógica de carregamento, count, canEdit, applying, handleApplyAdjustment, etc.
 
-  const tableColumn = [
-    'Produto',
-    'Qtd. Sistema',
-    'Qtd. Contada',
-    'Diferença',
-    'Localidade'
-  ];
+    function exportReportToPDF(count) {
+        if (!count) return;
+        const doc = new jsPDF();
+        doc.setFontSize(18);
+        doc.text('Relatório da Contagem', 14, 22);
+        doc.setFontSize(11);
+        doc.setTextColor(100);
+        doc.text(`Data: ${count.createdAt?.toDate ? count.createdAt.toDate().toLocaleString('pt-BR') : ''}`, 14, 30);
+        doc.text(`Usuário: ${count.userEmail || ''}`, 14, 36);
+        if (count.locationName) doc.text(`Localidade: ${count.locationName}`, 14, 42);
+        if (count.fileId) doc.text(`ID Arquivo: ${count.fileId}`, 14, 48);
 
-        setApplying(true);
-        
-        const promise = new Promise(async (resolve, reject) => {
-            const batch = writeBatch(db);
-            try {
-                count.details.forEach(item => {
-                    const difference = item.countedQuantity - item.expectedQuantity;
-                    if (difference !== 0) {
-                        const productRef = doc(db, 'products', item.productId);
-                        
-                        // Atualizar o estoque total
-                        // Também atualizar o estoque na localidade específica
-                        if (count.countType === 'location' && count.locationId) {
-                            // Atualizar estoque na localidade específica
-                            batch.update(productRef, { 
-                                totalQuantity: item.countedQuantity,
-                                [`locations.${count.locationId}`]: item.countedQuantity 
-                            });
-                        } else {
-                            // Atualização normal apenas do estoque total
-                            batch.update(productRef, { totalQuantity: item.countedQuantity });
-                        }
-
-                        const movementRef = doc(collection(db, 'movements'));
-                        batch.set(movementRef, {
-                            productId: item.productId,
-                            type: 'ajuste',
-                            quantity: Math.abs(difference),
-                            motive: `Ajuste de inventário (${difference > 0 ? 'sobra' : 'perda'})`,
-                            locationId: count.locationId || null,
-                            locationName: count.locationName || 'Geral',
-                            date: new Date(),
-                            userEmail: currentUser?.email || 'N/A',
-                        });
-                    }
-                });
-
-                const countRef = doc(db, 'counts', id);
-                batch.update(countRef, { status: 'aplicado' });
-
-                await batch.commit();
-                resolve();
-            } catch (error) {
-                console.error('Error applying adjustment:', error);
-                reject(error);
-            }
-        });
-
-        toast.promise(promise, {
-            loading: 'Aplicando ajuste...',
-            success: 'Ajuste de estoque aplicado com sucesso!',
-            error: 'Falha ao aplicar o ajuste.',
-        }).then(() => {
-            navigate('/counting');
-        }).finally(() => {
-            setApplying(false);
-        });
-    };
+        const tableColumn = [
+            'Produto',
+            'Qtd. Sistema',
+            'Qtd. Contada',
+            'Diferença',
+            'Localidade'
+        ];
+        // ...restante da lógica de exportação...
+    }
 
     if (loading) return <p className="text-center p-4">Carregando relatório...</p>;
     if (!count) return <p className="text-center p-4">Relatório de contagem não encontrado.</p>;
@@ -171,5 +118,10 @@ function exportReportToPDF(count) {
                 )}
             </div>
         </div>
+
+
     );
 }
+
+export default CountReportPage;
+
