@@ -39,64 +39,6 @@ function exportReportToPDF(count) {
     'Diferença',
     'Localidade'
   ];
-  const tableRows = (count.details || []).map(item => [
-    item.productName,
-    item.expectedQuantity,
-    item.countedQuantity,
-    (item.countedQuantity - item.expectedQuantity),
-    item.locationName || count.locationName || 'Desconhecida'
-  ]);
-
-  doc.autoTable({
-    head: [tableColumn],
-    body: tableRows,
-    startY: 55,
-    styles: { fontSize: 9 },
-    headStyles: { fillColor: [59, 130, 246] },
-    alternateRowStyles: { fillColor: [245, 245, 245] }
-  });
-
-  const pageCount = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-    doc.setFontSize(9);
-    doc.text(`Página ${i} de ${pageCount}`, doc.internal.pageSize.width - 30, doc.internal.pageSize.height - 10);
-  }
-  doc.save(`relatorio_contagem_${count.fileId || count.id || ''}.pdf`);
-}
-
-export default function CountReportPage() {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const { currentUser, userData } = useAuth();
-    const [count, setCount] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [applying, setApplying] = useState(false);
-
-    const canEdit = userData?.role === 'admin' || userData?.role === 'editor';
-
-    useEffect(() => {
-        const fetchCount = async () => {
-            try {
-                const countRef = doc(db, 'counts', id);
-                const countSnap = await getDoc(countRef);
-                if (countSnap.exists()) {
-                    setCount({ id: countSnap.id, ...countSnap.data() });
-                } else {
-                    console.error('No such count!');
-                }
-            } catch (error) {
-                console.error('Error fetching count:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchCount();
-    }, [id]);
-
-    const handleApplyAdjustment = async () => {
-        if (!count || count.status === 'aplicado') return;
-        if (!window.confirm('Tem certeza que deseja aplicar este ajuste? Esta ação atualizará o estoque de todos os produtos listados e não pode ser desfeita.')) return;
 
         setApplying(true);
         
