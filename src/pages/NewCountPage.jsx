@@ -4,7 +4,7 @@ import { db } from '../services/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import useFirestore from '../hooks/useFirestore';
 import { useAuth } from '../context/AuthContext';
-import { useOfflineMode } from '../hooks/useOfflineMode';
+// Offline removido
 import toast from 'react-hot-toast';
 import { FaWifi, FaBan, FaPlus, FaEdit, FaTrash, FaCheck, FaTimes, FaSearch, FaSave, FaMapMarkerAlt } from 'react-icons/fa';
 
@@ -12,7 +12,7 @@ export default function NewCountPage() {
     const { docs: products, loading: loadingProducts } = useFirestore('products');
     const { docs: locations, loading: loadingLocations } = useFirestore('locations');
     const { currentUser } = useAuth();
-    const { isOnline } = useOfflineMode();
+    // Sempre online
     const navigate = useNavigate();
     
     const [countedQuantities, setCountedQuantities] = useState({});
@@ -22,25 +22,15 @@ export default function NewCountPage() {
 
     useEffect(() => {
         if (products && products.length > 0) {
-            // Inicializa objeto de quantidades contadas com estrutura para localidades
             const initialQuantities = products.reduce((acc, product) => {
-                // Para cada produto, criamos um objeto que armazenará quantidades por localidade
                 acc[product.id] = {};
                 return acc;
             }, {});
             setCountedQuantities(initialQuantities);
-            
-            // Cache produtos para uso offline
-            // ...
         }
     }, [products]);
 
-    useEffect(() => {
-        if (locations && locations.length > 0) {
-            // Cache localidades para uso offline
-            // ...
-        }
-    }, [locations]);
+    // Nenhum cache offline
 
     const handleQuantityChange = (productId, locationId, value) => {
         setCountedQuantities(prev => ({
@@ -61,79 +51,54 @@ export default function NewCountPage() {
             toast.error('Selecione uma localidade para a contagem');
             return;
         }
-        
         // Verifica se existe algum produto com quantidade preenchida
         const hasFilledQuantities = Object.keys(countedQuantities).some(productId => {
             const locationQuantity = countedQuantities[productId][selectedLocation];
             return locationQuantity !== undefined && locationQuantity !== '';
         });
-
         if (!hasFilledQuantities) {
             toast.error('Preencha a quantidade de pelo menos um produto');
             return;
         }
-        
         setLoading(true);
-        
         // Prepara os detalhes da contagem, incluindo apenas produtos com quantidades preenchidas
         const countDetails = products.reduce((details, product) => {
             const countedQty = countedQuantities[product.id]?.[selectedLocation];
-            
-            // Se tem quantidade preenchida, adiciona aos detalhes
             if (countedQty !== undefined && countedQty !== '') {
-                // Calcula a quantidade esperada na localidade específica
                 const locationStock = product.locations?.[selectedLocation] || 0;
-                
                 details.push({
                     productId: product.id,
                     productName: product.name,
                     locationId: selectedLocation,
                     locationName: locations.find(loc => loc.id === selectedLocation)?.name || 'Desconhecida',
                     expectedQuantity: locationStock,
-                    countedQuantity: parseInt(countedQty, 10), // Garantir que é um número
+                    countedQuantity: parseInt(countedQty, 10),
                     productCode: product.code || null,
-                    category: product.categoryId ? categories.find(c => c.id === product.categoryId)?.name : null,
                 });
             }
-            
             return details;
         }, []);
-
         // Dados da contagem
         const countData = {
-            createdAt: isOnline ? serverTimestamp() : new Date(),
+            createdAt: serverTimestamp(),
             userEmail: currentUser?.email || 'N/A',
             userName: currentUser?.displayName || currentUser?.email || 'N/A',
-            status: isOnline ? 'concluido' : 'offline',
+            status: 'concluido',
             details: countDetails,
             totalProducts: countDetails.length,
             timestamp: new Date().toISOString(),
             locationId: selectedLocation,
             locationName: locations.find(loc => loc.id === selectedLocation)?.name || 'Desconhecida',
-            countType: 'location',  // Indica que é uma contagem por localidade
-            fileId: `inv_${Date.now()}_${Math.random().toString(36).substring(2, 8)}` // ID único para referência futura
+            countType: 'location',
+            fileId: `inv_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`
         };
-
         try {
-            if (isOnline) {
-                // Salvar online no Firebase
-                await addDoc(collection(db, 'counts'), countData);
-                toast.success('Contagem finalizada e salva com sucesso!');
-            } else {
-                // Salvar offline no IndexedDB
-                // ...
-                if (!success) {
-                    throw new Error('Falha ao salvar offline');
-                }
-            }
-            
+            await addDoc(collection(db, 'counts'), countData);
+            toast.success('Contagem finalizada e salva com sucesso!');
             navigate('/counting');
         } catch (error) {
             console.error('Error finalizing count:', error);
-            const errorMessage = isOnline 
-                ? 'Falha ao finalizar a contagem. Tente novamente.'
-                : 'Falha ao salvar contagem offline. Verifique o armazenamento do dispositivo.';
-            toast.error(errorMessage);
+            toast.error('Falha ao finalizar a contagem. Tente novamente.');
         } finally {
             setLoading(false);
         }
@@ -149,15 +114,10 @@ export default function NewCountPage() {
                 <div>
                     <h2 className="text-3xl font-bold text-gray-800">Nova Contagem por Localidade</h2>
                     <div className="flex items-center mt-2 space-x-4">
-                        <div className={`flex items-center space-x-2 text-sm ${isOnline ? 'text-green-600' : 'text-orange-600'}`}>
-                            {isOnline ? <FaWifi /> : <FaBan />}
-                            <span>{isOnline ? 'Online' : 'Modo Offline'}</span>
+                        <div className="flex items-center space-x-2 text-sm text-green-600">
+                            <FaWifi />
+                            <span>Online</span>
                         </div>
-                        {!isOnline && (
-                            <div className="text-sm text-orange-600 bg-orange-50 px-3 py-1 rounded-full">
-                                Dados serão salvos localmente
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>

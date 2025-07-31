@@ -2,7 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import useFirestore from '../hooks/useFirestore';
-import { useOfflineMode } from '../hooks/useOfflineMode';
+// Offline removido
 import { FaWifi, FaBan, FaPlus, FaHistory, FaBarcode } from 'react-icons/fa';
 
 const CountStatusBadge = ({ status }) => {
@@ -26,15 +26,13 @@ const CountStatusBadge = ({ status }) => {
 export default function CountingPage() {
     const { userData } = useAuth();
     const { docs: counts, loading } = useFirestore('counts', { field: 'createdAt', direction: 'desc' });
-    const { isOnline } = useOfflineMode();
+    // Sempre online
     const navigate = useNavigate();
 
     const canEdit = userData?.role === 'admin' || userData?.role === 'editor';
 
-    // Combinar contagens online e offline
-    const allCounts = [
-        ...(counts || []),
-    ].sort((a, b) => {
+    // Apenas contagens online
+    const allCounts = (counts || []).sort((a, b) => {
         const dateA = a.createdAt?.toDate?.() || new Date(a.timestamp) || new Date(a.createdAt);
         const dateB = b.createdAt?.toDate?.() || new Date(b.timestamp) || new Date(b.createdAt);
         return dateB - dateA;
@@ -75,50 +73,36 @@ export default function CountingPage() {
                 ) : (
                     <ul className="divide-y divide-gray-200">
                         {allCounts.map(count => {
-                            const isOfflineCount = count.status === 'offline';
                             const displayDate = count.createdAt?.toDate?.() 
                                 ? count.createdAt.toDate().toLocaleDateString('pt-BR')
                                 : new Date(count.timestamp || count.createdAt).toLocaleDateString('pt-BR');
-                            
                             return (
-                                <li key={count.id} className={`py-4 flex justify-between items-center ${isOfflineCount ? 'bg-orange-50 border-l-4 border-orange-400 pl-4' : ''}`}>
+                                <li key={count.id} className="py-4 flex justify-between items-center">
                                     <div>
                                         <div className="flex items-center space-x-2">
                                             <p className="text-lg font-semibold text-gray-900">
                                                 Contagem de {displayDate}
                                             </p>
-                                            {isOfflineCount && (
-                                                <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">
-                                                    Offline
-                                                </span>
-                                            )}
                                         </div>
                                         <p className="text-sm text-gray-500">
                                             Realizada por: {count.userEmail || count.userName || 'N/A'}
                                         </p>
-                                        {isOfflineCount && !count.synced && (
-                                            <p className="text-xs text-orange-600 mt-1">
-                                                Aguardando sincronização
-                                            </p>
-                                        )}
                                     </div>
                                     <div className="flex items-center space-x-4">
                                         <CountStatusBadge status={count.status} />
-                                        {!isOfflineCount && (
-                                            <div className="flex items-center space-x-2">
-                                                <button 
-                                                    onClick={() => navigate(`/counting/${count.id}`)} 
-                                                    className="text-indigo-600 hover:text-indigo-900 transition-colors px-3 py-1 border border-indigo-200 rounded-md"
-                                                >
-                                                    Ver Relatório
-                                                </button>
-                                                {count.status !== 'aplicado' && count.fileId && (
-                                                    <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                                                        ID: {count.fileId || count.id.substring(0, 8)}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        )}
+                                        <div className="flex items-center space-x-2">
+                                            <button 
+                                                onClick={() => navigate(`/counting/${count.id}`)} 
+                                                className="text-indigo-600 hover:text-indigo-900 transition-colors px-3 py-1 border border-indigo-200 rounded-md"
+                                            >
+                                                Ver Relatório
+                                            </button>
+                                            {count.status !== 'aplicado' && count.fileId && (
+                                                <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                                                    ID: {count.fileId || count.id.substring(0, 8)}
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
                                 </li>
                             );

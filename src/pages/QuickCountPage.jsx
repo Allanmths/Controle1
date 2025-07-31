@@ -5,7 +5,7 @@ import { db } from '../services/firebase';
 import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import useFirestore from '../hooks/useFirestore';
 import { useAuth } from '../context/AuthContext';
-import { useOfflineMode } from '../hooks/useOfflineMode';
+// Offline removido
 import toast from 'react-hot-toast';
 import { FaWifi, FaBan, FaSearch, FaSave, FaBarcode, FaHistory } from 'react-icons/fa';
 
@@ -18,7 +18,7 @@ export default function QuickCountPage() {
     // Função utilitária para garantir array
     const getCategoriesSafe = () => Array.isArray(categories) ? categories : [];
     const { currentUser } = useAuth();
-    const { isOnline } = useOfflineMode();
+    // Sempre online
     const navigate = useNavigate();
 
     const [countedQuantities, setCountedQuantities] = useState({});
@@ -29,36 +29,23 @@ export default function QuickCountPage() {
     const [recentProducts, setRecentProducts] = useState([]);
     const [countMode, setCountMode] = useState('barcode'); // 'barcode' ou 'manual'
     // Novo estado para saber se IndexedDB está pronto
-    const [dbReady, setDbReady] = useState(false);
+    // dbReady removido
 
     // Detecta quando o offlineData muda (ou seja, IndexedDB carregou)
-    useEffect(() => {
-        // Se counts, products, locations, categories já foram carregados, consideramos pronto
-        // ...
-            setDbReady(true);
-        }
-    }, [offlineData]);
+    // Nenhum controle de dbReady ou offlineData
 
     useEffect(() => {
         if (products && products.length > 0) {
             const initialQuantities = products.reduce((acc, product) => {
-                acc[product.id] = ''; // Use empty string for placeholder
+                acc[product.id] = '';
                 return acc;
             }, {});
             setCountedQuantities(initialQuantities);
-            
-            // Cache produtos para uso offline
-            // ...
         }
     }, [products]);
     
     // Cache categorias para uso offline
-    useEffect(() => {
-        const safeCategories = getCategoriesSafe();
-        if (safeCategories.length > 0) {
-            // ...
-        }
-    }, [categories]);
+    // Nenhum cache offline de categorias
 
     const handleQuantityChange = (productId, value) => {
         setCountedQuantities(prev => ({
@@ -87,14 +74,6 @@ export default function QuickCountPage() {
 
     const handleFinalizeCount = async () => {
         setLoading(true);
-        let timeoutId;
-        // Timeout de 15s para evitar loading infinito
-        const timeoutPromise = new Promise((_, reject) => {
-            timeoutId = setTimeout(() => {
-                reject(new Error('Tempo limite excedido ao salvar. Verifique sua conexão.'));
-            }, 15000);
-        });
-
         // Preparar dados da contagem
         const countDetails = Object.entries(countedQuantities)
             .filter(([_, qty]) => qty !== '')
@@ -107,71 +86,32 @@ export default function QuickCountPage() {
                     countedQuantity: qty,
                 };
             });
-
         const countData = {
-            createdAt: isOnline ? serverTimestamp() : new Date(),
+            createdAt: serverTimestamp(),
             userEmail: currentUser?.email || 'N/A',
             userName: currentUser?.displayName || currentUser?.email || 'N/A',
-            status: isOnline ? 'concluido' : 'offline',
+            status: 'concluido',
             details: countDetails,
             totalProducts: countDetails.length,
             timestamp: new Date().toISOString(),
-            countType: 'quick' // Indica que é uma contagem rápida
+            countType: 'quick'
         };
-
         try {
-            if (isOnline) {
-                // Salvar online no Firebase
-                console.log('[QuickCount] Salvando online no Firebase:', countData);
-                await Promise.race([
-                    addDoc(collection(db, 'counts'), countData),
-                    timeoutPromise
-                ]);
-                clearTimeout(timeoutId);
-                toast.success('Contagem rápida finalizada e salva com sucesso!');
-            } else {
-                // Salvar offline no IndexedDB
-                // ...
-                    toast.error('Função de salvamento offline não está disponível.');
-                    return;
-                }
-                // ...
-                if (!success) {
-                    toast.error('Falha ao salvar offline. O armazenamento local pode não estar pronto.');
-                    return;
-                }
-                toast.success('Contagem rápida salva offline!');
-            }
+            await addDoc(collection(db, 'counts'), countData);
+            toast.success('Contagem rápida finalizada e salva com sucesso!');
             navigate('/counting');
         } catch (error) {
-            clearTimeout(timeoutId);
             console.error('Erro ao finalizar contagem:', error);
-            let firebaseMsg = '';
-            if (error && error.message) {
-                firebaseMsg = error.message;
-            } else if (typeof error === 'string') {
-                firebaseMsg = error;
-            }
-            const errorMessage = isOnline 
-                ? `Falha ao finalizar a contagem. ${firebaseMsg || 'Tente novamente.'}`
-                : `Falha ao salvar contagem offline. ${firebaseMsg || 'Verifique o armazenamento do dispositivo.'}`;
-            toast.error(errorMessage);
+            toast.error('Falha ao finalizar a contagem. Tente novamente.');
         } finally {
             setLoading(false);
-            // Log para depuração
-            console.log('[QuickCount] Finalizou handleFinalizeCount. Loading:', loading);
         }
     };
 
-    if (loadingProducts || loadingCategories || (!isOnline && !dbReady)) {
+    if (loadingProducts || loadingCategories) {
         return (
             <div className="flex items-center justify-center min-h-[40vh]">
-                <div className="text-center p-4">
-                    {loadingProducts || loadingCategories
-                        ? 'Carregando dados...'
-                        : <span className="text-orange-600">Preparando armazenamento offline...</span>
-                    }
-                </div>
+                <div className="text-center p-4">Carregando dados...</div>
             </div>
         );
     }
@@ -189,15 +129,10 @@ export default function QuickCountPage() {
                 <div>
                     <h2 className="text-3xl font-bold text-gray-800">Contagem Rápida</h2>
                     <div className="flex items-center mt-2 space-x-4">
-                        <div className={`flex items-center space-x-2 text-sm ${isOnline ? 'text-green-600' : 'text-orange-600'}`}>
-                            {isOnline ? <FaWifi /> : <FaBan />}
-                            <span>{isOnline ? 'Online' : 'Modo Offline'}</span>
+                        <div className="flex items-center space-x-2 text-sm text-green-600">
+                            <FaWifi />
+                            <span>Online</span>
                         </div>
-                        {!isOnline && (
-                            <div className="text-sm text-orange-600 bg-orange-50 px-3 py-1 rounded-full">
-                                Dados serão salvos localmente
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>
