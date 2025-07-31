@@ -1,4 +1,5 @@
 ﻿import React, { useMemo } from 'react';
+import { ensureArray } from '../utils/arrayHelpers';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -28,7 +29,7 @@ ChartJS.register(
   Filler
 );
 
-const AdvancedCharts = ({ products = [], categories = [] }) => {
+const AdvancedCharts = ({ products = [], categories }) => {
   // Configurações de tema para os gráficos
   const isDark = document.documentElement.classList.contains('dark');
   
@@ -45,7 +46,7 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
 
   // Dados para gráfico de valor por categoria
   const categoryValueData = useMemo(() => {
-    const safeCategories = Array.isArray(categories) ? categories : [];
+    const safeCategories = ensureArray(categories, 'categories');
     const categoryValues = safeCategories.map(category => {
       const categoryProducts = products.filter(p => p.categoryId === category.id);
       const totalValue = categoryProducts.reduce((sum, product) => {
@@ -86,7 +87,7 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
 
   // Dados para gráfico de quantidade por categoria
   const categoryQuantityData = useMemo(() => {
-    const safeCategories = Array.isArray(categories) ? categories : [];
+    const safeCategories = ensureArray(categories, 'categories');
     const categoryQuantities = safeCategories.map(category => {
       const categoryProducts = products.filter(p => p.categoryId === category.id);
       const totalQuantity = categoryProducts.reduce((sum, product) => {
