@@ -21,8 +21,53 @@ const DifferenceCell = ({ difference }) => {
 };
 
 function CountReportPage() {
-    // ...hooks e variáveis de estado...
-    // Adapte aqui para incluir seus hooks, estados e lógica de carregamento, count, canEdit, applying, handleApplyAdjustment, etc.
+
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const { user } = useAuth();
+    const [loading, setLoading] = useState(true);
+    const [count, setCount] = useState(null);
+    const [canEdit, setCanEdit] = useState(false);
+    const [applying, setApplying] = useState(false);
+
+    useEffect(() => {
+        async function fetchCount() {
+            setLoading(true);
+            try {
+                const docRef = doc(db, 'counts', id);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    setCount({ id: docSnap.id, ...data });
+                    setCanEdit(user && (user.email === data.userEmail || user.isAdmin));
+                } else {
+                    setCount(null);
+                }
+            } catch (error) {
+                toast.error('Erro ao carregar relatório de contagem.');
+                setCount(null);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchCount();
+    }, [id, user]);
+
+    async function handleApplyAdjustment() {
+        if (!count) return;
+        setApplying(true);
+        try {
+            // Lógica de ajuste de estoque (exemplo)
+            const batch = writeBatch(db);
+            // ...adicionar operações de batch aqui...
+            // await batch.commit();
+            toast.success('Ajuste aplicado com sucesso!');
+        } catch (error) {
+            toast.error('Erro ao aplicar ajuste.');
+        } finally {
+            setApplying(false);
+        }
+    }
 
     function exportReportToPDF(count) {
         if (!count) return;
