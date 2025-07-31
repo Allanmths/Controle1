@@ -89,13 +89,14 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
     }).sort((a, b) => b.totalValue - a.totalValue);
 
     // 6. KPIs principais
+    const safeCategories = Array.isArray(categories) ? categories : [];
     const kpis = {
       totalProducts: products.length,
       totalValue: totalValue,
       avgProductValue: totalValue / products.length || 0,
       lowStockCount: lowStockProducts.length,
       zeroStockCount: zeroStockProducts.length,
-      categoriesCount: categories.length
+      categoriesCount: safeCategories.length
     };
 
     return {
