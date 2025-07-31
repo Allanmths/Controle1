@@ -43,16 +43,16 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
     grid: isDark ? '#374151' : '#E5E7EB'
   };
 
-  // Dados para grÃ¡fico de valor por categoria
+  // Dados para gráfico de valor por categoria
   const categoryValueData = useMemo(() => {
-    const categoryValues = (Array.isArray(categories) ? categories : []).map(category => {
+    const safeCategories = Array.isArray(categories) ? categories : [];
+    const categoryValues = safeCategories.map(category => {
       const categoryProducts = products.filter(p => p.categoryId === category.id);
       const totalValue = categoryProducts.reduce((sum, product) => {
         const productValue = Object.values(product.locations || {})
           .reduce((pSum, quantity) => pSum + (quantity * (product.price || 0)), 0);
         return sum + productValue;
       }, 0);
-      
       return {
         name: category.name,
         value: totalValue
@@ -84,16 +84,16 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
     };
   }, [products, categories, chartColors]);
 
-  // Dados para grÃ¡fico de quantidade por categoria
+  // Dados para gráfico de quantidade por categoria
   const categoryQuantityData = useMemo(() => {
-    const categoryQuantities = (Array.isArray(categories) ? categories : []).map(category => {
+    const safeCategories = Array.isArray(categories) ? categories : [];
+    const categoryQuantities = safeCategories.map(category => {
       const categoryProducts = products.filter(p => p.categoryId === category.id);
       const totalQuantity = categoryProducts.reduce((sum, product) => {
         const productQuantity = Object.values(product.locations || {})
           .reduce((pSum, quantity) => pSum + quantity, 0);
         return sum + productQuantity;
       }, 0);
-      
       return {
         name: category.name,
         quantity: totalQuantity,
@@ -114,7 +114,7 @@ const AdvancedCharts = ({ products = [], categories = [] }) => {
           borderSkipped: false,
         },
         {
-          label: 'NÃºmero de Produtos',
+          label: 'Número de Produtos',
           data: categoryQuantities.map(cat => cat.productCount),
           backgroundColor: chartColors.secondary,
           borderColor: chartColors.secondary,
