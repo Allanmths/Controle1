@@ -51,6 +51,7 @@ const AdvancedCharts = ({ products = [], categories }) => {
       const categoryProducts = products.filter(p => p.categoryId === category.id);
       const totalValue = categoryProducts.reduce((sum, product) => {
         const productValue = Object.values(product.locations || {})
+          .filter(q => typeof q === 'number' && !isNaN(q))
           .reduce((pSum, quantity) => pSum + (quantity * (product.price || 0)), 0);
         return sum + productValue;
       }, 0);
@@ -92,6 +93,7 @@ const AdvancedCharts = ({ products = [], categories }) => {
       const categoryProducts = products.filter(p => p.categoryId === category.id);
       const totalQuantity = categoryProducts.reduce((sum, product) => {
         const productQuantity = Object.values(product.locations || {})
+          .filter(q => typeof q === 'number' && !isNaN(q))
           .reduce((pSum, quantity) => pSum + quantity, 0);
         return sum + productQuantity;
       }, 0);
@@ -131,6 +133,7 @@ const AdvancedCharts = ({ products = [], categories }) => {
   const topProductsData = useMemo(() => {
     const productsWithValue = products.map(product => {
       const totalValue = Object.values(product.locations || {})
+        .filter(q => typeof q === 'number' && !isNaN(q))
         .reduce((sum, quantity) => sum + (quantity * (product.price || 0)), 0);
       
       return {
@@ -159,6 +162,7 @@ const AdvancedCharts = ({ products = [], categories }) => {
 
     const productsWithValue = products.map(product => {
       const totalValue = Object.values(product.locations || {})
+        .filter(q => typeof q === 'number' && !isNaN(q))
         .reduce((sum, quantity) => sum + (quantity * (product.price || 0)), 0);
       return { ...product, totalValue };
     }).sort((a, b) => b.totalValue - a.totalValue);
