@@ -211,7 +211,7 @@ export default function DashboardPage() {
     const tableRows = [];
 
     filteredProducts.forEach(product => {
-        const categoryName = categories.find(c => c.id === product.categoryId)?.name || 'N/A';
+        const categoryName = (Array.isArray(categories) ? categories : []).find(c => c.id === product.categoryId)?.name || 'N/A';
         const price = product.price || 0;
         const totalValue = price * product.totalQuantity;
 
