@@ -1,4 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { FaFilePdf } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../services/firebase';
@@ -16,6 +19,51 @@ const DifferenceCell = ({ difference }) => {
     }
     return <td className={`px-6 py-4 whitespace-nowrap text-sm ${color}`}>{sign}{difference}</td>;
 };
+
+function exportReportToPDF(count) {
+  if (!count) return;
+  const doc = new jsPDF();
+  doc.setFontSize(18);
+  doc.text('Relatório da Contagem', 14, 22);
+  doc.setFontSize(11);
+  doc.setTextColor(100);
+  doc.text(`Data: ${count.createdAt?.toDate ? count.createdAt.toDate().toLocaleString('pt-BR') : ''}`, 14, 30);
+  doc.text(`Usuário: ${count.userEmail || ''}`, 14, 36);
+  if (count.locationName) doc.text(`Localidade: ${count.locationName}`, 14, 42);
+  if (count.fileId) doc.text(`ID Arquivo: ${count.fileId}`, 14, 48);
+
+  const tableColumn = [
+    'Produto',
+    'Qtd. Sistema',
+    'Qtd. Contada',
+    'Diferença',
+    'Localidade'
+  ];
+  const tableRows = (count.details || []).map(item => [
+    item.productName,
+    item.expectedQuantity,
+    item.countedQuantity,
+    (item.countedQuantity - item.expectedQuantity),
+    item.locationName || count.locationName || 'Desconhecida'
+  ]);
+
+  doc.autoTable({
+    head: [tableColumn],
+    body: tableRows,
+    startY: 55,
+    styles: { fontSize: 9 },
+    headStyles: { fillColor: [59, 130, 246] },
+    alternateRowStyles: { fillColor: [245, 245, 245] }
+  });
+
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(9);
+    doc.text(`Página ${i} de ${pageCount}`, doc.internal.pageSize.width - 30, doc.internal.pageSize.height - 10);
+  }
+  doc.save(`relatorio_contagem_${count.fileId || count.id || ''}.pdf`);
+}
 
 export default function CountReportPage() {
     const { id } = useParams();
@@ -121,6 +169,12 @@ export default function CountReportPage() {
                     {count.locationName && <span>Localidade: <strong>{count.locationName}</strong> • </span>}
                     {count.fileId && <span>ID do arquivo: <strong>{count.fileId}</strong></span>}
                 </p>
+                <button
+                    onClick={() => exportReportToPDF(count)}
+                    className="ml-4 flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                >
+                    <FaFilePdf className="mr-2" /> Exportar PDF
+                </button>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-sm">
