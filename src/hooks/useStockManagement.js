@@ -54,14 +54,15 @@ export const useStockManagement = () => {
     return (products || []).filter(product => {
       // Filtro por nome
       const matchesName = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-      
+
       // Filtro por categoria - usando categoryId e comparando com o nome da categoria
       let matchesCategory = true;
       if (categoryFilter !== '') {
-        const category = categories?.find(cat => cat.id === product.categoryId);
+        const safeCategories = Array.isArray(categories) ? categories : [];
+        const category = safeCategories.find(cat => cat.id === product.categoryId);
         matchesCategory = category ? category.name === categoryFilter : false;
       }
-      
+
       // Filtro por localizaÃ§Ã£o - verificando se tem estoque na localizaÃ§Ã£o selecionada
       let matchesLocation = true;
       if (locationFilter !== '') {
@@ -73,7 +74,7 @@ export const useStockManagement = () => {
           matchesLocation = false;
         }
       }
-      
+
       return matchesName && matchesCategory && matchesLocation;
     });
   }, [products, searchTerm, categoryFilter, locationFilter, categories, locations]);
