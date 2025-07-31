@@ -1,4 +1,7 @@
 ﻿import React, { useState, useMemo } from 'react';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { FaFilePdf } from 'react-icons/fa';
 import { 
   FaChartLine, 
   FaChartBar, 
@@ -121,6 +124,31 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
   }
 
   const { abcAnalysis, lowStockProducts, top10Products, categoryAnalysis, kpis } = analytics;
+
+  // Função para exportar relatório de estoque por categoria
+  function exportCategoryReportToPDF() {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text('Relatório de Estoque por Categoria', 14, 22);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`Data: ${new Date().toLocaleString('pt-BR')}`, 14, 30);
+
+    const tableColumn = [
+      'Categoria',
+      'Qtd. Produtos',
+      'Qtd. Total',
+      'Valor Total (R$)'
+    ];
+    const tableRows = categoryAnalysis.map(cat => [
+      cat.name,
+      cat.productCount,
+      cat.totalQuantity,
+      cat.totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+    ]);
+    doc.autoTable({ head: [tableColumn], body: tableRows, startY: 38 });
+    doc.save(`relatorio_estoque_categoria_${new Date().toISOString().slice(0,10)}.pdf`);
+  }
 
   return (
     <div className="space-y-6">
@@ -259,10 +287,19 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
 
         {/* Análise por Categoria */}
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <FaChartBar className="text-green-600" />
-            Performance por Categoria
-          </h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <FaChartBar className="text-green-600" />
+              Performance por Categoria
+            </h3>
+            <button
+              onClick={exportCategoryReportToPDF}
+              className="flex items-center px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-semibold"
+              title="Exportar relatório de estoque por categoria em PDF"
+            >
+              <FaFilePdf className="mr-2" /> Exportar PDF
+            </button>
+          </div>
           <div className="space-y-3">
             {categoryAnalysis.slice(0, 8).map((category) => (
               <div key={category.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
