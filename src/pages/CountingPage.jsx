@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import useFirestore from '../hooks/useFirestore';
 // Offline removido
+
 import { FaWifi, FaBan, FaPlus, FaHistory, FaBarcode } from 'react-icons/fa';
+import { useOfflineMode } from '../hooks/useOfflineMode';
 
 const CountStatusBadge = ({ status }) => {
     let label, color;
@@ -24,6 +26,7 @@ const CountStatusBadge = ({ status }) => {
 };
 
 export default function CountingPage() {
+    const { isOnline } = useOfflineMode();
     const { userData } = useAuth();
     const { docs: counts, loading } = useFirestore('counts', { field: 'createdAt', direction: 'desc' });
     // Sempre online

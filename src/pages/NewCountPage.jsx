@@ -6,9 +6,12 @@ import useFirestore from '../hooks/useFirestore';
 import { useAuth } from '../context/AuthContext';
 // Offline removido
 import toast from 'react-hot-toast';
+
 import { FaWifi, FaBan, FaPlus, FaEdit, FaTrash, FaCheck, FaTimes, FaSearch, FaSave, FaMapMarkerAlt } from 'react-icons/fa';
+import { useOfflineMode } from '../hooks/useOfflineMode';
 
 export default function NewCountPage() {
+    const { isOnline } = useOfflineMode();
     const { docs: products, loading: loadingProducts } = useFirestore('products');
     const { docs: locations, loading: loadingLocations } = useFirestore('locations');
     const { currentUser } = useAuth();

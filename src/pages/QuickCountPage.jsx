@@ -7,9 +7,12 @@ import useFirestore from '../hooks/useFirestore';
 import { useAuth } from '../context/AuthContext';
 // Offline removido
 import toast from 'react-hot-toast';
+
 import { FaWifi, FaBan, FaSearch, FaSave, FaBarcode, FaHistory } from 'react-icons/fa';
+import { useOfflineMode } from '../hooks/useOfflineMode';
 
 export default function QuickCountPage() {
+    const { isOnline } = useOfflineMode();
     const { docs: products, loading: loadingProducts } = useFirestore('products');
     // Fallback seguro para categories
     const { docs: _categories, loading: loadingCategories } = useFirestore('categories');
