@@ -150,6 +150,31 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
     doc.save(`relatorio_estoque_categoria_${new Date().toISOString().slice(0,10)}.pdf`);
   }
 
+  // Função para exportar relatório geral de posição de estoque
+  function exportStockPositionReportToPDF() {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text('Relatório de Posição de Estoque', 14, 22);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`Data: ${new Date().toLocaleString('pt-BR')}`, 14, 30);
+
+    const tableColumn = [
+      'Produto',
+      'Categoria',
+      'Qtd. Total',
+      'Valor Total (R$)'
+    ];
+    const tableRows = (analytics.abcAnalysis || []).map(prod => [
+      prod.name,
+      (categories.find(c => c.id === prod.categoryId)?.name) || '-',
+      prod.totalQuantity,
+      prod.totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+    ]);
+    doc.autoTable({ head: [tableColumn], body: tableRows, startY: 38 });
+    doc.save(`relatorio_posicao_estoque_${new Date().toISOString().slice(0,10)}.pdf`);
+  }
+
   return (
     <div className="space-y-6">
       {/* Header com filtros */}
@@ -189,6 +214,20 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
 
       {/* KPIs Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        {/* Relatório de Posição de Estoque */}
+        <div className="bg-gradient-to-r from-gray-700 to-gray-900 text-white p-4 rounded-lg shadow-lg col-span-1 flex flex-col justify-between">
+          <div>
+            <p className="text-gray-100 text-sm font-semibold mb-2">Relatório de Posição de Estoque</p>
+            <p className="text-xs text-gray-300 mb-4">Exportação geral de todos os produtos do estoque</p>
+          </div>
+          <button
+            onClick={exportStockPositionReportToPDF}
+            className="flex items-center px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-semibold mt-auto"
+            title="Exportar relatório geral de posição de estoque em PDF"
+          >
+            <FaFilePdf className="mr-2" /> Exportar PDF
+          </button>
+        </div>
         <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-lg shadow-lg">
           <div className="flex items-center justify-between">
             <div>
