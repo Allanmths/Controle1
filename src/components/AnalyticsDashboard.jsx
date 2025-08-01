@@ -1,12 +1,4 @@
-﻿import React, { useState, useMemo } from 'react';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-import { FaFilePdf } from 'react-icons/fa';
-import { 
-  FaChartLine, 
-  FaChartBar, 
-
-import React, { useMemo } from 'react';
+﻿import React, { useMemo } from 'react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { FaFilePdf, FaChartBar, FaChartPie, FaArrowUp, FaArrowDown, FaExclamationTriangle, FaCalendarAlt, FaBell } from 'react-icons/fa';
@@ -229,4 +221,3 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
 };
 
 export default AnalyticsDashboard;
-          <div className="flex items-center justify-between">
