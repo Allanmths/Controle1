@@ -211,7 +211,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) 
         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
           <FaChartPie className="text-blue-600" /> Análise Visual Avançada
         </h3>
-        <AdvancedCharts products={products} categories={categories} />
+        <AdvancedCharts products={products} categories={categories} loading={loading} />
       </div>
 
       {/* Alertas Preditivos */}

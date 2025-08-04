@@ -1,4 +1,4 @@
-﻿import React, { useMemo } from 'react';
+﻿import React, { useMemo, useRef } from 'react';
 import { ensureArray } from '../utils/arrayHelpers';
 import {
   Chart as ChartJS,
@@ -14,6 +14,7 @@ import {
   Filler
 } from 'chart.js';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
+import { FaDownload, FaInfoCircle } from 'react-icons/fa';
 
 // Registrar componentes do Chart.js
 ChartJS.register(
@@ -29,7 +30,41 @@ ChartJS.register(
   Filler
 );
 
-const AdvancedCharts = ({ products = [], categories }) => {
+const ChartContainer = ({ title, chartId, children, onExport }) => (
+  <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg relative">
+    <div className="flex justify-between items-center mb-4">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+        {title}
+      </h3>
+      <button
+        onClick={() => onExport(chartId, title)}
+        className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
+        aria-label={`Exportar gráfico ${title}`}
+      >
+        <FaDownload />
+      </button>
+    </div>
+    <div id={chartId} className="h-80">
+      {children}
+    </div>
+  </div>
+);
+
+const NoDataComponent = () => (
+  <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+    <FaInfoCircle className="mr-2" />
+    <span>Não há dados para exibir.</span>
+  </div>
+);
+
+const AdvancedCharts = ({ products = [], categories, loading = false }) => {
+  const chartRefs = {
+    categoryValue: useRef(null),
+    abcAnalysis: useRef(null),
+    topProducts: useRef(null),
+    categoryQuantity: useRef(null),
+  };
+
   // Configurações de tema para os gráficos
   const isDark = document.documentElement.classList.contains('dark');
   
@@ -44,17 +79,27 @@ const AdvancedCharts = ({ products = [], categories }) => {
     grid: isDark ? '#374151' : '#E5E7EB'
   };
 
+  const productsWithCalculatedValues = useMemo(() => {
+    return products.map(product => {
+      const totalQuantity = Object.values(product.locations || {})
+        .filter(q => typeof q === 'number' && !isNaN(q))
+        .reduce((sum, quantity) => sum + quantity, 0);
+      const totalValue = totalQuantity * (product.price || 0);
+      
+      return {
+        ...product,
+        totalQuantity,
+        totalValue
+      };
+    });
+  }, [products]);
+
   // Dados para gráfico de valor por categoria
   const categoryValueData = useMemo(() => {
     const safeCategories = ensureArray(categories, 'categories');
     const categoryValues = safeCategories.map(category => {
-      const categoryProducts = products.filter(p => p.categoryId === category.id);
-      const totalValue = categoryProducts.reduce((sum, product) => {
-        const productValue = Object.values(product.locations || {})
-          .filter(q => typeof q === 'number' && !isNaN(q))
-          .reduce((pSum, quantity) => pSum + (quantity * (product.price || 0)), 0);
-        return sum + productValue;
-      }, 0);
+      const categoryProducts = productsWithCalculatedValues.filter(p => p.categoryId === category.id);
+      const totalValue = categoryProducts.reduce((sum, product) => sum + product.totalValue, 0);
       return {
         name: category.name,
         value: totalValue
@@ -84,19 +129,14 @@ const AdvancedCharts = ({ products = [], categories }) => {
         hoverBorderColor: chartColors.text,
       }]
     };
-  }, [products, categories, chartColors]);
+  }, [productsWithCalculatedValues, categories, chartColors]);
 
   // Dados para gráfico de quantidade por categoria
   const categoryQuantityData = useMemo(() => {
     const safeCategories = ensureArray(categories, 'categories');
     const categoryQuantities = safeCategories.map(category => {
-      const categoryProducts = products.filter(p => p.categoryId === category.id);
-      const totalQuantity = categoryProducts.reduce((sum, product) => {
-        const productQuantity = Object.values(product.locations || {})
-          .filter(q => typeof q === 'number' && !isNaN(q))
-          .reduce((pSum, quantity) => pSum + quantity, 0);
-        return sum + productQuantity;
-      }, 0);
+      const categoryProducts = productsWithCalculatedValues.filter(p => p.categoryId === category.id);
+      const totalQuantity = categoryProducts.reduce((sum, product) => sum + product.totalQuantity, 0);
       return {
         name: category.name,
         quantity: totalQuantity,
@@ -127,26 +167,17 @@ const AdvancedCharts = ({ products = [], categories }) => {
         }
       ]
     };
-  }, [products, categories, chartColors]);
+  }, [productsWithCalculatedValues, categories, chartColors]);
 
   // Top 10 produtos por valor
   const topProductsData = useMemo(() => {
-    const productsWithValue = products.map(product => {
-      const totalValue = Object.values(product.locations || {})
-        .filter(q => typeof q === 'number' && !isNaN(q))
-        .reduce((sum, quantity) => sum + (quantity * (product.price || 0)), 0);
-      
-      return {
-        ...product,
-        totalValue
-      };
-    }).sort((a, b) => b.totalValue - a.totalValue).slice(0, 10);
+    const productsSorted = [...productsWithCalculatedValues].sort((a, b) => b.totalValue - a.totalValue).slice(0, 10);
 
     return {
-      labels: productsWithValue.map(p => p.name.length > 20 ? p.name.substring(0, 20) + '...' : p.name),
+      labels: productsSorted.map(p => p.name.length > 20 ? p.name.substring(0, 20) + '...' : p.name),
       datasets: [{
         label: 'Valor Total (R$)',
-        data: productsWithValue.map(p => p.totalValue),
+        data: productsSorted.map(p => p.totalValue),
         backgroundColor: chartColors.info,
         borderColor: chartColors.info,
         borderWidth: 2,
@@ -154,25 +185,20 @@ const AdvancedCharts = ({ products = [], categories }) => {
         borderSkipped: false,
       }]
     };
-  }, [products, chartColors]);
+  }, [productsWithCalculatedValues, chartColors]);
 
   // Análise ABC para gráfico de rosca
   const abcAnalysisData = useMemo(() => {
-    if (!products.length) return null;
+    if (!productsWithCalculatedValues.length) return null;
 
-    const productsWithValue = products.map(product => {
-      const totalValue = Object.values(product.locations || {})
-        .filter(q => typeof q === 'number' && !isNaN(q))
-        .reduce((sum, quantity) => sum + (quantity * (product.price || 0)), 0);
-      return { ...product, totalValue };
-    }).sort((a, b) => b.totalValue - a.totalValue);
+    const productsSorted = [...productsWithCalculatedValues].sort((a, b) => b.totalValue - a.totalValue);
+    const totalValue = productsSorted.reduce((sum, p) => sum + p.totalValue, 0);
+    if (totalValue === 0) return null;
 
-    const totalValue = productsWithValue.reduce((sum, p) => sum + p.totalValue, 0);
     let cumulativeValue = 0;
-    
     const abcCounts = { A: 0, B: 0, C: 0 };
     
-    productsWithValue.forEach(product => {
+    productsSorted.forEach(product => {
       cumulativeValue += product.totalValue;
       const cumulativePercent = (cumulativeValue / totalValue) * 100;
       
@@ -192,10 +218,24 @@ const AdvancedCharts = ({ products = [], categories }) => {
         hoverBorderColor: chartColors.text,
       }]
     };
-  }, [products, chartColors]);
+  }, [productsWithCalculatedValues, chartColors]);
+
+  const handleExportChart = (chartId, title) => {
+    const chartRef = chartRefs[chartId];
+    const chart = chartRef.current;
+    if (chart) {
+      const link = document.createElement('a');
+      link.href = chart.toBase64Image('image/png', 1);
+      link.download = `${title.replace(/ /g, '_').toLowerCase()}_${new Date().toISOString().slice(0,10)}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
 
   // Opções padrão para os gráficos
   const defaultOptions = {
+// ... (o resto do arquivo permanece o mesmo)
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -268,7 +308,7 @@ const AdvancedCharts = ({ products = [], categories }) => {
             const label = context.label || '';
             const value = context.parsed || 0;
             const total = context.dataset.data.reduce((a, b) => a + b, 0);
-            const percentage = ((value / total) * 100).toFixed(1);
+            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
             return `${label}: ${value} produtos (${percentage}%)`;
           }
         }
@@ -276,35 +316,52 @@ const AdvancedCharts = ({ products = [], categories }) => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg h-80 animate-pulse">
+            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
+            <div className="h-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (!products.length) {
+    return (
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg col-span-1 lg:col-span-2">
+        <NoDataComponent />
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* GrÃ¡fico de Valor por Categoria */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          Valor em Estoque por Categoria
-        </h3>
-        <div className="h-80">
-          <Bar data={categoryValueData} options={defaultOptions} />
-        </div>
-      </div>
+      <ChartContainer title="Valor em Estoque por Categoria" chartId="categoryValue" onExport={handleExportChart}>
+        <Bar ref={chartRefs.categoryValue} data={categoryValueData} options={defaultOptions} />
+      </ChartContainer>
 
-      {/* Análise ABC */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          Análise ABC - Distribuição de Produtos
-        </h3>
-        <div className="h-80">
-          {abcAnalysisData && <Doughnut data={abcAnalysisData} options={doughnutOptions} />}
-        </div>
-      </div>
+      <ChartContainer title="Análise ABC - Distribuição de Produtos" chartId="abcAnalysis" onExport={handleExportChart}>
+        {abcAnalysisData ? <Doughnut ref={chartRefs.abcAnalysis} data={abcAnalysisData} options={doughnutOptions} /> : <NoDataComponent />}
+      </ChartContainer>
 
-      {/* Top 10 Produtos por Valor */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg lg:col-span-2">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          Top 10 Produtos por Valor Total
-        </h3>
-        <div className="h-96">
-          <Bar data={topProductsData} options={{
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg lg:col-span-2 relative">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            Top 10 Produtos por Valor Total
+          </h3>
+          <button
+            onClick={() => handleExportChart('topProducts', 'Top 10 Produtos por Valor Total')}
+            className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
+            aria-label="Exportar gráfico Top 10 Produtos por Valor Total"
+          >
+            <FaDownload />
+          </button>
+        </div>
+        <div id="topProducts" className="h-96">
+          <Bar ref={chartRefs.topProducts} data={topProductsData} options={{
             ...defaultOptions,
             indexAxis: 'y',
             plugins: {
@@ -339,13 +396,21 @@ const AdvancedCharts = ({ products = [], categories }) => {
         </div>
       </div>
 
-      {/* Comparativo Quantidade vs Produtos por Categoria */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg lg:col-span-2">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          Quantidade vs NÃºmero de Produtos por Categoria
-        </h3>
-        <div className="h-80">
-          <Bar data={categoryQuantityData} options={{
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg lg:col-span-2 relative">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            Quantidade vs Número de Produtos por Categoria
+          </h3>
+          <button
+            onClick={() => handleExportChart('categoryQuantity', 'Quantidade vs Número de Produtos por Categoria')}
+            className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
+            aria-label="Exportar gráfico Quantidade vs Número de Produtos por Categoria"
+          >
+            <FaDownload />
+          </button>
+        </div>
+        <div id="categoryQuantity" className="h-80">
+          <Bar ref={chartRefs.categoryQuantity} data={categoryQuantityData} options={{
             ...defaultOptions,
             plugins: {
               ...defaultOptions.plugins,

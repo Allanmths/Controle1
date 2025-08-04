@@ -50,6 +50,8 @@ export default function DashboardPage() {
   const { docs: categories, loading: loadingCategories } = useFirestore('categories');
   const { docs: movements, loading: loadingMovements } = useFirestore('movements', { orderBy: ['timestamp', 'desc'] });
 
+  const loading = loadingProducts || loadingMovements || loadingCategories;
+
   useEffect(() => {
     const now = new Date();
     switch (periodOption) {
@@ -237,7 +239,7 @@ export default function DashboardPage() {
     doc.save(`relatorio_estoque_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
   };
 
-  if (loadingProducts || loadingMovements || loadingCategories) {
+  if (loading) {
     return <div className="flex justify-center items-center h-screen"><p>Carregando...</p></div>;
   }
 
