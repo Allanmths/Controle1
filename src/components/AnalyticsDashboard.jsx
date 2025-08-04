@@ -5,7 +5,7 @@ import { FaFilePdf, FaChartBar, FaChartPie, FaArrowUp, FaArrowDown, FaExclamatio
 import AdvancedCharts from './AdvancedCharts';
 import PredictiveAlerts from './PredictiveAlerts';
 
-const AnalyticsDashboard = ({ products = [], movements = [], categories = [] }) => {
+const AnalyticsDashboard = ({ products = [], movements = [], categories = [], loading = false }) => {
 
   // Filtros de exportação
   const [selectedCategory, setSelectedCategory] = React.useState('all');

@@ -34,6 +34,7 @@ const ReportsPage = () => {
                     products={products || []}
                     categories={categories || []}
                     movements={movements || []}
+                    loading={isLoading}
                 />
             )
         },
