@@ -26,6 +26,12 @@ const StockTransferForm = () => {
 
         const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!user) {
+            toast.error("Usuário não autenticado. Por favor, faça login novamente.");
+            return;
+        }
+
         if (!selectedProduct || !fromLocationId || !toLocationId || !quantity) {
             toast.error("Por favor, preencha todos os campos.");
             return;
