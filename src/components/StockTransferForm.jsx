@@ -8,7 +8,7 @@ import useFirestore from '../hooks/useFirestore';
 import { FaExchangeAlt } from 'react-icons/fa';
 
 const StockTransferForm = () => {
-    const { user, userData } = useAuth();
+    const { user, userData, loading: authLoading } = useAuth();
     const { docs: locations } = useFirestore('locations', { field: 'name', direction: 'asc' });
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [fromLocationId, setFromLocationId] = useState('');
@@ -175,9 +175,13 @@ const StockTransferForm = () => {
                         </div>
 
                         <div className="flex justify-end pt-2">
-                            <button type="submit" disabled={!selectedProduct || !fromLocationId || !toLocationId || !quantity} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 disabled:bg-blue-300">
+                            <button 
+                                type="submit" 
+                                disabled={!selectedProduct || !fromLocationId || !toLocationId || !quantity || authLoading} 
+                                className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
+                            >
                                 <FaExchangeAlt />
-                                Confirmar Transferência
+                                {authLoading ? 'Verificando...' : 'Confirmar Transferência'}
                             </button>
                         </div>
                     </>
