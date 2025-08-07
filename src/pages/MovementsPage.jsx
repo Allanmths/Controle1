@@ -1,6 +1,7 @@
 ﻿import React, { useState } from 'react';
 import StockTransferForm from '../components/StockTransferForm';
 import StockExitForm from '../components/StockExitForm';
+import MovementHistory from '../components/MovementHistory';
 
 const MovementsPage = () => {
     const [activeTab, setActiveTab] = useState('forms');
@@ -46,10 +47,7 @@ const MovementsPage = () => {
             )}
 
             {activeTab === 'history' && (
-                <div className="bg-white rounded-lg shadow-lg p-6">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4">Histórico de Movimentações</h3>
-                    <p className="text-gray-600">Histórico em desenvolvimento...</p>
-                </div>
+                <MovementHistory />
             )}
         </div>
     );

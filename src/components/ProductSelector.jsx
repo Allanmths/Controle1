@@ -178,7 +178,7 @@ const ProductSelector = ({ onProductSelect, selectedProductId, placeholder = "Se
                             ) : (
                                 filteredProducts.map(product => {
                                     const category = categories?.find(cat => cat.id === product.categoryId);
-                                    const totalStock = product.totalQuantity || Object.values(product.locations || {})
+                                    const totalStock = Object.values(product.locations || {})
                                         .reduce((sum, quantity) => sum + quantity, 0);
                                     
                                     return (

@@ -236,7 +236,7 @@ export default function DashboardPage() {
         doc.text(`PÃ¡gina ${i} de ${pageCount}`, doc.internal.pageSize.width - 20, doc.internal.pageSize.height - 10);
     }
 
-    doc.save(`relatorio_estoque_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
+    doc.save(`relatório_estoque_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
   };
 
   if (loading) {

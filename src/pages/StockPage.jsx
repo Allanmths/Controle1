@@ -176,7 +176,7 @@ const StockPage = () => {
       head: [['Nome', 'Categoria', 'Local', 'Quantidade', 'Preço']],
       body: (products || []).map(p => [p.name, p.category, p.location, p.quantity, `R$ ${p.price}`]),
     });
-    doc.save('relatorio_estoque.pdf');
+    doc.save('relatório_estoque.pdf');
   };
 
   // Fecha o dropdown se clicar fora

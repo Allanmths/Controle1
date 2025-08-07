@@ -3,12 +3,12 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
     FaHome, FaBoxOpen, FaPlusCircle, 
-    FaExchangeAlt, FaClipboardCheck, FaHistory, FaFileAlt, FaCog, FaSignOutAlt, FaBoxes 
+    FaExchangeAlt, FaClipboardCheck, FaHistory, FaFileAlt, FaCog, FaSignOutAlt, FaBoxes
 } from 'react-icons/fa';
 
-// Links de navegaÃ§Ã£o principais
+// Links de navegação principais
 const mainNavLinks = [
-    { to: '/', text: 'I­nício', icon: FaHome },
+    { to: '/', text: 'Início', icon: FaHome },
     { to: '/stock', text: 'Estoque', icon: FaBoxOpen },
     { to: '/registers', text: 'Cadastros', icon: FaPlusCircle },
     { to: '/movements', text: 'Movimentações', icon: FaExchangeAlt },

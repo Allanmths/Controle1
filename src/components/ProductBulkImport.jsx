@@ -17,7 +17,7 @@ const ProductBulkImport = () => {
             'Nome', 
             'Categoria', 
             'Unidade', 
-            'EstoqueMinimo', 
+            'EstoqueMínimo', 
             ...(locations && locations.length > 0 ? locations.map(loc => `Estoque_${loc.name.replace(/\s+/g, '_')}`) : ['Estoque_Local'])
         ];
         
@@ -26,7 +26,7 @@ const ProductBulkImport = () => {
                 'Nome': 'Exemplo: Monitor 24 Polegadas',
                 'Categoria': 'Eletrônicos',
                 'Unidade': 'un',
-                'EstoqueMinimo': '5',
+                'EstoqueMínimo': '5',
                 ...(locations || []).reduce((acc, loc) => ({ ...acc, [`Estoque_${loc.name.replace(/\s+/g, '_')}`]: '10' }), {})
             }
         ];
@@ -41,7 +41,7 @@ const ProductBulkImport = () => {
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            link.setAttribute('download', 'modelo_importacao_produtos.csv');
+            link.setAttribute('download', 'modelo_importação_produtos.csv');
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -49,14 +49,14 @@ const ProductBulkImport = () => {
             const ws = XLSX.utils.json_to_sheet(sampleData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, 'Produtos');
-            XLSX.writeFile(wb, 'modelo_importacao_produtos.xlsx');
+            XLSX.writeFile(wb, 'modelo_importação_produtos.xlsx');
         } else if (format === 'json') {
             const jsonData = JSON.stringify(sampleData, null, 2);
             const blob = new Blob([jsonData], { type: 'application/json;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            link.setAttribute('download', 'modelo_importacao_produtos.json');
+            link.setAttribute('download', 'modelo_importação_produtos.json');
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -239,7 +239,7 @@ const ProductBulkImport = () => {
             toast.loading('Importando produtos...', { id: 'importing-products' });
 
             const promises = (productsToImport || []).map(async (productRow) => {
-                const { Nome, Categoria, Unidade, EstoqueMinimo, ...stockFields } = productRow;
+                const { Nome, Categoria, Unidade, EstoqueMínimo, ...stockFields } = productRow;
 
                 if (!Nome || !Categoria) {
                     toast.error(`Produto "${Nome || 'Sem nome'}" ignorado: Nome e Categoria são obrigatórios.`);
@@ -266,7 +266,7 @@ const ProductBulkImport = () => {
                     name: Nome,
                     categoryId,
                     unit: Unidade || 'un',
-                    minStock: Number(EstoqueMinimo) || 0,
+                    minStock: Number(EstoqueMínimo) || 0,
                     locations: locationQuantities
                 };
 

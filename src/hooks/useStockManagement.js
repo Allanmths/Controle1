@@ -6,8 +6,8 @@ import toast from 'react-hot-toast';
 import { useSettings } from '../context/SettingsContext';
 
 /**
- * Hook customizado para gerenciar toda a lÃ³gica da pÃ¡gina de estoque.
- * Encapsula o carregamento de dados, filtros, paginaÃ§Ã£o, e o estado dos modais.
+ * Hook customizado para gerenciar toda a lógica da página de estoque.
+ * Encapsula o carregamento de dados, filtros, paginação, e o estado dos modais.
  */
 export const useStockManagement = () => {
   // 1. Carregamento de Dados
@@ -25,14 +25,14 @@ export const useStockManagement = () => {
   const [productToEdit, setProductToEdit] = useState(null);
   const [productToDeleteConfirm, setProductToDeleteConfirm] = useState(null);
 
-  // 3. Estado de Filtros e PaginaÃ§Ã£o
+  // 3. Estado de Filtros e Paginação
   const { itemsPerPage } = useSettings(); // Consome do contexto
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   
-  // 4. LÃ³gica de NegÃ³cio
+  // 4. Lógica de Negócio
 
   // Combina os estados de loading
   const isLoading = productsLoading || categoriesLoading || locationsLoading;
@@ -193,7 +193,7 @@ export const useStockManagement = () => {
     handleCloseDeleteConfirmModal,
     handleConfirmDelete,
 
-    // Handlers de Filtro e PaginaÃ§Ã£o
+    // Handlers de Filtro e Paginação
     searchTerm,
     setSearchTerm,
     categoryFilter,

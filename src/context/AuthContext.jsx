@@ -6,7 +6,7 @@ import {
   signOut 
 } from 'firebase/auth';
 import { auth, db } from '../services/firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
@@ -40,7 +40,13 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    // Atualizar a data do último login
+    const userDocRef = doc(db, 'users', result.user.uid);
+    await updateDoc(userDocRef, {
+      lastLogin: serverTimestamp(),
+    });
+    return result;
   };
 
   const register = async (email, password) => {
@@ -50,7 +56,8 @@ export const AuthProvider = ({ children }) => {
     await setDoc(doc(db, 'users', result.user.uid), {
       email: result.user.email,
       role: 'viewer', // Usuários novos começam como 'viewer'
-      createdAt: new Date(),
+      createdAt: serverTimestamp(),
+      lastLogin: serverTimestamp(),
       displayName: result.user.email.split('@')[0]
     });
     
@@ -63,6 +70,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     currentUser,
+    user: currentUser, // Alias para compatibilidade
     userData,
     loading,
     login,

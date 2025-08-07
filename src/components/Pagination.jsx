@@ -22,7 +22,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                     <i className="fas fa-chevron-left h-5 w-5"></i>
                 </button>
                 
-                {/* Placeholder para lÃ³gica de paginaÃ§Ã£o mais complexa (ex: ... ) */}
+                {/* Placeholder para lógica de paginação mais complexa (ex: ... ) */}
                 {pageNumbers.map(number => (
                     <button
                         key={number}

@@ -36,7 +36,7 @@ export const createDemoUsers = async () => {
     },
     {
       id: 'demo-user',
-      email: 'usuario@demo.com',
+      email: 'usuário@demo.com',
       displayName: 'UsuÃ¡rio Demo',
       role: ROLES.USER,
       isActive: true,

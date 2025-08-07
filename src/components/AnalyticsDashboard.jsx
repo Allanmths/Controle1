@@ -65,7 +65,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [], lo
     const tableColumn = ['Produto', 'Categoria', 'Qtd. Total', 'Valor Total (R$)'];
     const tableRows = stockPositionRows.map(r => [r.name, r.category, r.totalQuantity, r.totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })]);
     doc.autoTable({ head: [tableColumn], body: tableRows, startY: 38 });
-    doc.save(`relatorio_geral_estoque_${new Date().toISOString().slice(0,10)}.pdf`);
+    doc.save(`relatório_geral_estoque_${new Date().toISOString().slice(0,10)}.pdf`);
   }
   function exportLowStockPDF() {
     const doc = new jsPDF();
@@ -77,7 +77,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [], lo
     const tableColumn = ['Produto', 'Categoria', 'Qtd. Total', 'Estoque Mínimo'];
     const tableRows = lowStockRows.map(r => [r.name, r.category, r.totalQuantity, r.minStock]);
     doc.autoTable({ head: [tableColumn], body: tableRows, startY: 38 });
-    doc.save(`relatorio_estoque_baixo_${new Date().toISOString().slice(0,10)}.pdf`);
+    doc.save(`relatório_estoque_baixo_${new Date().toISOString().slice(0,10)}.pdf`);
   }
   function exportZeroStockPDF() {
     const doc = new jsPDF();
@@ -89,7 +89,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [], lo
     const tableColumn = ['Produto', 'Categoria'];
     const tableRows = zeroStockRows.map(r => [r.name, r.category]);
     doc.autoTable({ head: [tableColumn], body: tableRows, startY: 38 });
-    doc.save(`relatorio_sem_estoque_${new Date().toISOString().slice(0,10)}.pdf`);
+    doc.save(`relatório_sem_estoque_${new Date().toISOString().slice(0,10)}.pdf`);
   }
   function handleExportFilteredPDF() {
     const doc = new jsPDF();
@@ -101,7 +101,7 @@ const AnalyticsDashboard = ({ products = [], movements = [], categories = [], lo
     const tableColumn = ['Produto', 'Categoria', 'Qtd. Total', 'Valor Total (R$)'];
     const tableRows = filteredRows.map(r => [r.name, r.category, r.totalQuantity, r.totalValue?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })]);
     doc.autoTable({ head: [tableColumn], body: tableRows, startY: 38 });
-    doc.save(`relatorio_estoque_filtrado_${new Date().toISOString().slice(0,10)}.pdf`);
+    doc.save(`relatório_estoque_filtrado_${new Date().toISOString().slice(0,10)}.pdf`);
   }
 
   return (

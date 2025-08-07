@@ -210,7 +210,7 @@ const PurchaseListModal = ({ isOpen, onClose, list, onExport, canExport }) => {
                             Qtd. Sugerida
                           </th>
                           <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">
-                            Preco Unit.
+                            Preço Unit.
                           </th>
                           <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">
                             Total
