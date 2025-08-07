@@ -18,7 +18,7 @@ const mainNavLinks = [
     { to: '/reports', text: 'Analytics & Relatórios', icon: FaFileAlt },
 ];
 
-// Componente de item de navegaÃ§Ã£o reutilizÃ¡vel
+// Componente de item de navegação reutilizável
 const NavItem = ({ to, text, icon: Icon, onClick, onNavigate }) => (
     <li>
         <NavLink
@@ -55,9 +55,9 @@ export default function Sidebar({ isOpen, onClose }) {
         navigate('/auth');
     };
 
-    // FunÃ§Ã£o para fechar o sidebar apÃ³s navegar (principalmente para mobile)
+    // Função para fechar o sidebar após navegar (principalmente para mobile)
     const handleNavigate = () => {
-        // Fecha o sidebar em telas menores quando uma opÃ§Ã£o Ã© selecionada
+        // Fecha o sidebar em telas menores quando uma opção é selecionada
         if (window.innerWidth < 1024) { // lg breakpoint do Tailwind
             onClose();
         }
