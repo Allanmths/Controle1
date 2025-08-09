@@ -119,72 +119,21 @@ export default function AuthPage() {
 
             {/* Container principal */}
             <div className="w-full max-w-4xl flex bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden relative z-10">
-                {/* Painel lateral esquerdo */}
-                <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-indigo-700 p-12 flex-col justify-between text-white relative">
+                {/* Painel lateral esquerdo - Simplificado */}
+                <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-indigo-700 p-12 flex-col justify-center items-center text-white relative">
                     <div className="absolute inset-0 bg-black/10"></div>
                     
-                    <div className="relative z-10">
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                                <i className="fas fa-boxes-stacked text-2xl"></i>
-                            </div>
-                            <div>
-                                <h1 className="text-2xl font-bold">Controle de Estoque</h1>
-                                <p className="text-blue-200 text-sm">Sistema Profissional</p>
-                            </div>
+                    <div className="relative z-10 text-center">
+                        <div className="w-24 h-24 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-8">
+                            <i className="fas fa-boxes-stacked text-4xl"></i>
                         </div>
-
-                        <div className="space-y-6">
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                                    <i className="fas fa-chart-line"></i>
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold">Dashboard Avançado</h3>
-                                    <p className="text-blue-200 text-sm">Analytics e relatórios em tempo real</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                                    <i className="fas fa-users"></i>
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold">Gestão de Usuários</h3>
-                                    <p className="text-blue-200 text-sm">5 níveis de permissão</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                                    <i className="fas fa-mobile-alt"></i>
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold">PWA Completo</h3>
-                                    <p className="text-blue-200 text-sm">Funciona offline e é instalável</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                                    <i className="fas fa-bell"></i>
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold">Notificações Inteligentes</h3>
-                                    <p className="text-blue-200 text-sm">Alertas de estoque baixo</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="relative z-10">
-                        <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                            <div className="flex items-center justify-between mb-2">
-                                <span className="text-sm text-blue-200">Horário atual</span>
-                                <i className="fas fa-clock text-blue-200"></i>
-                            </div>
-                            <div className="text-2xl font-bold mb-1">{formatTime(currentTime)}</div>
-                            <div className="text-sm text-blue-200 capitalize">{formatDate(currentTime)}</div>
+                        
+                        <h1 className="text-4xl font-bold mb-4">Controle de Estoque</h1>
+                        <p className="text-blue-200 text-lg mb-8">Sistema Profissional</p>
+                        
+                        <div className="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
+                            <div className="text-3xl font-bold mb-2">{formatTime(currentTime)}</div>
+                            <div className="text-blue-200 capitalize">{formatDate(currentTime)}</div>
                         </div>
                     </div>
                 </div>
@@ -202,8 +151,8 @@ export default function AuthPage() {
                             </h2>
                             <p className="text-gray-600">
                                 {isLogin 
-                                    ? 'Acesse seu painel de controle de estoque' 
-                                    : 'Crie sua conta como Visualizador'
+                                    ? 'Entre com suas credenciais' 
+                                    : 'Crie sua conta para começar'
                                 }
                             </p>
                         </div>
@@ -340,24 +289,6 @@ export default function AuthPage() {
                                     {isLogin ? 'Registre-se' : 'Faça Login'}
                                 </button>
                             </p>
-                        </div>
-
-                        {/* Informações adicionais */}
-                        <div className="mt-8 text-center">
-                            <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
-                                <span className="flex items-center gap-1">
-                                    <i className="fas fa-shield-alt"></i>
-                                    Seguro
-                                </span>
-                                <span className="flex items-center gap-1">
-                                    <i className="fas fa-clock"></i>
-                                    24/7
-                                </span>
-                                <span className="flex items-center gap-1">
-                                    <i className="fas fa-mobile-alt"></i>
-                                    Responsivo
-                                </span>
-                            </div>
                         </div>
                     </div>
                 </div>
