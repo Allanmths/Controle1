@@ -124,12 +124,22 @@ export default function AuthPage() {
                     <div className="absolute inset-0 bg-black/10"></div>
                     
                     <div className="relative z-10 text-center">
-                        <div className="w-24 h-24 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-8">
-                            <i className="fas fa-boxes-stacked text-4xl"></i>
+                        <div className="w-32 h-32 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-8 p-4">
+                            <img 
+                                src="/Controle1/hom-hotel-logo.png" 
+                                alt="HoM Hotel" 
+                                className="w-full h-full object-contain"
+                                onError={(e) => {
+                                    // Fallback para ícone se a imagem não carregar
+                                    e.target.style.display = 'none';
+                                    e.target.nextElementSibling.style.display = 'block';
+                                }}
+                            />
+                            <i className="fas fa-boxes-stacked text-4xl text-white" style={{display: 'none'}}></i>
                         </div>
                         
-                        <h1 className="text-4xl font-bold mb-4">Controle de Estoque</h1>
-                        <p className="text-blue-200 text-lg mb-8">Sistema Profissional</p>
+                        <h1 className="text-4xl font-bold mb-4">HoM Hotel</h1>
+                        <p className="text-blue-200 text-lg mb-8">Sistema de Controle</p>
                         
                         <div className="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
                             <div className="text-3xl font-bold mb-2">{formatTime(currentTime)}</div>
@@ -143,8 +153,18 @@ export default function AuthPage() {
                     <div className="max-w-sm mx-auto">
                         {/* Header do formulário */}
                         <div className="text-center mb-8">
-                            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                                <i className={`fas ${isLogin ? 'fa-sign-in-alt' : 'fa-user-plus'} text-white text-xl`}></i>
+                            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg p-2">
+                                <img 
+                                    src="/Controle1/hom-hotel-logo.png" 
+                                    alt="HoM Hotel" 
+                                    className="w-full h-full object-contain"
+                                    onError={(e) => {
+                                        // Fallback para ícone se a imagem não carregar
+                                        e.target.style.display = 'none';
+                                        e.target.nextElementSibling.style.display = 'block';
+                                    }}
+                                />
+                                <i className={`fas ${isLogin ? 'fa-sign-in-alt' : 'fa-user-plus'} text-white text-xl`} style={{display: 'none'}}></i>
                             </div>
                             <h2 className="text-3xl font-bold text-gray-800 mb-2">
                                 {isLogin ? 'Bem-vindo de volta!' : 'Criar Conta'}
