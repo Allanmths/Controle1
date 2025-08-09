@@ -124,15 +124,19 @@ export default function AuthPage() {
                     <div className="absolute inset-0 bg-black/10"></div>
                     
                     <div className="relative z-10 text-center">
-                        <div className="w-32 h-32 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-8 p-4">
+                        <div className="w-32 h-32 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-8 p-4 backdrop-blur-sm">
                             <img 
-                                src={`${import.meta.env.BASE_URL}hcm-hotel-logo.svg`}
+                                src={`${import.meta.env.BASE_URL}hcm-hotel-logo.png`}
                                 alt="HCM Hotel" 
-                                className="w-full h-full object-contain"
+                                className="w-full h-full object-contain drop-shadow-lg"
                                 onError={(e) => {
-                                    // Fallback para ícone se a imagem não carregar
-                                    e.target.style.display = 'none';
-                                    e.target.nextElementSibling.style.display = 'block';
+                                    // Fallback para SVG se PNG não carregar
+                                    e.target.src = `${import.meta.env.BASE_URL}hcm-hotel-logo.svg`;
+                                    e.target.onerror = () => {
+                                        // Fallback final para ícone
+                                        e.target.style.display = 'none';
+                                        e.target.nextElementSibling.style.display = 'block';
+                                    };
                                 }}
                             />
                             <i className="fas fa-hotel text-4xl text-white" style={{display: 'none'}}></i>
@@ -153,15 +157,19 @@ export default function AuthPage() {
                     <div className="max-w-sm mx-auto">
                         {/* Header do formulário */}
                         <div className="text-center mb-8">
-                            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg p-2">
+                            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg p-2 backdrop-blur-sm">
                                 <img 
-                                    src={`${import.meta.env.BASE_URL}hcm-hotel-logo.svg`}
+                                    src={`${import.meta.env.BASE_URL}hcm-hotel-logo.png`}
                                     alt="HCM Hotel" 
-                                    className="w-full h-full object-contain"
+                                    className="w-full h-full object-contain drop-shadow-md"
                                     onError={(e) => {
-                                        // Fallback para ícone se a imagem não carregar
-                                        e.target.style.display = 'none';
-                                        e.target.nextElementSibling.style.display = 'block';
+                                        // Fallback para SVG se PNG não carregar
+                                        e.target.src = `${import.meta.env.BASE_URL}hcm-hotel-logo.svg`;
+                                        e.target.onerror = () => {
+                                            // Fallback final para ícone
+                                            e.target.style.display = 'none';
+                                            e.target.nextElementSibling.style.display = 'block';
+                                        };
                                     }}
                                 />
                                 <i className={`fas ${isLogin ? 'fa-sign-in-alt' : 'fa-user-plus'} text-white text-xl`} style={{display: 'none'}}></i>
