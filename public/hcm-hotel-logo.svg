@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Fundo circular -->
+  <circle cx="100" cy="100" r="95" fill="#ffffff" stroke="#1e40af" stroke-width="10"/>
+  
+  <!-- Texto HCM -->
+  <text x="100" y="85" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#1e40af">HCM</text>
+  
+  <!-- Texto Hotel -->
+  <text x="100" y="125" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="normal" fill="#6b7280">Hotel</text>
+  
+  <!-- Ícone de hotel (topo) -->
+  <rect x="85" y="35" width="30" height="20" fill="#1e40af" rx="3"/>
+  <rect x="87" y="37" width="6" height="6" fill="#ffffff"/>
+  <rect x="95" y="37" width="6" height="6" fill="#ffffff"/>
+  <rect x="103" y="37" width="6" height="6" fill="#ffffff"/>
+  <rect x="87" y="45" width="6" height="6" fill="#ffffff"/>
+  <rect x="95" y="45" width="6" height="6" fill="#ffffff"/>
+  <rect x="103" y="45" width="6" height="6" fill="#ffffff"/>
+</svg>

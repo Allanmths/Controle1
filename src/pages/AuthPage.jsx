@@ -126,8 +126,8 @@ export default function AuthPage() {
                     <div className="relative z-10 text-center">
                         <div className="w-32 h-32 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-8 p-4">
                             <img 
-                                src="/Controle1/hom-hotel-logo.png" 
-                                alt="HoM Hotel" 
+                                src={`${import.meta.env.BASE_URL}hcm-hotel-logo.svg`}
+                                alt="HCM Hotel" 
                                 className="w-full h-full object-contain"
                                 onError={(e) => {
                                     // Fallback para ícone se a imagem não carregar
@@ -135,10 +135,10 @@ export default function AuthPage() {
                                     e.target.nextElementSibling.style.display = 'block';
                                 }}
                             />
-                            <i className="fas fa-boxes-stacked text-4xl text-white" style={{display: 'none'}}></i>
+                            <i className="fas fa-hotel text-4xl text-white" style={{display: 'none'}}></i>
                         </div>
                         
-                        <h1 className="text-4xl font-bold mb-4">HoM Hotel</h1>
+                        <h1 className="text-4xl font-bold mb-4">HCM Hotel</h1>
                         <p className="text-blue-200 text-lg mb-8">Sistema de Controle</p>
                         
                         <div className="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
@@ -155,8 +155,8 @@ export default function AuthPage() {
                         <div className="text-center mb-8">
                             <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg p-2">
                                 <img 
-                                    src="/Controle1/hom-hotel-logo.png" 
-                                    alt="HoM Hotel" 
+                                    src={`${import.meta.env.BASE_URL}hcm-hotel-logo.svg`}
+                                    alt="HCM Hotel" 
                                     className="w-full h-full object-contain"
                                     onError={(e) => {
                                         // Fallback para ícone se a imagem não carregar
