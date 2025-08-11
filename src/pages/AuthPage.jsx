@@ -124,7 +124,7 @@ export default function AuthPage() {
                     <div className="absolute inset-0 bg-black/10"></div>
                     
                     <div className="relative z-10 text-center">
-                        <div className="w-32 h-32 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-8 p-4 backdrop-blur-sm">
+                        <div className="w-32 h-32 bg-white rounded-2xl flex items-center justify-center mx-auto mb-8 p-4 backdrop-blur-sm">
                             <img 
                                 src={`${import.meta.env.BASE_URL}hcm-hotel-logo.png`}
                                 alt="HCM Hotel" 
@@ -226,7 +226,7 @@ export default function AuthPage() {
                                     </div>
                                     <input 
                                         type={showPassword ? "text" : "password"}
-                                        placeholder={isLogin ? "Sua senha" : "Mínimo 6 caracteres"}
+                                        placeholder={isLogin ? "sua senha" : "Mínimo 6 caracteres"}
                                         className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                                         required 
                                         value={password}
