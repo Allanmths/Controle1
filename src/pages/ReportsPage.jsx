@@ -1,5 +1,5 @@
 ﻿import React, { useState } from 'react';
-import { FaChartLine, FaFileAlt, FaBell, FaChartBar } from 'react-icons/fa';
+import { FaChartLine, FaFileAlt, FaBell, FaChartBar, FaMapMarkerAlt } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import useFirestore from '../hooks/useFirestore';
 import SkeletonLoader from '../components/SkeletonLoader';
@@ -11,6 +11,7 @@ import AnalyticsDashboard from '../components/AnalyticsDashboard';
 import StockValuationReport from '../components/reports/StockValuationReport';
 import DeadStockReport from '../components/reports/DeadStockReport';
 import StockReport from '../components/StockReport';
+import LocationStockReport from '../components/reports/LocationStockReport';
 
 const ReportsPage = () => {
     const { userData } = useAuth();
@@ -42,6 +43,11 @@ const ReportsPage = () => {
             name: 'Relatório de Estoque',
             icon: FaFileAlt,
             component: <StockReport />
+        },
+        locations: {
+            name: 'Estoque por Localização',
+            icon: FaMapMarkerAlt,
+            component: <LocationStockReport />
         },
         valuation: {
             name: 'Valorização de Estoque',
