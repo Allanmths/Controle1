@@ -1,7 +1,5 @@
 ﻿import React, { useEffect, useRef, useState } from 'react';
-import { FaPlus, FaSearch, FaFilePdf, FaEllipsisV, FaSave, FaFilter, FaTimes, FaTrash, FaCheck } from 'react-icons/fa';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { FaPlus, FaSearch, FaEllipsisV, FaSave, FaFilter, FaTimes, FaTrash, FaCheck } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
 import { useStockManagement } from '../hooks/useStockManagement';
@@ -169,16 +167,6 @@ const StockPage = () => {
     setLocationFilter('');
   };
 
-  const generatePdf = () => {
-    const doc = new jsPDF();
-    doc.text('Relatório de Estoque', 20, 10);
-    doc.autoTable({
-      head: [['Nome', 'Categoria', 'Local', 'Quantidade', 'Preço']],
-      body: (products || []).map(p => [p.name, p.category, p.location, p.quantity, `R$ ${p.price}`]),
-    });
-    doc.save('relatório_estoque.pdf');
-  };
-
   // Fecha o dropdown se clicar fora
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -207,10 +195,6 @@ const StockPage = () => {
           >
             <FaCheck className="mr-2" />
             {isSelectMode ? 'Cancelar Seleção' : 'Seleção Múltipla'}
-          </button>
-          <button onClick={generatePdf} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 flex items-center">
-            <FaFilePdf className="mr-2" />
-            Exportar PDF
           </button>
         </div>
       </div>
