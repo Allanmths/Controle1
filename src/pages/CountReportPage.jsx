@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { FaFilePdf } from 'react-icons/fa';
+import { FaFilePdf, FaCheck, FaExclamationTriangle } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../services/firebase';
@@ -29,6 +29,7 @@ function CountReportPage() {
     const [count, setCount] = useState(null);
     const [canEdit, setCanEdit] = useState(false);
     const [applying, setApplying] = useState(false);
+    const [adjustments, setAdjustments] = useState([]);
 
     useEffect(() => {
         async function fetchCount() {
@@ -38,10 +39,21 @@ function CountReportPage() {
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    setCount({ id: docSnap.id, ...data });
+                    const countData = { id: docSnap.id, ...data };
+                    setCount(countData);
                     setCanEdit(user && (user.email === data.userEmail || user.isAdmin));
+                    
+                    // Calcular ajustes necessários
+                    if (countData.details) {
+                        const needAdjustments = countData.details.filter(item => {
+                            const difference = item.countedQuantity - item.expectedQuantity;
+                            return difference !== 0;
+                        });
+                        setAdjustments(needAdjustments);
+                    }
                 } else {
                     setCount(null);
+                    setAdjustments([]);
                 }
             } catch (error) {
                 toast.error('Erro ao carregar relatório de contagem.');
