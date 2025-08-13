@@ -79,10 +79,21 @@ function CountReportPage() {
         try {
             const batch = writeBatch(db);
             
+            console.log('Iniciando aplicação de ajustes para contagem:', count);
+            console.log('Detalhes da contagem:', count.details);
+            
             // Para cada item da contagem, aplicar o ajuste no estoque
             for (const item of count.details) {
                 const { productId, locationId, countedQuantity, expectedQuantity } = item;
                 const difference = countedQuantity - expectedQuantity;
+                
+                console.log(`Processando produto ${item.productName}:`, {
+                    productId,
+                    locationId,
+                    countedQuantity,
+                    expectedQuantity,
+                    difference
+                });
                 
                 if (difference !== 0) {
                     // Buscar o produto e atualizar a quantidade na localização
@@ -93,6 +104,10 @@ function CountReportPage() {
                     if (productSnap.exists()) {
                         const productData = productSnap.data();
                         const currentLocations = productData.locations || {};
+                        
+                        console.log('Produto encontrado:', productData.name);
+                        console.log('Localizações atuais:', currentLocations);
+                        console.log('Atualizando localização:', locationId, 'para quantidade:', countedQuantity);
                         
                         // Atualizar a quantidade na localização específica
                         currentLocations[locationId] = countedQuantity;
@@ -120,7 +135,11 @@ function CountReportPage() {
                             timestamp: new Date(),
                             createdAt: new Date()
                         });
+                    } else {
+                        console.error('Produto não encontrado:', productId);
                     }
+                } else {
+                    console.log(`Produto ${item.productName} não precisa de ajuste (diferença: 0)`);
                 }
             }
             
@@ -132,8 +151,10 @@ function CountReportPage() {
                 appliedBy: user?.email || 'N/A'
             });
             
+            console.log('Executando batch commit...');
             // Executar todas as operações
             await batch.commit();
+            console.log('Batch commit executado com sucesso!');
             
             // Atualizar o estado local
             setCount(prev => ({
@@ -146,7 +167,7 @@ function CountReportPage() {
             toast.success('Ajuste aplicado com sucesso! O estoque foi atualizado.');
         } catch (error) {
             console.error('Erro ao aplicar ajuste:', error);
-            toast.error('Erro ao aplicar ajuste. Tente novamente.');
+            toast.error(`Erro ao aplicar ajuste: ${error.message}`);
         } finally {
             setApplying(false);
         }
