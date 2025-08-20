@@ -27,7 +27,7 @@ import ReplenishmentRequestModal from '../components/ReplenishmentRequestModal';
 import ReplenishmentApprovalModal from '../components/ReplenishmentApprovalModal';
 import ApprovalDashboard from '../components/ApprovalDashboard';
 import ExecutionDashboard from '../components/ExecutionDashboard';
-import { SmartPurchaseListDashboard } from '../components/SmartPurchaseListDashboard';
+import SmartPurchaseListDashboard from '../components/SmartPurchaseListDashboard';
 
 const ReplenishmentPage = () => {
   const { userData } = useAuth();
