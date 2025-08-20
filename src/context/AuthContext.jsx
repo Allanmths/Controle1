@@ -11,33 +11,6 @@ import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firest
 
 const AuthContext = createContext();
 
-export const useAuth = () => {
-// ... (o resto do arquivo permanece o mesmo)
-  const logout = () => {
-    return signOut(auth);
-  };
-
-  const resetPassword = (email) => {
-    return sendPasswordResetEmail(auth, email);
-  };
-
-  const value = {
-    currentUser,
-    user: currentUser, // Alias para compatibilidade
-    userData,
-    loading,
-    login,
-    register,
-    logout,
-    resetPassword
-  };
-
-const AuthContext = createContext();
-
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
-
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [userData, setUserData] = useState(null);
@@ -87,6 +60,32 @@ export const AuthProvider = ({ children }) => {
     
     return result;
   };
+
+  const logout = () => {
+    return signOut(auth);
+  };
+
+  const resetPassword = (email) => {
+    return sendPasswordResetEmail(auth, email);
+  };
+
+  const value = {
+    currentUser,
+    user: currentUser, // Alias para compatibilidade
+    userData,
+    loading,
+    login,
+    register,
+    logout,
+    resetPassword
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
+};
 
   const logout = () => {
     return signOut(auth);
