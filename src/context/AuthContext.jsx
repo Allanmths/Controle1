@@ -3,10 +3,34 @@ import {
   onAuthStateChanged, 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword,
-  signOut 
+  signOut,
+  sendPasswordResetEmail
 } from 'firebase/auth';
 import { auth, db } from '../services/firebase';
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+
+const AuthContext = createContext();
+
+export const useAuth = () => {
+// ... (o resto do arquivo permanece o mesmo)
+  const logout = () => {
+    return signOut(auth);
+  };
+
+  const resetPassword = (email) => {
+    return sendPasswordResetEmail(auth, email);
+  };
+
+  const value = {
+    currentUser,
+    user: currentUser, // Alias para compatibilidade
+    userData,
+    loading,
+    login,
+    register,
+    logout,
+    resetPassword
+  };
 
 const AuthContext = createContext();
 

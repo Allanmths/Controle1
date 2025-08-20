@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export default function AuthPage() {
     const [isLogin, setIsLogin] = useState(true);
@@ -12,8 +13,31 @@ export default function AuthPage() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date());
-    const { login, register } = useAuth();
+    const { login, register, resetPassword } = useAuth();
     const navigate = useNavigate();
+    // Função para redefinir senha
+    const handlePasswordReset = async () => {
+        if (!email) {
+            toast.error('Por favor, digite seu email para redefinir a senha.');
+            return;
+        }
+        try {
+            setLoading(true);
+            await resetPassword(email);
+            toast.success('Email de redefinição de senha enviado! Verifique sua caixa de entrada.');
+        } catch (error) {
+            console.error('Erro ao redefinir senha:', error);
+            if (error.code === 'auth/user-not-found') {
+                toast.error('Nenhum usuário encontrado com este email.');
+            } else if (error.code === 'auth/invalid-email') {
+                toast.error('Formato de email inválido.');
+            } else {
+                toast.error('Falha ao enviar email de redefinição.');
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // Atualizar relógio em tempo real
     useEffect(() => {
@@ -276,7 +300,12 @@ export default function AuthPage() {
                                         />
                                         <span className="ml-2 text-sm text-gray-600">Lembrar-me</span>
                                     </label>
-                                    <button type="button" className="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                                    <button
+                                        type="button"
+                                        onClick={handlePasswordReset}
+                                        className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                                        disabled={loading}
+                                    >
                                         Esqueceu a senha?
                                     </button>
                                 </div>
