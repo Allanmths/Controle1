@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
-import { FaMapMarkerAlt, FaBoxes, FaDownload, FaFilter, FaDollarSign } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaBoxes, FaFilter, FaDollarSign, FaFilePdf } from 'react-icons/fa';
 import useFirestore from '../../hooks/useFirestore';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const LocationStockReport = () => {
     const { docs: products, loading: loadingProducts } = useFirestore('products');
@@ -87,33 +89,45 @@ const LocationStockReport = () => {
         setShowOnlyWithStock(true);
     };
 
-    const exportToCSV = () => {
-        const headers = ['Localização', 'Produto', 'Categoria', 'Quantidade', 'Preço Unitário', 'Valor Total', 'Status'];
-        const csvRows = [];
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+        doc.text("Relatório de Estoque por Localização", 14, 16);
+        doc.setFontSize(10);
+        doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')}`, 14, 22);
+
+        let y = 30;
 
         reportData.locationSummary.forEach(location => {
-            location.products.forEach(product => {
-                csvRows.push([
-                    location.locationName,
-                    product.name,
-                    product.category,
-                    product.quantity,
-                    product.price.toFixed(2),
-                    product.value.toFixed(2),
-                    product.isLowStock ? 'Estoque Baixo' : 'Normal'
-                ].join(','));
+            if (y > 250) { // Adiciona nova página se o conteúdo estiver muito para baixo
+                doc.addPage();
+                y = 20;
+            }
+            
+            doc.setFontSize(12);
+            doc.text(location.locationName, 14, y);
+            y += 8;
+
+            const head = [['Produto', 'Categoria', 'Qtd', 'Preço Unit.', 'Valor Total']];
+            const body = location.products.map(p => [
+                p.name,
+                p.category,
+                p.quantity,
+                `R$ ${p.price.toFixed(2)}`,
+                `R$ ${p.value.toFixed(2)}`
+            ]);
+
+            doc.autoTable({
+                startY: y,
+                head: head,
+                body: body,
+                theme: 'striped',
+                headStyles: { fillColor: [41, 128, 185] },
             });
+
+            y = doc.autoTable.previous.finalY + 10;
         });
 
-        const csvContent = [headers.join(','), ...csvRows].join('\n');
-
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `relatorio_estoque_por_localizacao_${new Date().toISOString().slice(0, 10)}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
+        doc.save(`relatorio_estoque_localizacao_${new Date().toISOString().slice(0, 10)}.pdf`);
     };
 
     return (
@@ -130,11 +144,11 @@ const LocationStockReport = () => {
                     </div>
                     <div className="flex gap-2 mt-4 md:mt-0">
                         <button 
-                            onClick={exportToCSV}
-                            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center"
+                            onClick={exportToPDF}
+                            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg flex items-center"
                         >
-                            <FaDownload className="mr-2" />
-                            CSV
+                            <FaFilePdf className="mr-2" />
+                            PDF
                         </button>
                     </div>
                 </div>
