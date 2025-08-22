@@ -80,7 +80,11 @@ const HomePage = () => {
         let totalStock = 0;
         productsSnapshot.docs.forEach(doc => {
           const product = doc.data();
-          totalStock += product.totalQuantity || 0;
+          // Calcular o total somando todas as quantidades de todas as localizações
+          if (product.locations) {
+            const productTotal = Object.values(product.locations).reduce((sum, qty) => sum + (Number(qty) || 0), 0);
+            totalStock += productTotal;
+          }
         });
         
         // Categorias ativas
@@ -89,12 +93,20 @@ const HomePage = () => {
         const categoriesCount = categoriesSnapshot.size;
         
         // Produtos com estoque baixo
-        const lowStockQuery = query(
-          collection(db, 'products'),
-          where('totalQuantity', '<', 10)
-        );
-        const lowStockSnapshot = await getDocs(lowStockQuery);
-        const lowStockCount = lowStockSnapshot.size;
+        let lowStockCount = 0;
+        productsSnapshot.docs.forEach(doc => {
+          const product = doc.data();
+          // Calcular o total do produto somando todas as localizações
+          let productTotal = 0;
+          if (product.locations) {
+            productTotal = Object.values(product.locations).reduce((sum, qty) => sum + (Number(qty) || 0), 0);
+          }
+          // Verificar se está abaixo do estoque mínimo ou abaixo de 10
+          const minStock = product.minStock || 10;
+          if (productTotal < minStock) {
+            lowStockCount++;
+          }
+        });
         
         setStats({
           totalProducts,
