@@ -408,7 +408,7 @@ export const usePurchaseListManagement = () => {
         summary: {
           totalItems: selectedProducts.length,
           totalCost: selectedProducts.reduce((sum, item) => 
-            sum + (item.quantity * (item.unitCost || 0)), 0
+            sum + ((item.requestedQuantity || item.quantity || 0) * (item.unitCost || 0)), 0
           ),
           criticalItems: selectedProducts.filter(item => item.priority === 'critical').length,
           suppliers: [...new Set(selectedProducts.map(item => item.supplierId))].length
