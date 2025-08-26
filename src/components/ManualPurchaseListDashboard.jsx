@@ -11,7 +11,7 @@ import {
   FaCheckCircle,
   FaExclamationTriangle
 } from 'react-icons/fa';
-import { useFirestore } from '../hooks/useFirestore';
+import useFirestore from '../hooks/useFirestore';
 import { usePurchaseListManagement } from '../hooks/usePurchaseListManagement';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
