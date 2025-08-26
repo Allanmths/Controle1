@@ -1,11 +1,12 @@
 ﻿import React, { useState } from 'react';
-import { FaChartLine, FaFileAlt, FaBell, FaChartBar, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaChartLine, FaFileAlt, FaBell, FaChartBar, FaMapMarkerAlt, FaHistory } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import useFirestore from '../hooks/useFirestore';
 import SkeletonLoader from '../components/SkeletonLoader';
 
 // Componentes de Analytics
 import AnalyticsDashboard from '../components/AnalyticsDashboard';
+import HistoricalStockAnalysis from '../components/HistoricalStockAnalysis';
 
 // Componentes de Relatórios
 import StockValuationReport from '../components/reports/StockValuationReport';
@@ -38,6 +39,11 @@ const ReportsPage = () => {
                     loading={isLoading}
                 />
             )
+        },
+        historical: {
+            name: 'Análise Histórica',
+            icon: FaHistory,
+            component: <HistoricalStockAnalysis />
         },
         stock: {
             name: 'Relatório de Estoque',
