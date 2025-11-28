@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../services/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, writeBatch, doc } from 'firebase/firestore';
 import useFirestore from '../hooks/useFirestore';
 import { useAuth } from '../context/AuthContext';
 // Offline removido
@@ -96,7 +96,21 @@ export default function NewCountPage() {
             fileId: `inv_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`
         };
         try {
-            await addDoc(collection(db, 'counts'), countData);
+            const batch = writeBatch(db);
+            
+            // Criar o documento da contagem
+            const countRef = doc(collection(db, 'counts'));
+            batch.set(countRef, countData);
+
+            // Atualizar a data da última contagem nos produtos
+            countDetails.forEach(detail => {
+                const productRef = doc(db, 'products', detail.productId);
+                batch.update(productRef, {
+                    lastCountedAt: serverTimestamp()
+                });
+            });
+
+            await batch.commit();
             toast.success('Contagem finalizada e salva com sucesso!');
             navigate('/counting');
         } catch (error) {

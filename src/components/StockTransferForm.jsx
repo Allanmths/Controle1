@@ -75,6 +75,7 @@ const StockTransferForm = () => {
                 transaction.update(productRef, {
                     [`locations.${fromLocationId}`]: newFromStock,
                     [`locations.${toLocationId}`]: newToStock,
+                    lastMovedAt: serverTimestamp()
                     // O totalStock não muda na Transferência
                 });
 

@@ -77,6 +77,7 @@ const StockExitForm = () => {
                 transaction.update(productRef, {
                     [`locations.${fromLocationId}`]: newStock,
                     totalStock: newTotalStock,
+                    lastMovedAt: serverTimestamp()
                 });
 
                 // 2. Registrar movimento de SAÍDA no Kardex

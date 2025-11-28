@@ -35,7 +35,13 @@ const ManualPurchaseListDashboard = () => {
   // Função para calcular o estoque atual de um produto
   const calculateCurrentStock = (product) => {
     if (!product.locations) return 0;
-    return Object.values(product.locations).reduce((total, quantity) => total + (quantity || 0), 0);
+    
+    // Garantir que todos os valores sejam convertidos para números
+    return Object.values(product.locations).reduce((total, quantity) => {
+      // Força conversão para número e trata strings que podem ter caracteres extras
+      const numQuantity = parseFloat(quantity) || 0;
+      return total + numQuantity;
+    }, 0);
   };
 
   // Função para verificar se o estoque está baixo

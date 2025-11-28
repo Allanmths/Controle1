@@ -4,6 +4,7 @@ import { db } from '../services/firebase';
 import useFirestore from './useFirestore';
 import toast from 'react-hot-toast';
 import { useSettings } from '../context/SettingsContext';
+import { differenceInDays } from 'date-fns';
 
 /**
  * Hook customizado para gerenciar toda a lógica da página de estoque.
@@ -30,6 +31,7 @@ export const useStockManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
+  const [staleFilter, setStaleFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   
   // 4. Lógica de Negócio
@@ -75,9 +77,37 @@ export const useStockManagement = () => {
         }
       }
 
-      return matchesName && matchesCategory && matchesLocation;
+      // Filtro por itens sem movimentação recente (7 dias)
+      let matchesStale = true;
+      if (staleFilter) {
+          const now = new Date();
+          // Verifica lastCountedAt
+          let lastCounted = null;
+          if (product.lastCountedAt && typeof product.lastCountedAt.toDate === 'function') {
+              lastCounted = product.lastCountedAt.toDate();
+          } else if (product.lastCountedAt) {
+              lastCounted = new Date(product.lastCountedAt);
+          }
+
+          // Verifica lastMovedAt
+          let lastMoved = null;
+          if (product.lastMovedAt && typeof product.lastMovedAt.toDate === 'function') {
+              lastMoved = product.lastMovedAt.toDate();
+          } else if (product.lastMovedAt) {
+              lastMoved = new Date(product.lastMovedAt);
+          }
+          
+          const daysSinceCount = lastCounted ? differenceInDays(now, lastCounted) : 999;
+          const daysSinceMove = lastMoved ? differenceInDays(now, lastMoved) : 999;
+          
+          // Considera "stale" se ambos forem antigos (ou inexistentes)
+          // Se nunca foi contado nem movido, é stale (999 > 7)
+          matchesStale = daysSinceCount > 7 && daysSinceMove > 7;
+      }
+
+      return matchesName && matchesCategory && matchesLocation && matchesStale;
     });
-  }, [products, searchTerm, categoryFilter, locationFilter, categories, locations]);
+  }, [products, searchTerm, categoryFilter, locationFilter, staleFilter, categories, locations]);
 
   // Memoiza os produtos para a pÃ¡gina atual
   const paginatedProducts = useMemo(() => {
@@ -200,6 +230,8 @@ export const useStockManagement = () => {
     setCategoryFilter,
     locationFilter,
     setLocationFilter,
+    staleFilter,
+    setStaleFilter,
     currentPage,
     setCurrentPage,
     itemsPerPage, // Vem do contexto agora

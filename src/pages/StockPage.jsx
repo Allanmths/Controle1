@@ -51,6 +51,8 @@ const StockPage = () => {
     setCategoryFilter,
     locationFilter,
     setLocationFilter,
+    staleFilter,
+    setStaleFilter,
     currentPage,
     setCurrentPage,
     itemsPerPage,
@@ -290,6 +292,18 @@ const StockPage = () => {
             <option value="">Todos os Locais</option>
             {locations?.map(loc => <option key={loc.id} value={loc.name}>{loc.name}</option>)}
           </select>
+
+          <div className="flex items-center">
+            <label className={`flex items-center justify-center w-full p-3 border rounded-lg cursor-pointer transition-colors ${staleFilter ? 'bg-orange-100 border-orange-300 text-orange-800' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}>
+              <input
+                type="checkbox"
+                checked={staleFilter}
+                onChange={(e) => setStaleFilter(e.target.checked)}
+                className="mr-2 h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+              />
+              <span className="text-sm font-medium">Sem Movimentação (7d)</span>
+            </label>
+          </div>
 
           <div className="flex space-x-2">
             <button
