@@ -1,7 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-import { FaFilePdf, FaCheck, FaExclamationTriangle } from 'react-icons/fa';
+import * as XLSX from 'xlsx';
+import { FaFileExcel, FaCheck, FaExclamationTriangle } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../services/firebase';
@@ -173,26 +172,107 @@ function CountReportPage() {
         }
     }
 
-    function exportReportToPDF(count) {
+    function exportReportToExcel(count) {
         if (!count) return;
-        const doc = new jsPDF();
-        doc.setFontSize(18);
-        doc.text('Relatório da Contagem', 14, 22);
-        doc.setFontSize(11);
-        doc.setTextColor(100);
-        doc.text(`Data: ${count.createdAt?.toDate ? count.createdAt.toDate().toLocaleString('pt-BR') : ''}`, 14, 30);
-        doc.text(`Usuário: ${count.userEmail || ''}`, 14, 36);
-        if (count.locationName) doc.text(`Localidade: ${count.locationName}`, 14, 42);
-        if (count.fileId) doc.text(`ID Arquivo: ${count.fileId}`, 14, 48);
 
-        const tableColumn = [
-            'Produto',
-            'Qtd. Sistema',
-            'Qtd. Contada',
-            'Diferença',
-            'Localidade'
-        ];
-        // ...restante da lógica de exportação...
+        try {
+            // Criar dados de cabeçalho com informações da contagem
+            const headerData = [
+                ['RELATÓRIO DE CONTAGEM DE ESTOQUE'],
+                [],
+                ['Data:', count.createdAt?.toDate ? count.createdAt.toDate().toLocaleString('pt-BR') : 'N/A'],
+                ['Usuário:', count.userEmail || 'N/A'],
+                ['Localidade:', count.locationName || 'N/A'],
+                ['ID do Arquivo:', count.fileId || 'N/A'],
+                ['Status:', count.status === 'aplicado' ? 'Ajuste Aplicado' : 'Pendente de Aplicação'],
+                []
+            ];
+
+            // Criar dados da tabela
+            const tableHeaders = ['Produto', 'Qtd. Sistema', 'Qtd. Contada', 'Diferença', 'Localidade', 'Status'];
+            const tableData = count.details.map(item => {
+                const difference = item.countedQuantity - item.expectedQuantity;
+                let status = 'OK';
+                if (difference > 0) status = 'EXCEDENTE';
+                else if (difference < 0) status = 'FALTANTE';
+
+                return [
+                    item.productName || '',
+                    item.expectedQuantity || 0,
+                    item.countedQuantity || 0,
+                    difference,
+                    item.locationName || count.locationName || 'Desconhecida',
+                    status
+                ];
+            });
+
+            // Adicionar linha de resumo
+            const totalExpected = count.details.reduce((sum, item) => sum + (item.expectedQuantity || 0), 0);
+            const totalCounted = count.details.reduce((sum, item) => sum + (item.countedQuantity || 0), 0);
+            const totalDifference = totalCounted - totalExpected;
+
+            const summaryData = [
+                [],
+                ['RESUMO DA CONTAGEM'],
+                ['Total de Produtos:', count.details.length],
+                ['Qtd. Total Sistema:', totalExpected],
+                ['Qtd. Total Contada:', totalCounted],
+                ['Diferença Total:', totalDifference]
+            ];
+
+            // Combinar todos os dados
+            const worksheetData = [
+                ...headerData,
+                tableHeaders,
+                ...tableData,
+                ...summaryData
+            ];
+
+            // Criar planilha
+            const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+
+            // Definir larguras das colunas
+            worksheet['!cols'] = [
+                { wch: 30 }, // Produto
+                { wch: 15 }, // Qtd. Sistema
+                { wch: 15 }, // Qtd. Contada
+                { wch: 12 }, // Diferença
+                { wch: 20 }, // Localidade
+                { wch: 15 }  // Status
+            ];
+
+            // Estilizar células do cabeçalho
+            const headerRange = XLSX.utils.decode_range(worksheet['!ref']);
+            for (let row = 0; row < headerData.length + 1; row++) {
+                for (let col = headerRange.s.c; col <= headerRange.e.c; col++) {
+                    const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+                    if (worksheet[cellAddress]) {
+                        worksheet[cellAddress].s = {
+                            font: { bold: true },
+                            alignment: { horizontal: 'left' }
+                        };
+                    }
+                }
+            }
+
+            // Criar workbook e adicionar a planilha
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Contagem');
+
+            // Gerar nome do arquivo
+            const dataContagem = count.createdAt?.toDate 
+                ? count.createdAt.toDate().toLocaleDateString('pt-BR').replace(/\//g, '-')
+                : 'sem-data';
+            const fileName = `Contagem_${dataContagem}_${count.fileId || 'relatorio'}.xlsx`;
+
+            // Fazer download do arquivo
+            XLSX.writeFile(workbook, fileName);
+            
+            toast.success('Relatório exportado com sucesso!');
+        } catch (error) {
+            console.error('Erro ao exportar para Excel:', error);
+            toast.error('Erro ao exportar relatório');
+        }
     }
 
     if (loading) return <p className="text-center p-4">Carregando relatório...</p>;
@@ -232,10 +312,10 @@ function CountReportPage() {
                         )}
                     </div>
                     <button
-                        onClick={() => exportReportToPDF(count)}
-                        className="mt-4 sm:mt-0 flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                        onClick={() => exportReportToExcel(count)}
+                        className="mt-4 sm:mt-0 flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
                     >
-                        <FaFilePdf className="mr-2" /> Exportar PDF
+                        <FaFileExcel className="mr-2" /> Exportar Excel
                     </button>
                 </div>
             </div>
